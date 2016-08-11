@@ -5,7 +5,7 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = _build
+BUILDDIR      = build
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
@@ -54,7 +54,11 @@ clean:
 .PHONY: html
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	cp $(BUILDDIR)/html/index.html ./
+	sed -i -- 's/_static/static/g' $(BUILDDIR)/html/*.html
+	sed -i -- 's/_images/images/g' $(BUILDDIR)/html/*.html
+	cp $(BUILDDIR)/html/*.html ./
+	mv $(BUILDDIR)/html/_static ./static/
+	mv $(BUILDDIR)/html/_images ./images/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
