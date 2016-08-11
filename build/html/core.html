@@ -59,14 +59,14 @@
 <p><strong>py_register_machine2.core.parts</strong>: Basic parts of the register machine</p>
 <dl class="exception">
 <dt id="py_register_machine2.core.parts.AddressError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">AddressError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#AddressError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.AddressError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">AddressError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#AddressError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.AddressError" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote id="addresserror">
 <div>raised by a device if the requested offset exceeds the size of the device</div></blockquote>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.parts.BUS">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS" title="Permalink to this definition">¶</a></dt>
 <dd><p id="bus"><strong>The BUS object</strong></p>
 <p>A BUS object connects the Processor with one or more 
 Memory alike operating devices (<a class="reference internal" href="#worddevice">WordDevice</a>).</p>
@@ -91,7 +91,7 @@ If the addresspace of the BUS is too small do hold a new device,
 BUS.register_device will raise a BUSSetupError.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.BUS.read_word">
-<code class="descname">read_word</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUS.read_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.read_word" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read_word</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUS.read_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.read_word" title="Permalink to this definition">¶</a></dt>
 <dd><p id="read-word">Read one word from a device.
 The offset is <code class="docutils literal"><span class="pre">device_addr</span> <span class="pre">+</span> <span class="pre">device_offset</span></code>, e.g.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">offset</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># third word of the device</span>
@@ -105,7 +105,7 @@ The offset is <code class="docutils literal"><span class="pre">device_addr</span
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.BUS.register_device">
-<code class="descname">register_device</code><span class="sig-paren">(</span><em>word_device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUS.register_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.register_device" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_device</code><span class="sig-paren">(</span><em>word_device</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUS.register_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.register_device" title="Permalink to this definition">¶</a></dt>
 <dd><p id="register-device">Register the <a class="reference internal" href="#worddevice">WordDevice</a> <code class="docutils literal"><span class="pre">word_device</span></code> in the bus
 returns the start address of the device.</p>
 <p>raises: <a class="reference internal" href="#bussetuperror">BUSSetupError</a>, if the device cannot be registered.</p>
@@ -113,7 +113,7 @@ returns the start address of the device.</p>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.BUS.write_word">
-<code class="descname">write_word</code><span class="sig-paren">(</span><em>offset</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUS.write_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.write_word" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_word</code><span class="sig-paren">(</span><em>offset</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUS.write_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.write_word" title="Permalink to this definition">¶</a></dt>
 <dd><p id="write-word">Writes one word from a device,
 see <a class="reference internal" href="#read-word">read_word</a>.</p>
 </dd></dl>
@@ -122,34 +122,34 @@ see <a class="reference internal" href="#read-word">read_word</a>.</p>
 
 <dl class="exception">
 <dt id="py_register_machine2.core.parts.BUSError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUSError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUSError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUSError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUSError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUSError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUSError" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote id="buserror">
 <div>raised by a BUS if an operation failed.</div></blockquote>
 </dd></dl>
 
 <dl class="exception">
 <dt id="py_register_machine2.core.parts.BUSSetupError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUSSetupError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#BUSSetupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUSSetupError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">BUSSetupError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUSSetupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUSSetupError" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote id="bussetuperror">
 <div>raised by a BUS if the setup failed.</div></blockquote>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.parts.Integer">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">Integer</code><span class="sig-paren">(</span><em>value=0</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">Integer</code><span class="sig-paren">(</span><em>value=0</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer" title="Permalink to this definition">¶</a></dt>
 <dd><p id="integer">The register machine may have a special width.
 This is handled by the Integer objects.</p>
 <p>Automatically truncates the value to the defined width.</p>
 <p>Use <a class="reference internal" href="#setvalue">setvalue</a> and <a class="reference internal" href="#getvalue">getvalue</a> to access the value.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.getvalue">
-<code class="descname">getvalue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Integer.getvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.getvalue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getvalue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.getvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.getvalue" title="Permalink to this definition">¶</a></dt>
 <dd><p id="getvalue">Get the value of the Integer</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.setvalue">
-<code class="descname">setvalue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Integer.setvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.setvalue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setvalue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.setvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.setvalue" title="Permalink to this definition">¶</a></dt>
 <dd><p id="setvalue">Set the value of the Integer and truncate it</p>
 </dd></dl>
 
@@ -157,27 +157,27 @@ This is handled by the Integer objects.</p>
 
 <dl class="exception">
 <dt id="py_register_machine2.core.parts.ReadOnlyError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">ReadOnlyError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#ReadOnlyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.ReadOnlyError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">ReadOnlyError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#ReadOnlyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.ReadOnlyError" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote id="readonlyerror">
 <div>raised by a device if it is read-only</div></blockquote>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.parts.Register">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">Register</code><span class="sig-paren">(</span><em>name</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">Register</code><span class="sig-paren">(</span><em>name</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register" title="Permalink to this definition">¶</a></dt>
 <dd><p id="register">Basically hold one value and permitt read/write operations.
 There may be several subclasses, like Input/Output Register.</p>
 <p>The name will be used by the assembler.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Register.read">
-<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Register.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Register.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the content of the Register,
 may execute a function</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Register.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#Register.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Register.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Register.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the content of the Register,
 may execute a function</p>
 </dd></dl>
@@ -186,14 +186,14 @@ may execute a function</p>
 
 <dl class="class">
 <dt id="py_register_machine2.core.parts.WordDevice">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">WordDevice</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>mode=3</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#WordDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">WordDevice</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>mode=3</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#WordDevice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice" title="Permalink to this definition">¶</a></dt>
 <dd><p id="worddevice">Base Device for the register machine.
 The words have the width <code class="docutils literal"><span class="pre">width</span></code> and are stored in an
 <a class="reference internal" href="#integer">Integer</a> object.</p>
 <p>Values are accessed by <a class="reference internal" href="#read">read</a> and <a class="reference internal" href="#write">write</a></p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.WordDevice.read">
-<code class="descname">read</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#WordDevice.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#WordDevice.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice.read" title="Permalink to this definition">¶</a></dt>
 <dd><p id="read">Returns the value of the memory word at <code class="docutils literal"><span class="pre">offset</span></code>.</p>
 <p>Might raise <a class="reference internal" href="#writeonlyerror">WriteOnlyError</a>, if the device is write-only.
 Might raise <a class="reference internal" href="#addresserror">AddressError</a>, if the offset exceeds the size of the device.</p>
@@ -201,7 +201,7 @@ Might raise <a class="reference internal" href="#addresserror">AddressError</a>,
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.WordDevice.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>offset</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#WordDevice.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>offset</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#WordDevice.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WordDevice.write" title="Permalink to this definition">¶</a></dt>
 <dd><p id="write">Writes the memory word at <code class="docutils literal"><span class="pre">offset</span></code> to <code class="docutils literal"><span class="pre">value</span></code>.</p>
 <p>Might raise <a class="reference internal" href="#readonlyerror">ReadOnlyError</a>, if the device is read-only.
 Might raise <a class="reference internal" href="#addresserror">AddressError</a>, if the offset exceeds the size of the device.</p>
@@ -211,7 +211,7 @@ Might raise <a class="reference internal" href="#addresserror">AddressError</a>,
 
 <dl class="exception">
 <dt id="py_register_machine2.core.parts.WriteOnlyError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">WriteOnlyError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/parts.html#WriteOnlyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WriteOnlyError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.parts.</code><code class="descname">WriteOnlyError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#WriteOnlyError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.WriteOnlyError" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote id="writeonlyerror">
 <div>raised by a device if it is write-only</div></blockquote>
 </dd></dl>
@@ -221,13 +221,13 @@ Might raise <a class="reference internal" href="#addresserror">AddressError</a>,
 <span id="memory"></span><h2>Memory<a class="headerlink" href="#module-py_register_machine2.core.memory" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="py_register_machine2.core.memory.BUS">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/memory.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.BUS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/memory.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.BUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The processor&#8217;s memory BUS, its devices are ROM and RAM.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.memory.RAM">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">RAM</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/memory.html#RAM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.RAM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">RAM</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/memory.html#RAM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.RAM" title="Permalink to this definition">¶</a></dt>
 <dd><p id="ram"><strong>The Random Access Memory Device</strong></p>
 <p>By default the RAM device is filled with zeros. 
 After poweron the Bootcode in the ROM might perform read/write operations on the RAM.
@@ -237,7 +237,7 @@ has to be copied into the RAM.</p>
 
 <dl class="class">
 <dt id="py_register_machine2.core.memory.ROM">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">ROM</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/memory.html#ROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.memory.</code><code class="descname">ROM</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/memory.html#ROM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM" title="Permalink to this definition">¶</a></dt>
 <dd><p id="rom"><strong>The Read Only Memory Device</strong></p>
 <p>of the register machine stores either the boot code (for big programs) or
 the complete program, if the program is really small.</p>
@@ -252,7 +252,7 @@ RAM and ROM:</p>
 <p>A <code class="docutils literal"><span class="pre">write</span></code> call will raise <a class="reference internal" href="#readonlyerror">ReadOnlyError</a>.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.memory.ROM.program">
-<code class="descname">program</code><span class="sig-paren">(</span><em>prog</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/memory.html#ROM.program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM.program" title="Permalink to this definition">¶</a></dt>
+<code class="descname">program</code><span class="sig-paren">(</span><em>prog</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/memory.html#ROM.program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM.program" title="Permalink to this definition">¶</a></dt>
 <dd><p id="program">Write the content of the iterable <code class="docutils literal"><span class="pre">prog</span></code> starting with the optional offset <code class="docutils literal"><span class="pre">offset</span></code>
 to the device.</p>
 <p>Invokes <a class="reference internal" href="#program-word">program_word</a>.</p>
@@ -260,7 +260,7 @@ to the device.</p>
 
 <dl class="method">
 <dt id="py_register_machine2.core.memory.ROM.program_word">
-<code class="descname">program_word</code><span class="sig-paren">(</span><em>offset</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/memory.html#ROM.program_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM.program_word" title="Permalink to this definition">¶</a></dt>
+<code class="descname">program_word</code><span class="sig-paren">(</span><em>offset</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/memory.html#ROM.program_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.memory.ROM.program_word" title="Permalink to this definition">¶</a></dt>
 <dd><p id="program-word">Write the word <code class="docutils literal"><span class="pre">word</span></code> to the memory at offset <code class="docutils literal"><span class="pre">offset</span></code>.
 Used to write the boot code.</p>
 <p>Might raise <a class="reference internal" href="#addresserror">AddressError</a>, if the  offset exceeds the address space.</p>
@@ -274,14 +274,14 @@ Used to write the boot code.</p>
 <p><strong>py_register_machine2.core.device</strong>: Device BUS and attached devices</p>
 <dl class="class">
 <dt id="py_register_machine2.core.device.BUS">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.device.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/device.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.BUS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.device.</code><code class="descname">BUS</code><span class="sig-paren">(</span><em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/device.html#BUS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.BUS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The processor&#8217;s device BUS, usually the Flash is attached to this BUS,
 but there might be more devices.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.device.Flash">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.device.</code><code class="descname">Flash</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/device.html#Flash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.device.</code><code class="descname">Flash</code><span class="sig-paren">(</span><em>size</em>, <em>width=64</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/device.html#Flash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash" title="Permalink to this definition">¶</a></dt>
 <dd><p id="flash"><strong>The Program Flash</strong></p>
 <p>If the size of the program exceeds the size of the ROM the program has to be written into
 the Flash. The Flash is a Read/Write device and contains</p>
@@ -293,7 +293,7 @@ the Flash. The Flash is a Read/Write device and contains</p>
 <p>The Flash is a WordDevice and attached to the <code class="docutils literal"><span class="pre">device.BUS</span></code> .</p>
 <dl class="method">
 <dt id="py_register_machine2.core.device.Flash.program">
-<code class="descname">program</code><span class="sig-paren">(</span><em>prog</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/device.html#Flash.program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash.program" title="Permalink to this definition">¶</a></dt>
+<code class="descname">program</code><span class="sig-paren">(</span><em>prog</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/device.html#Flash.program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash.program" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the content of the iterable <code class="docutils literal"><span class="pre">prog</span></code> starting with the optional offset <code class="docutils literal"><span class="pre">offset</span></code>
 to the device.</p>
 <p>Invokes <a class="reference internal" href="#write">write</a>.</p>
@@ -307,7 +307,7 @@ to the device.</p>
 <span class="target" id="module-py_register_machine2.core.register"></span><p><strong>py_register_machine2.core.register</strong>: Registers for the register machine</p>
 <dl class="class">
 <dt id="py_register_machine2.core.register.BStreamIORegister">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">BStreamIORegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream_in</em>, <em>open_stream_out</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#BStreamIORegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">BStreamIORegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream_in</em>, <em>open_stream_out</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#BStreamIORegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister" title="Permalink to this definition">¶</a></dt>
 <dd><p id="bstreamioregister">Works like <a class="reference internal" href="#streamioregister">StreamIORegister</a>, but <code class="docutils literal"><span class="pre">open_stream_in</span></code> and <code class="docutils literal"><span class="pre">open_stream_out</span></code> 
 are byte streams (like <code class="docutils literal"><span class="pre">open(&quot;fname&quot;,</span> <span class="pre">&quot;rb&quot;)</span></code>).</p>
 <ul class="simple">
@@ -316,14 +316,14 @@ are byte streams (like <code class="docutils literal"><span class="pre">open(&qu
 </ul>
 <dl class="method">
 <dt id="py_register_machine2.core.register.BStreamIORegister.read">
-<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#BStreamIORegister.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#BStreamIORegister.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads enough bytes from <code class="docutils literal"><span class="pre">open_stream_in</span></code> to fill the <code class="docutils literal"><span class="pre">width</span></code> 
 (if available) and converts them to an <code class="docutils literal"><span class="pre">int</span></code>. Returns this <code class="docutils literal"><span class="pre">int</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.register.BStreamIORegister.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#BStreamIORegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#BStreamIORegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.BStreamIORegister.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the <code class="docutils literal"><span class="pre">int</span></code> <code class="docutils literal"><span class="pre">word</span></code> to a <code class="docutils literal"><span class="pre">bytes</span></code> object and writes them to
 <code class="docutils literal"><span class="pre">open_stream_out</span></code>.</p>
 <p>See <code class="docutils literal"><span class="pre">int_to_bytes</span></code>.</p>
@@ -333,7 +333,7 @@ are byte streams (like <code class="docutils literal"><span class="pre">open(&qu
 
 <dl class="class">
 <dt id="py_register_machine2.core.register.OutputRegister">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">OutputRegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#OutputRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.OutputRegister" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">OutputRegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#OutputRegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.OutputRegister" title="Permalink to this definition">¶</a></dt>
 <dd><p id="outputregister">Used to print data to the user.
 The <code class="docutils literal"><span class="pre">write</span></code> call will convert <code class="docutils literal"><span class="pre">word</span></code> using <code class="docutils literal"><span class="pre">chr</span></code> and write
 the resulting <code class="docutils literal"><span class="pre">str</span></code> to <code class="docutils literal"><span class="pre">open_stream</span></code>.</p>
@@ -341,7 +341,7 @@ the resulting <code class="docutils literal"><span class="pre">str</span></code>
 <p><code class="docutils literal"><span class="pre">open_stream</span></code> might be a <code class="docutils literal"><span class="pre">file</span></code> (like <code class="docutils literal"><span class="pre">sys.stdout</span></code>) or an <code class="docutils literal"><span class="pre">io.StringIO</span></code> object.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.register.OutputRegister.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#OutputRegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.OutputRegister.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#OutputRegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.OutputRegister.write" title="Permalink to this definition">¶</a></dt>
 <dd><p id="sowrite">Write the <code class="docutils literal"><span class="pre">chr</span></code> representation of <code class="docutils literal"><span class="pre">word</span></code> to the <code class="docutils literal"><span class="pre">open_stream</span></code>.</p>
 <p>If <code class="docutils literal"><span class="pre">chr(word)</span></code> fails due <code class="docutils literal"><span class="pre">OverflowError</span></code>, a <code class="docutils literal"><span class="pre">&quot;?&quot;</span></code> will be written.</p>
 </dd></dl>
@@ -350,7 +350,7 @@ the resulting <code class="docutils literal"><span class="pre">str</span></code>
 
 <dl class="class">
 <dt id="py_register_machine2.core.register.Register">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">Register</code><span class="sig-paren">(</span><em>name</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#Register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.Register" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">Register</code><span class="sig-paren">(</span><em>name</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#Register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.Register" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic standard register. 
 Permitts read and write, does not execute any callbacks on read/write.</p>
 <p>See also: <a class="reference internal" href="#register">Register</a></p>
@@ -358,19 +358,19 @@ Permitts read and write, does not execute any callbacks on read/write.</p>
 
 <dl class="class">
 <dt id="py_register_machine2.core.register.StreamIORegister">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">StreamIORegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream_in</em>, <em>open_stream_out</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#StreamIORegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.register.</code><code class="descname">StreamIORegister</code><span class="sig-paren">(</span><em>name</em>, <em>open_stream_in</em>, <em>open_stream_out</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#StreamIORegister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister" title="Permalink to this definition">¶</a></dt>
 <dd><p id="streamioregister">Input/Output Register via streams.</p>
 <p>The <code class="docutils literal"><span class="pre">open_stream_in</span></code> has to be readable, <code class="docutils literal"><span class="pre">open_stream_out</span></code> writeable.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.register.StreamIORegister.read">
-<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#StreamIORegister.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#StreamIORegister.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a <code class="docutils literal"><span class="pre">str</span></code> from <code class="docutils literal"><span class="pre">open_stream_in</span></code> and convert it to an integer
 using <code class="docutils literal"><span class="pre">ord</span></code>. The result will be truncated according to <a class="reference internal" href="#integer">Integer</a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.register.StreamIORegister.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/register.html#StreamIORegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/register.html#StreamIORegister.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.register.StreamIORegister.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Works like <a class="reference internal" href="#sowrite">SOwrite</a>.</p>
 </dd></dl>
 
@@ -381,14 +381,14 @@ using <code class="docutils literal"><span class="pre">ord</span></code>. The re
 <span id="processor"></span><h2>Processor<a class="headerlink" href="#module-py_register_machine2.core.processor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="py_register_machine2.core.processor.EnigneControlBits">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">EnigneControlBits</code><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#EnigneControlBits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.EnigneControlBits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">EnigneControlBits</code><a class="reference internal" href="modules/py_register_machine2/core/processor.html#EnigneControlBits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.EnigneControlBits" title="Permalink to this definition">¶</a></dt>
 <dd><p id="enignecontrolbits">Container for the static engine controll bits.
 Used by the <a class="reference internal" href="#id2">Processor</a> to handle his ECR.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.processor.Processor">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">Processor</code><span class="sig-paren">(</span><em>f_cpu=None</em>, <em>width=64</em>, <em>interrupts=False</em>, <em>clock_barrier=None</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">Processor</code><span class="sig-paren">(</span><em>f_cpu=None</em>, <em>width=64</em>, <em>interrupts=False</em>, <em>clock_barrier=None</em>, <em>debug=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor" title="Permalink to this definition">¶</a></dt>
 <dd><p id="id2">Fetches Opcodes from the ROM or RAM, decodes them and executes the commands.</p>
 <p id="processor-phases">Phases in one operation cycle:</p>
 <dl class="docutils">
@@ -411,14 +411,14 @@ according to the program counter and increases the program counter.</dd>
 </ol>
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.add_register">
-<code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.add_register" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.add_register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new register in the <a class="reference internal" href="#registerinterface">RegisterInterface</a>.</p>
 <p>Invokes <a class="reference internal" href="#add-register">add_register</a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.do_cycle">
-<code class="descname">do_cycle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.do_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.do_cycle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">do_cycle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.do_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.do_cycle" title="Permalink to this definition">¶</a></dt>
 <dd><p id="do-cycle">Run one clock cycle of the <a class="reference internal" href="#id2">Processor</a>,
 works according to <a class="reference internal" href="#processor-phases">processor_phases</a>.</p>
 <p>Then all <code class="docutils literal"><span class="pre">on_cycle_callbacks</span></code>, <code class="docutils literal"><span class="pre">_refresh_pc</span></code> and <code class="docutils literal"><span class="pre">_refresh_ecr</span></code> are executed.</p>
@@ -430,28 +430,28 @@ works according to <a class="reference internal" href="#processor-phases">proces
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.register_command">
-<code class="descname">register_command</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.register_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_command" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_command</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.register_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_command" title="Permalink to this definition">¶</a></dt>
 <dd><p id="register-command">Register a Command in the Processor,
 the Command can now be executed by the Processor.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.register_device">
-<code class="descname">register_device</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.register_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_device" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_device</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.register_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a device in the device <a class="reference internal" href="#bus">BUS</a>.</p>
 <p>Invokes <a class="reference internal" href="#register-device">register_device</a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.register_memory_device">
-<code class="descname">register_memory_device</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.register_memory_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_memory_device" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_memory_device</code><span class="sig-paren">(</span><em>device</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.register_memory_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_memory_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a device in the memory <a class="reference internal" href="#bus">BUS</a>.</p>
 <p>Invokes <a class="reference internal" href="#register-device">register_device</a>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.register_on_cycle_callback">
-<code class="descname">register_on_cycle_callback</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.register_on_cycle_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_on_cycle_callback" title="Permalink to this definition">¶</a></dt>
+<code class="descname">register_on_cycle_callback</code><span class="sig-paren">(</span><em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.register_on_cycle_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_on_cycle_callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>A on cycle callback is executed in every clock cycle of the
 Processor. No on cycle callback modifies the state of the Processor directly,
 but it might cause an Interrupt.</p>
@@ -466,7 +466,7 @@ but fatal Errors may stop the engine.</p>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs <a class="reference internal" href="#do-cycle">do_cycle</a>, until either a stop bit in the <a class="reference internal" href="#ecr">ECR</a> is set (see <a class="reference internal" href="#enignecontrolbits">EnigneControlBits</a>),
 or if an Exception in <a class="reference internal" href="#do-cycle">do_cycle</a> occurs.</p>
 </dd></dl>
@@ -475,12 +475,12 @@ or if an Exception in <a class="reference internal" href="#do-cycle">do_cycle</a
 
 <dl class="class">
 <dt id="py_register_machine2.core.processor.RegisterInterface">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">RegisterInterface</code><span class="sig-paren">(</span><em>registers=[]</em>, <em>debug=0</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#RegisterInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">RegisterInterface</code><span class="sig-paren">(</span><em>registers=[]</em>, <em>debug=0</em>, <em>width=64</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#RegisterInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p id="registerinterface">Used by the Processor to perform read/write
 operations on the registers.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.processor.RegisterInterface.add_register">
-<code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#RegisterInterface.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.add_register" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#RegisterInterface.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.add_register" title="Permalink to this definition">¶</a></dt>
 <dd><p id="add-register">Adds the <a class="reference internal" href="#register">Register</a> <code class="docutils literal"><span class="pre">register</span></code> to the interface.</p>
 <p>Will raise a <a class="reference internal" href="#setuperror">SetupError</a> if the interface is locked (because it is running) or if
 there is already a Register with the name of the new Register or if
@@ -490,7 +490,7 @@ the number of Registers would exceed the size of the interface.</p>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.RegisterInterface.read">
-<code class="descname">read</code><span class="sig-paren">(</span><em>name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#RegisterInterface.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.read" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read</code><span class="sig-paren">(</span><em>name_or_index</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#RegisterInterface.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a word from the Register with the name <code class="docutils literal"><span class="pre">name_or_index</span></code> or with the index <code class="docutils literal"><span class="pre">name_or_index</span></code>.
 <code class="docutils literal"><span class="pre">name_or_index</span></code> hat to be either <code class="docutils literal"><span class="pre">str</span></code> or <code class="docutils literal"><span class="pre">int</span></code>. If the type of <code class="docutils literal"><span class="pre">name_or_index</span></code>
 is wrong an AttributeError will be raised.</p>
@@ -499,7 +499,7 @@ is wrong an AttributeError will be raised.</p>
 
 <dl class="method">
 <dt id="py_register_machine2.core.processor.RegisterInterface.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>name_or_index</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#RegisterInterface.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>name_or_index</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#RegisterInterface.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.RegisterInterface.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a word in the Register with the name <code class="docutils literal"><span class="pre">name_or_index</span></code> or with the index <code class="docutils literal"><span class="pre">name_or_index</span></code>.
 <code class="docutils literal"><span class="pre">name_or_index</span></code> hat to be either <code class="docutils literal"><span class="pre">str</span></code> or <code class="docutils literal"><span class="pre">int</span></code>. If the type of <code class="docutils literal"><span class="pre">name_or_index</span></code>
 is wrong an AttributeError will be raised.</p>
@@ -510,13 +510,13 @@ is wrong an AttributeError will be raised.</p>
 
 <dl class="exception">
 <dt id="py_register_machine2.core.processor.SIGSEGV">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SIGSEGV</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#SIGSEGV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SIGSEGV" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SIGSEGV</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#SIGSEGV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SIGSEGV" title="Permalink to this definition">¶</a></dt>
 <dd><p id="sigsegv">Raised if an invalid memory command or opcode occurs.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="py_register_machine2.core.processor.SetupError">
-<em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SetupError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#SetupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SetupError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SetupError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#SetupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SetupError" title="Permalink to this definition">¶</a></dt>
 <dd><p id="setuperror">Raised if the setup is invalid.</p>
 </dd></dl>
 
@@ -526,7 +526,7 @@ is wrong an AttributeError will be raised.</p>
 <p><strong>py_register_machine2.core.commands</strong>: Abstract Commands</p>
 <dl class="class">
 <dt id="py_register_machine2.core.commands.ArithmeticCommand">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">ArithmeticCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#ArithmeticCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArithmeticCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">ArithmeticCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#ArithmeticCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArithmeticCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p id="arithmeticcommand">Used for calculation commands, <code class="docutils literal"><span class="pre">numargs</span></code> is always 2,
 both arguments are Registers.</p>
 <p><em>Example</em>: The <code class="docutils literal"><span class="pre">add</span></code> command:</p>
@@ -536,7 +536,7 @@ both arguments are Registers.</p>
 </div>
 <dl class="method">
 <dt id="py_register_machine2.core.commands.ArithmeticCommand.exec">
-<code class="descname">exec</code><span class="sig-paren">(</span><em>operand1</em>, <em>operand2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#ArithmeticCommand.exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArithmeticCommand.exec" title="Permalink to this definition">¶</a></dt>
+<code class="descname">exec</code><span class="sig-paren">(</span><em>operand1</em>, <em>operand2</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#ArithmeticCommand.exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArithmeticCommand.exec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses two operands and performs a function on their content.:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">operand1</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="n">operand1</span><span class="p">,</span> <span class="n">operand2</span><span class="p">)</span>
 </pre></div>
@@ -547,7 +547,7 @@ both arguments are Registers.</p>
 
 <dl class="class">
 <dt id="py_register_machine2.core.commands.BaseCommand">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">BaseCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#BaseCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">BaseCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class for Commands.</p>
 <p>Every Command has to be derived from BaseCommand and provide the following functions:</p>
 <ul class="simple">
@@ -558,7 +558,7 @@ both arguments are Registers.</p>
 </ul>
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.exec">
-<code class="descname">exec</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#BaseCommand.exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.exec" title="Permalink to this definition">¶</a></dt>
+<code class="descname">exec</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.exec" title="Permalink to this definition">¶</a></dt>
 <dd><p id="exec">Exec will execute the Action of the Command.
 The method will be provided with <a class="reference internal" href="#numargs">numargs</a> arguments and
 might read/write data via the attributes <code class="docutils literal"><span class="pre">register_interface</span></code>,
@@ -568,21 +568,21 @@ using <a class="reference internal" href="#register-command">register_command</a
 
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.mnemonic">
-<code class="descname">mnemonic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#BaseCommand.mnemonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.mnemonic" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mnemonic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.mnemonic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.mnemonic" title="Permalink to this definition">¶</a></dt>
 <dd><p id="mnemonic">Returns the mnemonic of the command (<code class="docutils literal"><span class="pre">str</span></code>).
 Used by the Assembler and Disassembler.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.numargs">
-<code class="descname">numargs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#BaseCommand.numargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.numargs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">numargs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.numargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.numargs" title="Permalink to this definition">¶</a></dt>
 <dd><p id="numargs">Returns the number of needed arguments.
 Used in the <code class="docutils literal"><span class="pre">fetch-operands-phase</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.opcode">
-<code class="descname">opcode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#BaseCommand.opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.opcode" title="Permalink to this definition">¶</a></dt>
+<code class="descname">opcode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.opcode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.opcode" title="Permalink to this definition">¶</a></dt>
 <dd><p id="opcode">Returns the opcode of the command (<code class="docutils literal"><span class="pre">int</span></code>).
 Used by the Assembler and in the <code class="docutils literal"><span class="pre">decode-command-phase</span></code>.</p>
 </dd></dl>
@@ -591,7 +591,7 @@ Used by the Assembler and in the <code class="docutils literal"><span class="pre
 
 <dl class="class">
 <dt id="py_register_machine2.core.commands.FunctionCommand">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">FunctionCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/commands.html#FunctionCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.FunctionCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">FunctionCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#FunctionCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.FunctionCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p id="functioncommand">Provides a basic handle to create Commands.</p>
 <p>The argument <code class="docutils literal"><span class="pre">function</span></code> is a function with at least three arguments:</p>
 <ol class="arabic simple">

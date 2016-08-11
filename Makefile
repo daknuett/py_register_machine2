@@ -56,10 +56,12 @@ html: clean
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	sed -i -- 's/_static/static/g' $(BUILDDIR)/html/*.html
 	sed -i -- 's/_images/images/g' $(BUILDDIR)/html/*.html
-	rm -rf ./static ./images
+	sed -i -- 's/_modules/modules/g' $(BUILDDIR)/html/*.html
+	rm -rf ./static ./images ./modules
 	cp $(BUILDDIR)/html/*.html ./
 	mv $(BUILDDIR)/html/_static ./static/
 	mv $(BUILDDIR)/html/_images ./images/
+	mv $(BUILDDIR)/html/_modules ./modules/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
