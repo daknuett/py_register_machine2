@@ -38,7 +38,7 @@ class OutputRegister(parts.Register):
 
 	def write(self, word):
 		"""
-		.. _SOread:
+		.. _SOwrite:
 
 		Write the ``chr`` representation of ``word`` to the ``open_stream``.
 		
@@ -73,7 +73,7 @@ class StreamIORegister(parts.Register):
 		return self.value.getvalue()
 	def write(self, word):
 		"""
-		Works like SOread_.
+		Works like SOwrite_.
 		"""
 		self.value.setvalue(word)
 		try:

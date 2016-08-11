@@ -47,9 +47,12 @@ class BUS(object):
 		self._lock = False
 	def register_device(self, word_device):
 		"""
+		.. _register_device:
+
 		Register the WordDevice_ ``word_device`` in the bus
 		returns the start address of the device.
-		raises: BUSSetupError_
+
+		raises: BUSSetupError_, if the device cannot be registered.
 
 		"""
 		if(self._lock):

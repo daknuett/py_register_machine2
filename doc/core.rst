@@ -14,11 +14,6 @@ Memory
 .. automodule:: py_register_machine2.core.memory
    :members:
 
-Processor
-=========
-
-.. automodule:: py_register_machine2.core.processor
-   :members:
 
 Devices
 =======
@@ -31,4 +26,17 @@ Register
 ========
 
 .. automodule:: py_register_machine2.core.register
+   :members:
+
+Processor
+=========
+
+.. automodule:: py_register_machine2.core.processor
+   :members:
+
+
+Commands
+========
+
+.. automodule:: py_register_machine2.core.commands
    :members:
