@@ -1,0 +1,355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>py_register_machine2.core.parts &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../../static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../static/jquery.js"></script>
+    <script type="text/javascript" src="../../../static/underscore.js"></script>
+    <script type="text/javascript" src="../../../static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for py_register_machine2.core.parts</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">**py_register_machine2.core.parts**: Basic parts of the register machine</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="BUS"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS">[docs]</a><span class="k">class</span> <span class="nc">BUS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _BUS:</span>
+
+<span class="sd">	**The BUS object**</span>
+
+<span class="sd">	A BUS object connects the Processor with one or more </span>
+<span class="sd">	Memory alike operating devices (WordDevice_).</span>
+
+<span class="sd">	Before the BUS starts working, devices can be registered, the</span>
+<span class="sd">	address spaces of the devices are organized incremental::</span>
+
+<span class="sd">		d1 = WordDevice(4)</span>
+<span class="sd">		d2 = WordDevice(5)</span>
+<span class="sd">		d3 = WordDevice(19)</span>
+
+<span class="sd">		b = BUS()</span>
+<span class="sd">		addr1 = b.register_device(d1)</span>
+<span class="sd">		addr2 = b.register_device(d2)</span>
+<span class="sd">		addr3 = b.register_device(d3)</span>
+
+<span class="sd">		print( (addr1, addr2, addr3))</span>
+<span class="sd">		# (0, 4, 9)</span>
+<span class="sd">	</span>
+<span class="sd">	Once the BUS started working (a read/write operation has been used)</span>
+<span class="sd">	BUS.register_device will raise a BUSSetupError.</span>
+<span class="sd">	If the addresspace of the BUS is too small do hold a new device,</span>
+<span class="sd">	BUS.register_device will raise a BUSSetupError.</span>
+
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">max_addr</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">width</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">False</span>
+<div class="viewcode-block" id="BUS.register_device"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.register_device">[docs]</a>	<span class="k">def</span> <span class="nf">register_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_device</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _register_device:</span>
+
+<span class="sd">		Register the WordDevice_ ``word_device`` in the bus</span>
+<span class="sd">		returns the start address of the device.</span>
+
+<span class="sd">		raises: BUSSetupError_, if the device cannot be registered.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">BUSSetupError</span><span class="p">(</span><span class="s2">&quot;BUS already locked.&quot;</span><span class="p">)</span>
+		<span class="n">size</span> <span class="o">=</span> <span class="n">word_device</span><span class="o">.</span><span class="n">size</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span> <span class="o">+</span> <span class="n">size</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_addr</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">BUSSetupError</span><span class="p">(</span><span class="s2">&quot;Addresspace({}) would exceed width of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="o">+</span> <span class="n">size</span><span class="p">,</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">word_device</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span> <span class="o">+=</span> <span class="n">size</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">current_max_offset</span><span class="p">)]</span> <span class="o">=</span> <span class="n">device</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="BUS.read_word"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.read_word">[docs]</a>	<span class="k">def</span> <span class="nf">read_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _read_word:</span>
+
+<span class="sd">		Read one word from a device.</span>
+<span class="sd">		The offset is ``device_addr + device_offset``, e.g.::</span>
+
+<span class="sd">			offset = 3 # third word of the device</span>
+<span class="sd">			offset += addr2</span>
+<span class="sd">			b.read_word(offset)</span>
+<span class="sd">			# reads third word of d2.</span>
+
+<span class="sd">		May raise BUSError_, if the offset exceeds the address space.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>	
+		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">True</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">BUSError</span><span class="p">(</span><span class="s2">&quot;Offset({}) exceeds address space of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">))</span> 
+		<span class="k">for</span> <span class="n">addresspace</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">addresspace</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">])</span> </div>
+
+
+<div class="viewcode-block" id="BUS.write_word"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.write_word">[docs]</a>	<span class="k">def</span> <span class="nf">write_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _write_word:</span>
+
+<span class="sd">		Writes one word from a device,</span>
+<span class="sd">		see read_word_.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">True</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">BUSError</span><span class="p">(</span><span class="s2">&quot;Offset({}) exceeds address space of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">))</span> 
+		
+		<span class="k">for</span> <span class="n">addresspace</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">addresspace</span><span class="p">):</span>
+				<span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">],</span> <span class="n">word</span><span class="p">)</span> </div></div>
+
+<div class="viewcode-block" id="Integer"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer">[docs]</a><span class="k">class</span> <span class="nc">Integer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _Integer:</span>
+
+<span class="sd">	The register machine may have a special width.</span>
+<span class="sd">	This is handled by the Integer objects.</span>
+<span class="sd">	</span>
+<span class="sd">	Automatically truncates the value to the defined width.</span>
+
+<span class="sd">	Use setvalue_ and getvalue_ to access the value.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">width</span>
+
+
+<div class="viewcode-block" id="Integer.setvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.setvalue">[docs]</a>	<span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _setvalue:</span>
+
+<span class="sd">		Set the value of the Integer and truncate it</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span></div>
+<div class="viewcode-block" id="Integer.getvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.getvalue">[docs]</a>	<span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _getvalue:</span>
+
+<span class="sd">		Get the value of the Integer</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div></div>
+
+
+<div class="viewcode-block" id="WordDevice"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WordDevice">[docs]</a><span class="k">class</span> <span class="nc">WordDevice</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _WordDevice:</span>
+
+<span class="sd">	Base Device for the register machine.</span>
+<span class="sd">	The words have the width ``width`` and are stored in an</span>
+<span class="sd">	Integer_ object.</span>
+
+<span class="sd">	Values are accessed by read_ and write_</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="mb">0b11</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span> <span class="o">=</span> <span class="p">[</span><span class="n">Integer</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">)]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+<div class="viewcode-block" id="WordDevice.read"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WordDevice.read">[docs]</a>	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _read:</span>
+
+<span class="sd">		Returns the value of the memory word at ``offset``.</span>
+
+<span class="sd">		Might raise WriteOnlyError_, if the device is write-only.</span>
+<span class="sd">		Might raise AddressError_, if the offset exceeds the size of the device.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="mb">0b01</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">WriteOnlyError</span><span class="p">(</span><span class="s2">&quot;Device is Write-Only&quot;</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">AddressError</span><span class="p">(</span><span class="s2">&quot;Offset({}) not in address space({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="WordDevice.write"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WordDevice.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _write:</span>
+
+<span class="sd">		Writes the memory word at ``offset`` to ``value``.</span>
+
+<span class="sd">		Might raise ReadOnlyError_, if the device is read-only.</span>
+<span class="sd">		Might raise AddressError_, if the offset exceeds the size of the device.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">&amp;</span> <span class="mb">0b10</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ReadOnlyError</span><span class="p">(</span><span class="s2">&quot;Device is Read-Only&quot;</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">AddressError</span><span class="p">(</span><span class="s2">&quot;Offset({}) not in address space({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Register"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Register">[docs]</a><span class="k">class</span> <span class="nc">Register</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _Register:</span>
+
+<span class="sd">	Basically hold one value and permitt read/write operations.</span>
+<span class="sd">	There may be several subclasses, like Input/Output Register.</span>
+
+<span class="sd">	The name will be used by the assembler.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+
+
+<div class="viewcode-block" id="Register.read"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Register.read">[docs]</a>	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Return the content of the Register,</span>
+<span class="sd">		may execute a function</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Register.write"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Register.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Set the content of the Register,</span>
+<span class="sd">		may execute a function</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
+
+		
+		
+
+<div class="viewcode-block" id="BUSSetupError"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUSSetupError">[docs]</a><span class="k">class</span> <span class="nc">BUSSetupError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _BUSSetupError:</span>
+
+<span class="sd">	   raised by a BUS if the setup failed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BUSError"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUSError">[docs]</a><span class="k">class</span> <span class="nc">BUSError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _BUSError:</span>
+
+<span class="sd">	   raised by a BUS if an operation failed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReadOnlyError"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.ReadOnlyError">[docs]</a><span class="k">class</span> <span class="nc">ReadOnlyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _ReadOnlyError:</span>
+
+<span class="sd">	   raised by a device if it is read-only</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<div class="viewcode-block" id="WriteOnlyError"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WriteOnlyError">[docs]</a><span class="k">class</span> <span class="nc">WriteOnlyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _WriteOnlyError:</span>
+
+<span class="sd">	   raised by a device if it is write-only</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<div class="viewcode-block" id="AddressError"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.AddressError">[docs]</a><span class="k">class</span> <span class="nc">AddressError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _AddressError:</span>
+
+<span class="sd">	   raised by a device if the requested offset exceeds the size of the device</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -52,16 +52,18 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 .PHONY: html
-html: clean
+html: 
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	sed -i -- 's/_static/static/g' $(BUILDDIR)/html/*.html
 	sed -i -- 's/_images/images/g' $(BUILDDIR)/html/*.html
 	sed -i -- 's/_modules/modules/g' $(BUILDDIR)/html/*.html
-	rm -rf ./static ./images ./modules
+	sed -i -- 's/_static/static/g' $(BUILDDIR)/html/_modules/py_register_machine2/*/*.html
+	sed -i -- 's/_images/images/g' $(BUILDDIR)/html/_modules/py_register_machine2/*/*.html
+	sed -i -- 's/_modules/modules/g' $(BUILDDIR)/html/_modules/py_register_machine2/*/*.html
 	cp $(BUILDDIR)/html/*.html ./
-	mv $(BUILDDIR)/html/_static ./static/
-	mv $(BUILDDIR)/html/_images ./images/
-	mv $(BUILDDIR)/html/_modules ./modules/
+	cp $(BUILDDIR)/html/_static/* ./static/
+	cp $(BUILDDIR)/html/_images/* ./images/
+	cp -r $(BUILDDIR)/html/_modules/* ./modules/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
