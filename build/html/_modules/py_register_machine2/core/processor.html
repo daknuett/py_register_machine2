@@ -175,6 +175,10 @@
 
 <span class="sd">	**Special Register**</span>
 
+<span class="sd">	.. _PC:</span>
+
+<span class="sd">	.. _ECR:</span>
+
 <span class="sd">	0. The first Register (index 0) is the Program Counter(PC).</span>
 <span class="sd">	1. The second Register (index 1) is the Engine Control Register (ECR) take a look at EnigneControlBits_.</span>
 
@@ -291,6 +295,8 @@
 <span class="sd">		``do_cycle`` will wait until the right time for the next cycle.</span>
 
 <span class="sd">		If ``clock_barrier`` is set, ``do_cycle`` will perform the ``clock_barrier.wait()``.</span>
+
+<span class="sd">		Might raise SIGSEGV_, if there is an invalid opcode.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -314,7 +320,16 @@
 				<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">cycle_time</span>  <span class="o">-</span> <span class="p">(</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_cpu</span><span class="p">))</span>
 		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock_barrier</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">clock_barrier</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Processor.run"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.processor.Processor.run">[docs]</a>	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Runs do_cycle_, until either a stop bit in the ECR_ is set (see EnigneControlBits_),</span>
+<span class="sd">		or if an Exception in do_cycle_ occurs.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">do_cycle</span><span class="p">()</span>
+			<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ecr</span> <span class="o">&amp;</span> <span class="n">EnigneControlBits</span><span class="o">.</span><span class="n">engine_stop_bit</span><span class="p">):</span>
+				<span class="k">break</span></div></div>
 
 		
 
@@ -322,11 +337,20 @@
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	.. _SetupError:</span>
 <span class="sd">	</span>
-<span class="sd">	raised if the setup is invalid.</span>
+<span class="sd">	Raised if the setup is invalid.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="SIGSEGV"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.processor.SIGSEGV">[docs]</a><span class="k">class</span> <span class="nc">SIGSEGV</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _SIGSEGV:</span>
+<span class="sd">	</span>
+<span class="sd">	Raised if an invalid memory command or opcode occurs.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 </pre></div>
 
           </div>

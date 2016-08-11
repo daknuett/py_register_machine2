@@ -405,8 +405,8 @@ according to the program counter and increases the program counter.</dd>
 <dd>(optional) If there is a result this result is written to a register or the RAM or a device.</dd>
 </dl>
 <p><strong>Special Register</strong></p>
-<ol class="arabic simple" start="0">
-<li>The first Register (index 0) is the Program Counter(PC).</li>
+<ol class="arabic simple" id="ecr" start="0">
+<span id="pc"></span><li>The first Register (index 0) is the Program Counter(PC).</li>
 <li>The second Register (index 1) is the Engine Control Register (ECR) take a look at <a class="reference internal" href="#enignecontrolbits">EnigneControlBits</a>.</li>
 </ol>
 <dl class="method">
@@ -425,6 +425,7 @@ works according to <a class="reference internal" href="#processor-phases">proces
 <p>If <code class="docutils literal"><span class="pre">f_cpu</span></code> is set and the execution took not long enough,
 <code class="docutils literal"><span class="pre">do_cycle</span></code> will wait until the right time for the next cycle.</p>
 <p>If <code class="docutils literal"><span class="pre">clock_barrier</span></code> is set, <code class="docutils literal"><span class="pre">do_cycle</span></code> will perform the <code class="docutils literal"><span class="pre">clock_barrier.wait()</span></code>.</p>
+<p>Might raise <a class="reference internal" href="#sigsegv">SIGSEGV</a>, if there is an invalid opcode.</p>
 </dd></dl>
 
 <dl class="method">
@@ -461,6 +462,13 @@ but it might cause an Interrupt.</p>
 </div>
 <p>The return value of a callback is ignored and the callback must not raise Exceptions,
 but fatal Errors may stop the engine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.core.processor.Processor.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#Processor.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs <a class="reference internal" href="#do-cycle">do_cycle</a>, until either a stop bit in the <a class="reference internal" href="#ecr">ECR</a> is set (see <a class="reference internal" href="#enignecontrolbits">EnigneControlBits</a>),
+or if an Exception in <a class="reference internal" href="#do-cycle">do_cycle</a> occurs.</p>
 </dd></dl>
 
 </dd></dl>
@@ -501,9 +509,15 @@ is wrong an AttributeError will be raised.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="py_register_machine2.core.processor.SIGSEGV">
+<em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SIGSEGV</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#SIGSEGV"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SIGSEGV" title="Permalink to this definition">¶</a></dt>
+<dd><p id="sigsegv">Raised if an invalid memory command or opcode occurs.</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="py_register_machine2.core.processor.SetupError">
 <em class="property">exception </em><code class="descclassname">py_register_machine2.core.processor.</code><code class="descname">SetupError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/py_register_machine2/core/processor.html#SetupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.SetupError" title="Permalink to this definition">¶</a></dt>
-<dd><p id="setuperror">raised if the setup is invalid.</p>
+<dd><p id="setuperror">Raised if the setup is invalid.</p>
 </dd></dl>
 
 </div>

@@ -52,10 +52,11 @@ clean:
 	rm -rf $(BUILDDIR)/*
 
 .PHONY: html
-html:
+html: clean
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	sed -i -- 's/_static/static/g' $(BUILDDIR)/html/*.html
 	sed -i -- 's/_images/images/g' $(BUILDDIR)/html/*.html
+	rm -rf ./static ./images
 	cp $(BUILDDIR)/html/*.html ./
 	mv $(BUILDDIR)/html/_static ./static/
 	mv $(BUILDDIR)/html/_images ./images/
