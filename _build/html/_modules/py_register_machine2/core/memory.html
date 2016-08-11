@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>py_register_machine2.core.memory &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for py_register_machine2.core.memory</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+
+<span class="kn">from</span> <span class="nn">..core</span> <span class="kn">import</span> <span class="n">parts</span>
+
+
+<div class="viewcode-block" id="BUS"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.memory.BUS">[docs]</a><span class="k">class</span> <span class="nc">BUS</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">BUS</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	The processor&#39;s memory BUS, its devices are ROM and RAM.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="n">parts</span><span class="o">.</span><span class="n">BUS</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span><span class="p">)</span></div>
+	
+<div class="viewcode-block" id="ROM"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.memory.ROM">[docs]</a><span class="k">class</span> <span class="nc">ROM</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">WordDevice</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _ROM:</span>
+
+<span class="sd">	**The Read Only Memory Device** </span>
+
+<span class="sd">	of the register machine stores either the boot code (for big programs) or</span>
+<span class="sd">	the complete program, if the program is really small.</span>
+
+<span class="sd">	The ROM is attached to the same BUS as the RAM and **always** includes the</span>
+<span class="sd">	``offset 0``. The Program Counter (*PC*) of the Processor points to this word on powerup.</span>
+
+<span class="sd">	Because RAM and ROM are in the same address space the following formula defines the size of</span>
+<span class="sd">	RAM and ROM::</span>
+
+<span class="sd">		addr_space = 2 ** memorybus.width</span>
+<span class="sd">		ram.size + rom.size &lt; addr_space</span>
+
+<span class="sd">	A ``write`` call will raise ReadOnlyError_.</span>
+<span class="sd">	</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="n">parts</span><span class="o">.</span><span class="n">WordDevice</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="mb">0b01</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ROM.program_word"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.memory.ROM.program_word">[docs]</a>	<span class="k">def</span> <span class="nf">program_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _program_word:</span>
+
+<span class="sd">		Write the word ``word`` to the memory at offset ``offset``.</span>
+<span class="sd">		Used to write the boot code.</span>
+
+<span class="sd">		Might raise AddressError_, if the  offset exceeds the address space.</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">AddressError</span><span class="p">(</span><span class="s2">&quot;Offset({}) not in address space({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ROM.program"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.memory.ROM.program">[docs]</a>	<span class="k">def</span> <span class="nf">program</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prog</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _program:</span>
+
+<span class="sd">		Write the content of the iterable ``prog`` starting with the optional offset ``offset``</span>
+<span class="sd">		to the device.</span>
+
+<span class="sd">		Invokes program_word_.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">addr</span><span class="p">,</span> <span class="n">word</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">prog</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">program_word</span><span class="p">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">addr</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span></div></div>
+		
+
+<div class="viewcode-block" id="RAM"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.memory.RAM">[docs]</a><span class="k">class</span> <span class="nc">RAM</span><span class="p">(</span><span class="n">parts</span><span class="o">.</span><span class="n">WordDevice</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _RAM:</span>
+
+<span class="sd">	**The Random Access Memory Device**</span>
+
+<span class="sd">	By default the RAM device is filled with zeros. </span>
+<span class="sd">	After poweron the Bootcode in the ROM might perform read/write operations on the RAM.</span>
+<span class="sd">	If the register machine is to execute programs from the Flash device, this code</span>
+<span class="sd">	has to be copied into the RAM.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+		<span class="n">parts</span><span class="o">.</span><span class="n">WordDevice</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="mb">0b11</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
