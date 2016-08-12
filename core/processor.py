@@ -7,6 +7,17 @@ import time
 **py_register_machine2.core.processor**: The processor and his parts
 """
 
+class EnigneControlBits(object):
+	"""
+	.. _EnigneControlBits:
+
+	Container for the static engine controll bits.
+	Used by the Processor_ to handle his ECR.
+	"""
+	engine_stop_bit = 0b00001
+
+
+
 class RegisterInterface(object):
 	"""
 	.. _RegisterInterface:
@@ -113,7 +124,37 @@ class Processor(object):
 		(optional) If there is a result this result is written to a register or the RAM or a device.
 
 
-	The first register (index 0) is the Program Counter(pc).
+	**Special Register**
+
+	.. _PC:
+
+	.. _ECR:
+
+	.. _SP:
+
+	0. The first Register (index 0) is the Program Counter(PC).
+	1. The second Register (index 1) is the Engine Control Register (ECR) take a look at EnigneControlBits_.
+	2. The third Register (index 2) is the Stack Pointer (SP) and may be used for ``call``, ``ret``, ``push`` and ``pop``
+
+
+	.. _`internal constants`:
+
+	**Internal Constants**
+
+	Constants used by the Assembler, should be set using setup_done_
+	
+	``ROMEND_LOW``
+		First word of the ROM_ (always ``0``)
+	``ROMEND_HIGH`` 
+		Last word of the ROM_
+	``RAMEND_LOW``
+		First word of the RAM_, (``ROMEND_HIGH + rom.size``)
+	``RAMEND_HIGH``
+		Last word of the RAM_
+	``FLASH_START``
+		First word of the Flash_(always ``0``)
+	``FLASH_END``
+		Last word of the Flash_
 
 	"""
 	def __init__(self, f_cpu = None, width = 64,
@@ -123,6 +164,8 @@ class Processor(object):
 		self.register_interface = RegisterInterface(width = width, debug = debug)
 		# program counter
 		self.register_interface.add_register(register.Register("PC", width = width))
+		self.register_interface.add_register(register.Register("ECR", width = width))
+		self.register_interface.add_register(register.Register("SP", width = width))
 		self.f_cpu = f_cpu
 		self.clock_barrier = clock_barrier
 
@@ -131,7 +174,7 @@ class Processor(object):
 		self.interrupts = interrupts
 		self.debug = debug
 
-		commands_by_opcode = {}
+		self.commands_by_opcode = {}
 
 		if(f_cpu != None):
 			self.last_cycle = None
@@ -141,7 +184,10 @@ class Processor(object):
 			raise SetupError("Interrupts are not yet implemented")
 
 		self.pc = 0
+		self.ecr = 0
+		self.sp = 0
 		self.on_cycle_callbacks = []
+		self.comstants = {}
 
 	def _increase_pc(self):
 		self.pc += 1
@@ -149,13 +195,51 @@ class Processor(object):
 		self.pc = self.register_interface.read(0)
 	def _refresh_pc(self):
 		self.pc = self.register_interface.read(0)
+	def _refresh_ecr(self):
+		self.ecr = self.register_interface.read(1)
+	def _refresh_sp(self):
+		self.sp = self.register_interface.read(2)
 	def _fetch_at_pc(self):
 		opcode = self.memory_bus.read_word(self.pc)
 		self._increase_pc()
 		return opcode
+	def _set_sp(self, sp):
+		self.sp = sp
+		self.register_interface.write(2, sp)
 	def _execute_on_cycle_callbacks(self):
 		for callback in self.on_cycle_callbacks:
 			callback()
+	def setup_done(self):
+		"""
+		.. _setup_done:
+	
+		Finish the setup of the Processor.
+
+		This should be the last call before the Processor is used.
+		Sets the `internal constants`_ (used by the assembler) and
+		sets the Stack Pointer to RAMEND_HIGH, if there is a RAM attached.
+		If there is no RAM attached, SP will stay ``0``.
+
+		Might raise SetupError_.
+		"""
+		if(self.memory_bus.device_count() < 1):
+			raise SetupError("At least a ROM device has to be attached.")
+
+		rom = self.memory_bus.devices[0]
+		self.constants["ROMEND_HIGH"] = rom.size - 1
+		self.constants["ROMEND_LOW"] = 0
+
+		if(self.memory_bus.device_count() > 1):
+			ram = self.memory_bus.devices[1]
+			self.constants["RAMEND_HIGH"] = rom.size + ram.size - 1
+			self.constants["RAMEND_LOW"] = rom.size
+			self._set_sp(rom.size + ram.size - 1)
+		if(self.device_bus.device_count() > 0):
+			flash = self.device_bus.devices[0]
+			self.constants["FLASH_START"] = 0
+			self.constants["FLASH_END"] = flash.size - 1
+			
+
 	def register_on_cycle_callback(self, callback):
 		"""
 		A on cycle callback is executed in every clock cycle of the
@@ -217,15 +301,18 @@ class Processor(object):
 		Run one clock cycle of the Processor_,
 		works according to processor_phases_.
 
-		Then all ``on_cycle_callbacks`` and ``_refresh_pc`` are executed.
+		Then all ``on_cycle_callbacks`` are executed and the internal Registers are updated.
 
 		If ``f_cpu`` is set and the execution took not long enough,
 		``do_cycle`` will wait until the right time for the next cycle.
 
 		If ``clock_barrier`` is set, ``do_cycle`` will perform the ``clock_barrier.wait()``.
+
+		Might raise SIGSEGV_, if there is an invalid opcode.
 		"""
-		if(self.last_cycle == None):
-			self.last_cycle = time.time()
+		if(self.f_cpu != None):
+			if(self.last_cycle == None):
+				self.last_cycle = time.time()
 
 		opcode = self._fetch_at_pc()
 		if(not opcode in self.commands_by_opcode):
@@ -233,9 +320,10 @@ class Processor(object):
 		command = self.commands_by_opcode[opcode]
 		numargs = command.numargs()
 		args = [self._fetch_at_pc() for i in range(numargs)]
-		command.execute(*args)
+		command.exec(*args)
 
 		self._refresh_pc()
+		self._refresh_ecr()
 		self._execute_on_cycle_callbacks()
 
 		self.current_cycle = time.time()
@@ -246,6 +334,15 @@ class Processor(object):
 		if(self.clock_barrier != None):
 			self.clock_barrier.wait()
 		self.last_cycle = time.time()
+	def run(self):
+		"""
+		Runs do_cycle_, until either a stop bit in the ECR_ is set (see EnigneControlBits_),
+		or if an Exception in do_cycle_ occurs.
+		"""
+		while(1):
+			self.do_cycle()
+			if(self.ecr & EnigneControlBits.engine_stop_bit):
+				break
 
 		
 
@@ -253,8 +350,17 @@ class SetupError(Exception):
 	"""
 	.. _SetupError:
 	
-	raised if the setup is invalid.
+	Raised if the setup is invalid.
 	"""
 	def __init__(self, *args):
 		Exception.__init__(self, *args)
 
+
+class SIGSEGV(Exception):
+	"""
+	.. _SIGSEGV:
+	
+	Raised if an invalid memory command or opcode occurs.
+	"""
+	def __init__(self, *args):
+		Exception.__init__(self, *args)
