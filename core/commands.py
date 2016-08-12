@@ -129,7 +129,7 @@ class FunctionCommand(BaseCommand):
 			
 	"""
 	def __init__(self, mnemonic, opcode, numargs, function):
-		BaseCommand.__init__(self, mnemonic, numargs)
+		BaseCommand.__init__(self, mnemonic, opcode, numargs)
 		self.function = function
 
 	def exec(self, *args):
