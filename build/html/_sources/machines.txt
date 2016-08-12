@@ -7,3 +7,4 @@ Small Machines
 ==============
 
 .. automodule:: py_register_machine2.machines.small
+   :members:
