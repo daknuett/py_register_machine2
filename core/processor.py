@@ -187,7 +187,7 @@ class Processor(object):
 		self.ecr = 0
 		self.sp = 0
 		self.on_cycle_callbacks = []
-		self.comstants = {}
+		self.constants = {}
 
 	def _increase_pc(self):
 		self.pc += 1
@@ -197,6 +197,8 @@ class Processor(object):
 		self.pc = self.register_interface.read(0)
 	def _refresh_ecr(self):
 		self.ecr = self.register_interface.read(1)
+		if(self.debug > 5):
+			print("ECR: {}".format(bin(self.ecr)))
 	def _refresh_sp(self):
 		self.sp = self.register_interface.read(2)
 	def _fetch_at_pc(self):
@@ -263,7 +265,7 @@ class Processor(object):
 		the Command can now be executed by the Processor.
 		"""
 		if(command.opcode() in self.commands_by_opcode):
-			raise SetupError("Command with opcode {} already registered".format(command.opcode()))
+			raise SetupError("Command with opcode {}(mnemonic: {}) already registered".format(command.opcode(), command.mnemonic()))
 		command.membus = self.memory_bus
 		command.devbus = self.device_bus
 		command.register_interface = self.register_interface
@@ -320,10 +322,13 @@ class Processor(object):
 		command = self.commands_by_opcode[opcode]
 		numargs = command.numargs()
 		args = [self._fetch_at_pc() for i in range(numargs)]
+		if(self.debug > 2):
+			print("{}|EXEC: [{}] {} $ ".format(self.pc, opcode, command.mnemonic()), *args)
 		command.exec(*args)
 
 		self._refresh_pc()
 		self._refresh_ecr()
+		self._refresh_sp()
 		self._execute_on_cycle_callbacks()
 
 		self.current_cycle = time.time()

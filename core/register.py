@@ -44,9 +44,9 @@ class OutputRegister(parts.Register):
 		
 		If ``chr(word)`` fails due ``OverflowError``, a ``"?"`` will be written. 
 		"""
-		self.value.setvalue(word)
+		self.repr_.setvalue(word)
 		try:
-			self.open_stream.write(chr(self.value.getvalue()))
+			self.open_stream.write(chr(self.repr_.getvalue()))
 		except OverflowError:
 			self.open_stream.write("?")
 
@@ -69,13 +69,13 @@ class StreamIORegister(parts.Register):
 		Read a ``str`` from ``open_stream_in`` and convert it to an integer
 		using ``ord``. The result will be truncated according to Integer_.
 		"""
-		self.value.setvalue(ord(self.open_stream_in.read(1)))
+		self.repr_.setvalue(ord(self.open_stream_in.read(1)))
 		return self.value.getvalue()
 	def write(self, word):
 		"""
 		Works like SOwrite_.
 		"""
-		self.value.setvalue(word)
+		self.repr_.setvalue(word)
 		try:
 			self.open_stream.write(chr(self.value.getvalue()))
 		except OverflowError:
@@ -103,7 +103,7 @@ class BStreamIORegister(parts.Register):
 		(if available) and converts them to an ``int``. Returns this ``int``.
 		"""
 		int_ = bytes_to_int(self.open_stream_in.read(math.ceil(self.width / 8)), self.width)
-		self.value.setvalue(int_)
+		self.repr_.setvalue(int_)
 		return self.value.getvalue()
 
 	def write(self, word):
