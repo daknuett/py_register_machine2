@@ -113,7 +113,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">word_device</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span>
 		<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span> <span class="o">+=</span> <span class="n">size</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">current_max_offset</span><span class="p">)]</span> <span class="o">=</span> <span class="n">device</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">)]</span> <span class="o">=</span> <span class="n">word_device</span>
 		<span class="k">return</span> <span class="n">res</span></div>
 
 <div class="viewcode-block" id="BUS.read_word"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.read_word">[docs]</a>	<span class="k">def</span> <span class="nf">read_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
@@ -136,6 +136,9 @@
 			<span class="k">raise</span> <span class="n">BUSError</span><span class="p">(</span><span class="s2">&quot;Offset({}) exceeds address space of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">))</span> 
 		<span class="k">for</span> <span class="n">addresspace</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">addresspace</span><span class="p">):</span>
+				<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">):</span>
+					<span class="k">print</span><span class="p">(</span><span class="s2">&quot;BUS::read({}) | startaddress({})&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">],</span>
+								<span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">])))</span>
 				<span class="k">return</span> <span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">])</span> </div>
 
 
@@ -166,9 +169,9 @@
 <span class="sd">	Use setvalue_ and getvalue_ to access the value.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">width</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span>
 
 
 <div class="viewcode-block" id="Integer.setvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.setvalue">[docs]</a>	<span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -177,14 +180,16 @@
 
 <span class="sd">		Set the value of the Integer and truncate it</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">))):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span></div>
 <div class="viewcode-block" id="Integer.getvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.getvalue">[docs]</a>	<span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _getvalue:</span>
 
 <span class="sd">		Get the value of the Integer</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span></div></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span></div></div>
 
 
 <div class="viewcode-block" id="WordDevice"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WordDevice">[docs]</a><span class="k">class</span> <span class="nc">WordDevice</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>

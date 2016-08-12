@@ -24,7 +24,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
-    <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
+    <link rel="next" title="Commands" href="commands.html" />
     <link rel="prev" title="Overview" href="overview.html" /> 
   </head>
   <body role="document">
@@ -38,7 +38,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="developer_guide.html" title="Developer’s Guide"
+          <a href="commands.html" title="Commands"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="overview.html" title="Overview"
@@ -405,9 +405,10 @@ according to the program counter and increases the program counter.</dd>
 <dd>(optional) If there is a result this result is written to a register or the RAM or a device.</dd>
 </dl>
 <p><strong>Special Register</strong></p>
-<ol class="arabic simple" id="ecr" start="0">
-<span id="pc"></span><li>The first Register (index 0) is the Program Counter(PC).</li>
+<ol class="arabic simple" id="sp" start="0">
+<span id="ecr"></span><span id="pc"></span><li>The first Register (index 0) is the Program Counter(PC).</li>
 <li>The second Register (index 1) is the Engine Control Register (ECR) take a look at <a class="reference internal" href="#enignecontrolbits">EnigneControlBits</a>.</li>
+<li>The third Register (index 2) is the Stack Pointer (SP) and may be used for <code class="docutils literal"><span class="pre">call</span></code>, <code class="docutils literal"><span class="pre">ret</span></code>, <code class="docutils literal"><span class="pre">push</span></code> and <code class="docutils literal"><span class="pre">pop</span></code></li>
 </ol>
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.add_register">
@@ -421,7 +422,7 @@ according to the program counter and increases the program counter.</dd>
 <code class="descname">do_cycle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.do_cycle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.do_cycle" title="Permalink to this definition">¶</a></dt>
 <dd><p id="do-cycle">Run one clock cycle of the <a class="reference internal" href="#id2">Processor</a>,
 works according to <a class="reference internal" href="#processor-phases">processor_phases</a>.</p>
-<p>Then all <code class="docutils literal"><span class="pre">on_cycle_callbacks</span></code>, <code class="docutils literal"><span class="pre">_refresh_pc</span></code> and <code class="docutils literal"><span class="pre">_refresh_ecr</span></code> are executed.</p>
+<p>Then all <code class="docutils literal"><span class="pre">on_cycle_callbacks</span></code> are executed and the internal Registers are updated.</p>
 <p>If <code class="docutils literal"><span class="pre">f_cpu</span></code> is set and the execution took not long enough,
 <code class="docutils literal"><span class="pre">do_cycle</span></code> will wait until the right time for the next cycle.</p>
 <p>If <code class="docutils literal"><span class="pre">clock_barrier</span></code> is set, <code class="docutils literal"><span class="pre">do_cycle</span></code> will perform the <code class="docutils literal"><span class="pre">clock_barrier.wait()</span></code>.</p>
@@ -648,8 +649,8 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
   <p class="topless"><a href="overview.html"
                         title="previous chapter">Overview</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="developer_guide.html"
-                        title="next chapter">Developer&#8217;s Guide</a></p>
+  <p class="topless"><a href="commands.html"
+                        title="next chapter">Commands</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -684,7 +685,7 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="developer_guide.html" title="Developer’s Guide"
+          <a href="commands.html" title="Commands"
              >next</a> |</li>
         <li class="right" >
           <a href="overview.html" title="Overview"

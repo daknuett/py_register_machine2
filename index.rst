@@ -13,6 +13,7 @@ Contents:
 
    overview
    core
+   commands
    developer_guide
 
 

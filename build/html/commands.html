@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Commands &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
+    <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
+    <link rel="prev" title="py_register_machine2.core" href="core.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="py_register_machine2.core"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="commands">
+<h1>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-py_register_machine2.commands.basic_commands">
+<span id="basic-commands"></span><h2>Basic Commands<a class="headerlink" href="#module-py_register_machine2.commands.basic_commands" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.commands.basic_commands</strong>: The most important commands</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="12%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">mnemonic</th>
+<th class="head">opcode</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mov a b</td>
+<td>0x01</td>
+<td>copy content from register a to register b <a class="footnote-reference" href="#id10" id="id1">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>ld a b</td>
+<td>0x02</td>
+<td>load from address in register a to register b <a class="footnote-reference" href="#id10" id="id2">[1]</a></td>
+</tr>
+<tr class="row-even"><td>st a b</td>
+<td>0x03</td>
+<td>store register a to address in register b <a class="footnote-reference" href="#id10" id="id3">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>ldi a b</td>
+<td>0x04</td>
+<td>load from a into register b <a class="footnote-reference" href="#id10" id="id4">[1]</a></td>
+</tr>
+<tr class="row-even"><td>sti a b</td>
+<td>0x05</td>
+<td>store from a into register b <a class="footnote-reference" href="#id10" id="id5">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>add a b</td>
+<td>0x06</td>
+<td>b = a + b</td>
+</tr>
+<tr class="row-even"><td>sub a b</td>
+<td>0x07</td>
+<td>b = a - b</td>
+</tr>
+<tr class="row-odd"><td>mul a b</td>
+<td>0x08</td>
+<td>b = a * b</td>
+</tr>
+<tr class="row-even"><td>div a b</td>
+<td>0x09</td>
+<td>b = a / b (integer division)</td>
+</tr>
+<tr class="row-odd"><td>jmp a</td>
+<td>0x0a</td>
+<td>pc = pc + a - 2 <a class="footnote-reference" href="#id12" id="id6">[3]</a></td>
+</tr>
+<tr class="row-even"><td>in a b</td>
+<td>0x0b</td>
+<td>read from address in register a to register b <a class="footnote-reference" href="#id11" id="id7">[2]</a></td>
+</tr>
+<tr class="row-odd"><td>out a b</td>
+<td>0x0c</td>
+<td>write register a to address in register b <a class="footnote-reference" href="#id11" id="id8">[2]</a></td>
+</tr>
+<tr class="row-even"><td>inc a</td>
+<td>0x0d</td>
+<td>increase register a</td>
+</tr>
+<tr class="row-odd"><td>dec a</td>
+<td>0x0f</td>
+<td>decrease register a</td>
+</tr>
+<tr class="row-even"><td>jne a b</td>
+<td>0x10</td>
+<td>if a != 0: pc += b - 3 <a class="footnote-reference" href="#id12" id="id9">[3]</a></td>
+</tr>
+<tr class="row-odd"><td>jeq a b</td>
+<td>0x11</td>
+<td>if a == 0: pc += b - 3</td>
+</tr>
+<tr class="row-even"><td>jle a b</td>
+<td>0x12</td>
+<td>if a &lt;= 0: pc += b - 3</td>
+</tr>
+<tr class="row-odd"><td>jlt a b</td>
+<td>0x13</td>
+<td>if a &lt; 0: pc += b - 3</td>
+</tr>
+<tr class="row-even"><td>jge a b</td>
+<td>0x14</td>
+<td>if a &gt;= 0: pc += b - 3</td>
+</tr>
+<tr class="row-odd"><td>jgt a b</td>
+<td>0x15</td>
+<td>if a &gt; 0: pc += b - 3</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id3">3</a>, <a class="fn-backref" href="#id4">4</a>, <a class="fn-backref" href="#id5">5</a>)</em> stores and loads to/from the memory BUS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id7">1</a>, <a class="fn-backref" href="#id8">2</a>)</em> reads and writes from/to the device BUS</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> both the fetch opcode and fetch arguments increases the PC, so we need to undo this.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Commands</a><ul>
+<li><a class="reference internal" href="#module-py_register_machine2.commands.basic_commands">Basic Commands</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="previous chapter">py_register_machine2.core</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer_guide.html"
+                        title="next chapter">Developer&#8217;s Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/commands.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="py_register_machine2.core"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
