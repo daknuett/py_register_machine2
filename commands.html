@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Commands &mdash; py_register_machine2 0.0.1a documentation</title>
+    <title>py_register_machine2.commands &mdash; py_register_machine2 0.0.1a documentation</title>
     
     <link rel="stylesheet" href="static/classic.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -52,8 +52,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="commands">
-<h1>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="py-register-machine2-commands">
+<h1>py_register_machine2.commands<a class="headerlink" href="#py-register-machine2-commands" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-py_register_machine2.commands.basic_commands">
 <span id="basic-commands"></span><h2>Basic Commands<a class="headerlink" href="#module-py_register_machine2.commands.basic_commands" title="Permalink to this headline">¶</a></h2>
 <p><strong>py_register_machine2.commands.basic_commands</strong>: The most important commands</p>
@@ -74,19 +74,19 @@
 <td>0x01</td>
 <td>copy content from register a to register b <a class="footnote-reference" href="#id10" id="id1">[1]</a></td>
 </tr>
-<tr class="row-odd"><td>ld a b</td>
+<tr class="row-odd"><td>pld a b</td>
 <td>0x02</td>
 <td>load from address in register a to register b <a class="footnote-reference" href="#id10" id="id2">[1]</a></td>
 </tr>
-<tr class="row-even"><td>st a b</td>
+<tr class="row-even"><td>pst a b</td>
 <td>0x03</td>
 <td>store register a to address in register b <a class="footnote-reference" href="#id10" id="id3">[1]</a></td>
 </tr>
-<tr class="row-odd"><td>ldi a b</td>
+<tr class="row-odd"><td>ld  a b</td>
 <td>0x04</td>
 <td>load from a into register b <a class="footnote-reference" href="#id10" id="id4">[1]</a></td>
 </tr>
-<tr class="row-even"><td>sti a b</td>
+<tr class="row-even"><td>st  a b</td>
 <td>0x05</td>
 <td>store from a into register b <a class="footnote-reference" href="#id10" id="id5">[1]</a></td>
 </tr>
@@ -150,6 +150,10 @@
 <td>0x15</td>
 <td>if a &gt; 0: pc += b - 3</td>
 </tr>
+<tr class="row-even"><td>ldi a b</td>
+<td>0x16</td>
+<td>Load immediate a into Register b</td>
+</tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
@@ -170,6 +174,7 @@
 <tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id6">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> both the fetch opcode and fetch arguments increases the PC, so we need to undo this.</td></tr>
 </tbody>
 </table>
+<p>A list of all commands is <code class="docutils literal"><span class="pre">basic_commands</span></code>.</p>
 </div>
 </div>
 
@@ -181,7 +186,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Commands</a><ul>
+<li><a class="reference internal" href="#">py_register_machine2.commands</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.commands.basic_commands">Basic Commands</a></li>
 </ul>
 </li>

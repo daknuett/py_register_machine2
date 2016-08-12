@@ -185,6 +185,26 @@
 <span class="sd">	1. The second Register (index 1) is the Engine Control Register (ECR) take a look at EnigneControlBits_.</span>
 <span class="sd">	2. The third Register (index 2) is the Stack Pointer (SP) and may be used for ``call``, ``ret``, ``push`` and ``pop``</span>
 
+
+<span class="sd">	.. _`internal constants`:</span>
+
+<span class="sd">	**Internal Constants**</span>
+
+<span class="sd">	Constants used by the Assembler, should be set using setup_done_</span>
+<span class="sd">	</span>
+<span class="sd">	``ROMEND_LOW``</span>
+<span class="sd">		First word of the ROM_ (always ``0``)</span>
+<span class="sd">	``ROMEND_HIGH`` </span>
+<span class="sd">		Last word of the ROM_</span>
+<span class="sd">	``RAMEND_LOW``</span>
+<span class="sd">		First word of the RAM_, (``ROMEND_HIGH + rom.size``)</span>
+<span class="sd">	``RAMEND_HIGH``</span>
+<span class="sd">		Last word of the RAM_</span>
+<span class="sd">	``FLASH_START``</span>
+<span class="sd">		First word of the Flash_(always ``0``)</span>
+<span class="sd">	``FLASH_END``</span>
+<span class="sd">		Last word of the Flash_</span>
+
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_cpu</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
 			<span class="n">interrupts</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">clock_barrier</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -216,6 +236,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">ecr</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_cycle_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="p">{}</span>
 
 	<span class="k">def</span> <span class="nf">_increase_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">pc</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -225,15 +246,51 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">pc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">_refresh_ecr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">ecr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">):</span>
+			<span class="k">print</span><span class="p">(</span><span class="s2">&quot;ECR: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ecr</span><span class="p">)))</span>
 	<span class="k">def</span> <span class="nf">_refresh_sp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">_fetch_at_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="n">opcode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span><span class="o">.</span><span class="n">read_word</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pc</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_increase_pc</span><span class="p">()</span>
 		<span class="k">return</span> <span class="n">opcode</span>
+	<span class="k">def</span> <span class="nf">_set_sp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sp</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sp</span><span class="p">)</span>
 	<span class="k">def</span> <span class="nf">_execute_on_cycle_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_cycle_callbacks</span><span class="p">:</span>
 			<span class="n">callback</span><span class="p">()</span>
+<div class="viewcode-block" id="Processor.setup_done"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.processor.Processor.setup_done">[docs]</a>	<span class="k">def</span> <span class="nf">setup_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _setup_done:</span>
+<span class="sd">	</span>
+<span class="sd">		Finish the setup of the Processor.</span>
+
+<span class="sd">		This should be the last call before the Processor is used.</span>
+<span class="sd">		Sets the `internal constants`_ (used by the assembler) and</span>
+<span class="sd">		sets the Stack Pointer to RAMEND_HIGH, if there is a RAM attached.</span>
+<span class="sd">		If there is no RAM attached, SP will stay ``0``.</span>
+
+<span class="sd">		Might raise SetupError_.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">SetupError</span><span class="p">(</span><span class="s2">&quot;At least a ROM device has to be attached.&quot;</span><span class="p">)</span>
+
+		<span class="n">rom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;ROMEND_HIGH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;ROMEND_LOW&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="n">ram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;RAMEND_HIGH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">ram</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;RAMEND_LOW&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rom</span><span class="o">.</span><span class="n">size</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_set_sp</span><span class="p">(</span><span class="n">rom</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="n">ram</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_bus</span><span class="o">.</span><span class="n">device_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+			<span class="n">flash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_bus</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;FLASH_START&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s2">&quot;FLASH_END&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flash</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span></div>
+			
+
 <div class="viewcode-block" id="Processor.register_on_cycle_callback"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.processor.Processor.register_on_cycle_callback">[docs]</a>	<span class="k">def</span> <span class="nf">register_on_cycle_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		A on cycle callback is executed in every clock cycle of the</span>
@@ -257,7 +314,7 @@
 <span class="sd">		the Command can now be executed by the Processor.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">if</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">opcode</span><span class="p">()</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_by_opcode</span><span class="p">):</span>
-			<span class="k">raise</span> <span class="n">SetupError</span><span class="p">(</span><span class="s2">&quot;Command with opcode {} already registered&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">opcode</span><span class="p">()))</span>
+			<span class="k">raise</span> <span class="n">SetupError</span><span class="p">(</span><span class="s2">&quot;Command with opcode {}(mnemonic: {}) already registered&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">opcode</span><span class="p">(),</span> <span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">()))</span>
 		<span class="n">command</span><span class="o">.</span><span class="n">membus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_bus</span>
 		<span class="n">command</span><span class="o">.</span><span class="n">devbus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_bus</span>
 		<span class="n">command</span><span class="o">.</span><span class="n">register_interface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span>
@@ -314,10 +371,13 @@
 		<span class="n">command</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands_by_opcode</span><span class="p">[</span><span class="n">opcode</span><span class="p">]</span>
 		<span class="n">numargs</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">numargs</span><span class="p">()</span>
 		<span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_fetch_at_pc</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">numargs</span><span class="p">)]</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+			<span class="k">print</span><span class="p">(</span><span class="s2">&quot;{}|EXEC: [{}] {} $ &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pc</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">()),</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 		<span class="n">command</span><span class="o">.</span><span class="k">exec</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">_refresh_pc</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_refresh_ecr</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_refresh_sp</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_execute_on_cycle_callbacks</span><span class="p">()</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">current_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>

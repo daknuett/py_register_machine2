@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>py_register_machine2.machines &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
+    <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
+    <link rel="prev" title="py_register_machine2.commands" href="commands.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="commands.html" title="py_register_machine2.commands"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="py-register-machine2-machines">
+<h1>py_register_machine2.machines<a class="headerlink" href="#py-register-machine2-machines" title="Permalink to this headline">¶</a></h1>
+<p>A collection of register machines in different states of configuration.</p>
+<div class="section" id="module-py_register_machine2.machines.small">
+<span id="small-machines"></span><h2>Small Machines<a class="headerlink" href="#module-py_register_machine2.machines.small" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.machines.small</strong>: a collection of small ready to use register machines</p>
+<p><strong>About Register Machine Definitions</strong></p>
+<p>All Register Machine Definitions are functions that take at least <code class="docutils literal"><span class="pre">0</span></code> arguments and return
+a <code class="docutils literal"><span class="pre">tuple</span></code> with length <code class="docutils literal"><span class="pre">4</span></code>: <code class="docutils literal"><span class="pre">(Processor,</span> <span class="pre">ROM,</span> <span class="pre">RAM,</span> <span class="pre">Flash)</span></code></p>
+<p><em>Example</em>: a simple Register Machine:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_machine2.core</span> <span class="kn">import</span> <span class="n">memory</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">register</span><span class="p">,</span> <span class="n">device</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.commands.basic_commands</span> <span class="kn">import</span> <span class="n">basic_commands</span>
+<span class="k">def</span> <span class="nf">simple_register_machine</span><span class="p">():</span>
+        <span class="n">rom</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">ROM</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+        <span class="n">ram</span> <span class="o">=</span> <span class="n">memory</span><span class="o">.</span><span class="n">RAM</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
+        <span class="n">flash</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">Flash</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">Processor</span><span class="p">()</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">register_memory_device</span><span class="p">(</span><span class="n">rom</span><span class="p">)</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">register_memory_device</span><span class="p">(</span><span class="n">ram</span><span class="p">)</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">register_device</span><span class="p">(</span><span class="n">flash</span><span class="p">)</span>
+
+        <span class="n">r0</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">Register</span><span class="p">(</span><span class="s2">&quot;r0&quot;</span><span class="p">)</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">Register</span><span class="p">(</span><span class="s2">&quot;r1&quot;</span><span class="p">)</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;r2&quot;</span><span class="p">)</span>
+        <span class="n">r3</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">Register</span><span class="p">(</span><span class="s2">&quot;r3&quot;</span><span class="p">)</span>
+        <span class="n">r4</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">Register</span><span class="p">(</span><span class="s2">&quot;r4&quot;</span><span class="p">)</span>
+        <span class="n">r5</span> <span class="o">=</span> <span class="n">register</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;r5&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="p">(</span><span class="n">r0</span><span class="p">,</span> <span class="n">r1</span><span class="p">,</span> <span class="n">r2</span><span class="p">,</span> <span class="n">r3</span><span class="p">,</span> <span class="n">r4</span><span class="p">,</span> <span class="n">r5</span><span class="p">):</span>
+                <span class="n">proc</span><span class="o">.</span><span class="n">add_register</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">basic_commands</span><span class="p">:</span>
+                <span class="n">proc</span><span class="o">.</span><span class="n">register_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">py_register_machine2.machines</a><ul>
+<li><a class="reference internal" href="#module-py_register_machine2.machines.small">Small Machines</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="commands.html"
+                        title="previous chapter">py_register_machine2.commands</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer_guide.html"
+                        title="next chapter">Developer&#8217;s Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/machines.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="commands.html" title="py_register_machine2.commands"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

@@ -1,5 +1,5 @@
-Commands
-********
+py_register_machine2.commands
+*****************************
 
 Basic Commands
 ==============

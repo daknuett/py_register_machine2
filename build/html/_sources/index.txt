@@ -14,6 +14,7 @@ Contents:
    overview
    core
    commands
+   machines
    developer_guide
 
 

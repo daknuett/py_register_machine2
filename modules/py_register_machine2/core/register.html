@@ -93,9 +93,9 @@
 <span class="sd">		</span>
 <span class="sd">		If ``chr(word)`` fails due ``OverflowError``, a ``&quot;?&quot;`` will be written. </span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
 		<span class="k">try</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()))</span>
 		<span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span></div></div>
 
@@ -118,13 +118,13 @@
 <span class="sd">		Read a ``str`` from ``open_stream_in`` and convert it to an integer</span>
 <span class="sd">		using ``ord``. The result will be truncated according to Integer_.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_stream_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_stream_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 <div class="viewcode-block" id="StreamIORegister.write"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.register.StreamIORegister.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Works like SOwrite_.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
 		<span class="k">try</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()))</span>
 		<span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
@@ -152,7 +152,7 @@
 <span class="sd">		(if available) and converts them to an ``int``. Returns this ``int``.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">int_</span> <span class="o">=</span> <span class="n">bytes_to_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">open_stream_in</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">int_</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">repr_</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">int_</span><span class="p">)</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BStreamIORegister.write"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.register.BStreamIORegister.write">[docs]</a>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
