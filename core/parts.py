@@ -42,6 +42,7 @@ class BUS(object):
 		self.max_addr = 2 ** width
 		self.start_addresses = {}
 		self.index = {}
+		self.devices = []
 		self.current_max_offset = 0
 		self.debug = debug
 		self._lock = False
@@ -64,7 +65,8 @@ class BUS(object):
 		self.start_addresses[word_device] = self.current_max_offset
 		res = self.current_max_offset
 		self.current_max_offset += size
-		self.index[range(res, current_max_offset)] = device
+		self.index[range(res, self.current_max_offset)] = word_device
+		self.devices.append(word_device)
 		return res
 
 	def read_word(self, offset):
@@ -87,6 +89,9 @@ class BUS(object):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
 		for addresspace, device in self.index.items():
 			if(offset in addresspace):
+				if(self.debug > 5):
+					print("BUS::read({}) | startaddress({})> {}".format(offset, self.start_addresses[device],
+								device.read(offset - self.start_addresses[device])))
 				return device.read(offset - self.start_addresses[device]) 
 
 
@@ -104,6 +109,8 @@ class BUS(object):
 		for addresspace, device in self.index.items():
 			if(offset in addresspace):
 				device.write(offset - self.start_addresses[device], word) 
+	def device_count(self):
+		return len(self.start_addresses)
 
 class Integer(object):
 	"""
@@ -114,28 +121,65 @@ class Integer(object):
 	
 	Automatically truncates the value to the defined width.
 
-	Use setvalue_ and getvalue_ to access the value.
+	Use setvalue_ and getvalue_ or setuvalue_ and getuvalue_ to access the value.
+
+	Uses a bitset internally.
 	"""
 	def __init__(self, value = 0, width = 64):
-		self.value = 0
+		self.bitset = [0] * width
 		self.width = width
-		self.mask = 2 ** width
+		self.mask = 2 ** width - 1
+		self.setvalue(value)
 
 
 	def setvalue(self, value):
 		"""
 		.. _setvalue:
 
-		Set the value of the Integer and truncate it
+		Set the signed value of the Integer, truncate it and handle Overflows.
 		"""
-		self.value = value & self.mask
+		if(value < 0):
+			self.bitset[-1] = 1
+		else:
+			self.bitset[-1] = 0
+
+		for shift in range(self.width - 1):
+			self.bitset[shift] = (value & (1 << shift)) >> shift
+		self.bitset[-1] |= (value & (1 << self.width)) >> self.width
 	def getvalue(self):
 		"""
 		.. _getvalue:
 
-		Get the value of the Integer
+		Get the signed value of the Integer.
 		"""
-		return self.value
+
+		value = 0
+		for shift, bit in enumerate(self.bitset[:-1]):
+			value += bit << shift
+		if(self.bitset[-1]):
+			value *= -1
+		return value
+
+	def setuvalue(self, value):
+		"""
+		.. _setuvalue:
+
+		Set the unsigned value of the Integer, truncate it and handle Overflows.
+		"""
+		for shift in range(self.width):
+			self.bitset[shift] = (value & (1 << shift)) >> shift
+	def getuvalue(self):
+		"""
+		.. _getuvalue:
+
+		Get the ansigned value of the Integer.
+		"""
+
+		value = 0
+		for shift, bit in enumerate( self.bitset):
+			value += bit << shift
+
+		return value
 
 
 class WordDevice(object):
