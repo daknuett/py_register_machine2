@@ -14,7 +14,7 @@ class EnigneControlBits(object):
 	Container for the static engine controll bits.
 	Used by the Processor_ to handle his ECR.
 	"""
-	engine_stop_bit = 0b00001
+	engine_stop_bit = 0b00000001
 
 
 
@@ -156,6 +156,10 @@ class Processor(object):
 	``FLASH_END``
 		Last word of the Flash_
 
+	**Cycles**
+	
+	The number of cycles can be observed by acessing the ``cycles``variable.
+
 	"""
 	def __init__(self, f_cpu = None, width = 64,
 			interrupts = False, clock_barrier = None, debug = 0):
@@ -188,6 +192,7 @@ class Processor(object):
 		self.sp = 0
 		self.on_cycle_callbacks = []
 		self.constants = {}
+		self.cycles = 0
 
 	def _increase_pc(self):
 		self.pc += 1
@@ -336,9 +341,10 @@ class Processor(object):
 			cycle_time = self.current_cycle - self.last_cycle
 			if(cycle_time < ( 1 / self.f_cpu)):
 				time.sleep(cycle_time  - ( 1 / self.f_cpu))
+			self.last_cycle = time.time()
 		if(self.clock_barrier != None):
 			self.clock_barrier.wait()
-		self.last_cycle = time.time()
+		self.cycles += 1
 	def run(self):
 		"""
 		Runs do_cycle_, until either a stop bit in the ECR_ is set (see EnigneControlBits_),

@@ -16,12 +16,14 @@ class BaseCommand(object):
 	* numargs_
 	* mnemonic_
 	* opcode_
+	* argtypes_
 
 	"""
-	def __init__(self, mnemonic, opcode, numargs):
+	def __init__(self, mnemonic, opcode, numargs, argtypes):
 		self._mnemonic = mnemonic
 		self._opcode = opcode
 		self._numargs = numargs
+		self._argtypes = argtypes
 		self.register_interface = None
 		self.membus = None
 		self.devbus = None
@@ -62,6 +64,17 @@ class BaseCommand(object):
 		"""
 		return self._opcode
 
+	def argtypes(self):
+		"""
+		.. _argtypes:
+
+		Return a list of strings defining the argument types,
+		i.e.::
+
+			["register", "register"]
+		"""
+		return self._argtypes
+
 class ArithmeticCommand(BaseCommand):
 	"""
 	.. _ArithmeticCommand:
@@ -77,7 +90,7 @@ class ArithmeticCommand(BaseCommand):
 	
 	"""
 	def __init__(self, mnemonic, opcode, function):
-		BaseCommand.__init__(self, mnemonic, opcode, 2)
+		BaseCommand.__init__(self, mnemonic, opcode, 2, ["register", "register"])
 		self.function = function
 
 	def exec(self, operand1, operand2):
@@ -119,17 +132,17 @@ class FunctionCommand(BaseCommand):
 			word = memory_BUS.read_word(from_)
 			register_interface.write(to, word)
 		
-		ld_command = FunctionCommand("ld", 34, 2, ld_function)
+		ld_command = FunctionCommand("ld", 34, 2, ld_function, ["const", "register"])
 			
 	*Example*: ``nop`` Command::
 
 		def nop_function(register_interface, memory_BUS, device_BUS):
 			return
-		nop_command = FunctionCommand("nop", 36, 0, nop_function)
+		nop_command = FunctionCommand("nop", 36, 0, nop_function, [])
 			
 	"""
-	def __init__(self, mnemonic, opcode, numargs, function):
-		BaseCommand.__init__(self, mnemonic, opcode, numargs)
+	def __init__(self, mnemonic, opcode, numargs, function, argtypes):
+		BaseCommand.__init__(self, mnemonic, opcode, numargs, argtypes)
 		self.function = function
 
 	def exec(self, *args):

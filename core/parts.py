@@ -36,16 +36,21 @@ class BUS(object):
 	BUS.register_device will raise a BUSSetupError.
 
 
+	The number of read/write actions can be observed by accessing the variables
+	``reads`` and ``writes``
 	"""
 	def __init__(self, width = 64, debug = 0):
 		self.width = width
 		self.max_addr = 2 ** width
+		self.max_val = 2 ** width - 1
 		self.start_addresses = {}
 		self.index = {}
 		self.devices = []
 		self.current_max_offset = 0
 		self.debug = debug
 		self._lock = False
+		self.reads = 0
+		self.writes = 0
 	def register_device(self, word_device):
 		"""
 		.. _register_device:
@@ -81,18 +86,21 @@ class BUS(object):
 			b.read_word(offset)
 			# reads third word of d2.
 
+		Truncates the value according to ``width``.
+
 		May raise BUSError_, if the offset exceeds the address space.
 
 		"""	
 		self._lock = True
 		if(offset >= self.current_max_offset):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
+		self.reads += 1
 		for addresspace, device in self.index.items():
 			if(offset in addresspace):
 				if(self.debug > 5):
 					print("BUS::read({}) | startaddress({})> {}".format(offset, self.start_addresses[device],
 								device.read(offset - self.start_addresses[device])))
-				return device.read(offset - self.start_addresses[device]) 
+				return device.read(offset - self.start_addresses[device]) & self.max_val
 
 
 	def write_word(self, offset, word):
@@ -105,7 +113,10 @@ class BUS(object):
 		self._lock = True
 		if(offset >= self.current_max_offset):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
+		self.writes += 1
 		
+		word &= self.max_val
+
 		for addresspace, device in self.index.items():
 			if(offset in addresspace):
 				device.write(offset - self.start_addresses[device], word) 
