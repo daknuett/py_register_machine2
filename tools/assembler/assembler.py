@@ -43,7 +43,7 @@ class Assembler(object):
 	def __init__(self, processor, open_stream, directives = []):
 		self.processor = processor
 		self.open_stream = open_stream
-		self.directives = directives
+		self.directives = {d.name: d for d in directives}
 		self.line_count = 0
 		self.word_count = 0
 		self.refs = {} # jump marks
@@ -59,6 +59,14 @@ class Assembler(object):
 			self.register_indices[register.name] = index
 
 	def split_run(self):
+		"""
+		Splits the assembly code into
+
+		* commands
+		* directives
+		* jump marks
+
+		"""
 		sp_run = []
 		for line in self.open_stream.read().split("\n"):
 			self.line_count += 1
@@ -79,6 +87,7 @@ class Assembler(object):
 
 			mnemo = words[0]
 			args = words[1:]
+			self.word_count += 1 + len(args)
 			if(len(args) != self.commands[mnemo].numargs()):
 				raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count,
 							mnemo, self.commands[mnemo].numargs(), len(args)))
@@ -87,6 +96,9 @@ class Assembler(object):
 
 
 	def add_ref(self, wordlist):
+		"""
+		Adds a reference.
+		"""
 		refname = wordlist[0][:-1]
 
 		if(refname in self.refs):
@@ -96,9 +108,10 @@ class Assembler(object):
 
 
 	def handle_directive(self, words):
+		""""""
 		refname = words[1]
 
-		if(self.getdirective(words[0]).is_static()):
+		if(self.getdirective(words[0]).isstatic()):
 			if(refname in self.static_refs):
 				raise ReferenceError("[line {}]:{} already defined here (word) {} (line) {}".format(self.line_count,
 							refname, self.static_refs[refname][0], self.static_refs[refname][1]))
@@ -108,12 +121,17 @@ class Assembler(object):
 				raise ReferenceError("[line {}]:{} already defined here (word) {} (line) {}".format(self.line_count,
 							refname, self.refs[refname][0], self.refs[refname][1]))
 			self.refs[refname] = (self.word_count, self.line_count)
-		return (self.line_count, "data", (self.getdirective(words[0]), words[1:]))
+		return (self.line_count, "data", self.getdirective(words[0]), words[2:])
 	def isdirective(self, words):
-		for directive in self.directives:
-			if(words[0] == directive.name):
-				return True
-		return False
+		"""
+		Check if the line ``words`` is a directive.
+		"""
+		return words[0] in self.directives
+	def getdirective(self, name):
+		"""
+		Returns the directive with the name ``name``.
+		"""
+		return self.directives[name]
 
 	def argument_run(self, sp_r):
 		"""
@@ -125,7 +143,7 @@ class Assembler(object):
 
 		for line in sp_r:
 			if(line[1] == "data"):
-				arg_run.append( (line[0], line[1], line[2], line[2].getwords(line[3])))
+				arg_run.append( (line[0], line[1], line[2], line[2].get_words(line[3])))
 				continue
 			if(line[1] == "command"):
 				self.checkargs(line[0], line[2], line[3])
@@ -143,7 +161,7 @@ class Assembler(object):
 			if(wanted == "register" and (not arg in self.register)):
 				raise ArgumentError("[line {}]: Command '{}' wants argument of type register, but {} is not a register".format(lineno, command.name, arg))
 			if(wanted == "const" and (arg in self.register)):
-				raise ArgumentError("[line {}]: Command '{}' wants argument of type const, but {} is a register.".format(lineno, command.name, arg))
+				raise ArgumentError("[line {}]: Command '{}' wants argument of type const, but {} is a register.".format(lineno, command.mnemonic(), arg))
 
 	def convert_args(self, command, args):
 		"""
@@ -169,29 +187,26 @@ class Assembler(object):
 		wc = 0
 		der_run = []
 		for line in arg_r:
+			args = []
+			for argument in line[3]:
+				if(isinstance(argument, int)):
+					args.append(argument)
+					continue
+				if((not argument in self.refs) and 
+						(not argument in self.static_refs)):
+					raise ArgumentError("[line {}]: Argument '{}' is neither an int nor a reference.".format(line[0], argument))
+				if(argument in self.static_refs):
+					args.append(self.static_refs[argument][0])
+					continue
+				my_word = wc
+				ref_word = self.refs[argument][0]
+				args.append(ref_word - my_word)
+			data = []
 			if(line[1] == "command"):
-				args = []
-				for argument in line[3]:
-					if(isinstance(argument, int)):
-						args.append(argument)
-						continue
-					if((not argument in self.refs) or 
-							(not argument in self.static_refs)):
-						raise ArgumentError("[line {}]: Argument '{}' is neither an int nor a reference.".format(line[0], argument))
-					if(argument in self.static_refs):
-						args.append(self.static_refs[argument][0])
-						continue
-					my_word = wc
-					ref_word = self.refs[argument][0]
-					args.append(ref_word - my_word)
 				data = [line[2].opcode()]
-				data.extend(args)
-				wc += len(data)
-				der_run.append((line[0], line[1], data))
-				continue
-			if(line[1] == "data"):
-				wc += len(line[3])
-				der_run.append((line[0], line[1], line[3]))
+			data.extend(args)
+			wc += len(data)
+			der_run.append((line[0], line[1], data))
 		return der_run
 			
 
@@ -216,6 +231,18 @@ class Assembler(object):
 		program = []
 		for line in der_r:
 			program.extend(line[2])
+		return program
+	def assemble(self):
+		"""
+		.. _assembler:
+
+		Chains split_run_, argument_run_, dereference_run_ and program_run_.
+		"""
+
+		sp_r = self.split_run()
+		ar_r = self.argument_run(sp_r)
+		de_r = self.dereference_run(ar_r)
+		program = self.program_run(de_r)
 		return program
 
 class ArgumentError(Exception):
