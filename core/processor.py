@@ -158,7 +158,7 @@ class Processor(object):
 
 	**Cycles**
 	
-	The number of cycles can be observed by acessing the ``cycles``variable.
+	The number of cycles can be observed by acessing the ``cycles`` variable.
 
 	"""
 	def __init__(self, f_cpu = None, width = 64,
