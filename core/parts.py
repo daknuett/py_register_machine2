@@ -5,6 +5,8 @@
 
 """
 
+from ..engine_tools.operations import bitsetxor
+
 
 class BUS(object):
 	"""
@@ -138,74 +140,73 @@ class Integer(object):
 	Uses a bitset internally.
 	"""
 	def __init__(self, value = 0, width = 64):
-		self.bitset = [0] * width
 		self.width = width
 		self.mask = 2 ** width - 1
+		self._value = 0
+		self._sign = 0
 		self.setvalue(value)
-		# TODO: remove this
-
-		self._value = value
 
 	def setvalue(self, value):
 		"""
 		.. _setvalue:
 
-		Set the signed value of the Integer, truncate it and handle Overflows.
+		Set the signed value of the Integer.
 		"""
-		self._value = value
+		self._value = abs(value)
+		self._sign = 0
 		if(value < 0):
-			self.bitset[-1] = 1
-			value ^= self.mask
-		else:
-			self.bitset[-1] = 0
-
-		for shift in range(self.width - 1):
-			self.bitset[shift] = (value & (1 << shift)) >> shift
-		self.bitset[-1] |= (value & (1 << self.width)) >> self.width
+			self._sign = 1
 
 	def getvalue(self):
 		"""
 		.. _getvalue:
 
-		Get the signed value of the Integer.
+		Get the signed value of the Integer, truncate it and handle Overflows.
 		"""
+		bitset = [0] * self.width
+		zero = [1] * self.width
 
-		value = 0
-		for shift, bit in enumerate(self.bitset[:-1]):
-			value += bit << shift
-		if(self.bitset[-1]):
-			value ^= self.mask
-			value *= -1
-		#FIXME: revert this
-		return self._value
-		#return value
+		for shift in range(self.width):
+			bitset[shift] = (self._value & (1 << shift)) >> shift
+		sign = 0
+		if((not bitset[-1]) and self._sign):
+			bitset[-1] = 1
+			sign = 1
+		elif(bitset[-1]):
+			bitset = bitsetxor(bitset, zero)
+			sign = 1
+		
+		value = [ bitset[shift] << shift for shift in range(self.width - 1)]
+		value = sum(value)
+		if(sign):
+			return -1 * value
+		return value
 
 	def setuvalue(self, value):
 		"""
 		.. _setuvalue:
 
-		Set the unsigned value of the Integer, truncate it and handle Overflows.
+		Set the unsigned value of the Integer.
 		"""
-		for shift in range(self.width):
-			self.bitset[shift] = (value & (1 << shift)) >> shift
+		self._value = value
+		self._sign = 0
 	def getuvalue(self):
 		"""
 		.. _getuvalue:
 
-		Get the ansigned value of the Integer.
+		Get the unsigned value of the Integer, truncate it and handle Overflows.
 		"""
+		bitset = [0] * self.width
+		zero = [1] * self.width
+		for shift in range(self.width):
+			bitset[shift] = (self._value & (1 << shift)) >> shift
+		if(self._sign):
+			bitset = bitsetxor(zero, bitset)
 
-		value = 0
-		for shift, bit in enumerate( self.bitset):
-			value += bit << shift
+		value = [ bitset[shift] << shift for shift in range(self.width)]
+		return sum(value)
 
-		return value
 
-	def getbitset(self):
-		"""
-		Returns the bitset in MSB first order.
-		"""
-		return [i for i in reversed(self.bitset)]
 
 
 class WordDevice(object):
