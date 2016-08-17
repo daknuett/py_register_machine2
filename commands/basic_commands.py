@@ -114,7 +114,7 @@ def jmp_function(register_interface, memory_BUS, device_BUS, to):
 jmp = FunctionCommand("jmp", 0x0a, 1, jmp_function, ["const"])
 
 def sjmp_function(register_interface, memory_BUS, device_BUS, to):
-	pc = to - 2
+	pc = to
 	register_interface.write(0, pc)
 sjmp = FunctionCommand("sjmp", 0x17, 1, sjmp_function, ["const"])
 
