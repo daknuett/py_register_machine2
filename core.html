@@ -89,6 +89,8 @@ address spaces of the devices are organized incremental:</p>
 BUS.register_device will raise a BUSSetupError.
 If the addresspace of the BUS is too small do hold a new device,
 BUS.register_device will raise a BUSSetupError.</p>
+<p>The number of read/write actions can be observed by accessing the variables
+<code class="docutils literal"><span class="pre">reads</span></code> and <code class="docutils literal"><span class="pre">writes</span></code></p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.BUS.read_word">
 <code class="descname">read_word</code><span class="sig-paren">(</span><em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#BUS.read_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.BUS.read_word" title="Permalink to this definition">¶</a></dt>
@@ -100,6 +102,7 @@ The offset is <code class="docutils literal"><span class="pre">device_addr</span
 <span class="c1"># reads third word of d2.</span>
 </pre></div>
 </div>
+<p>Truncates the value according to <code class="docutils literal"><span class="pre">width</span></code>.</p>
 <p>May raise <a class="reference internal" href="#buserror">BUSError</a>, if the offset exceeds the address space.</p>
 </dd></dl>
 
@@ -145,25 +148,25 @@ This is handled by the Integer objects.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.getuvalue">
 <code class="descname">getuvalue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.getuvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.getuvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p id="getuvalue">Get the ansigned value of the Integer.</p>
+<dd><p id="getuvalue">Get the unsigned value of the Integer, truncate it and handle Overflows.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.getvalue">
 <code class="descname">getvalue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.getvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.getvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p id="getvalue">Get the signed value of the Integer.</p>
+<dd><p id="getvalue">Get the signed value of the Integer, truncate it and handle Overflows.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.setuvalue">
 <code class="descname">setuvalue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.setuvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.setuvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p id="setuvalue">Set the unsigned value of the Integer, truncate it and handle Overflows.</p>
+<dd><p id="setuvalue">Set the unsigned value of the Integer.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="py_register_machine2.core.parts.Integer.setvalue">
 <code class="descname">setvalue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/parts.html#Integer.setvalue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.parts.Integer.setvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p id="setvalue">Set the signed value of the Integer, truncate it and handle Overflows.</p>
+<dd><p id="setvalue">Set the signed value of the Integer.</p>
 </dd></dl>
 
 </dd></dl>
@@ -309,7 +312,14 @@ the Flash. The Flash is a Read/Write device and contains</p>
 <code class="descname">program</code><span class="sig-paren">(</span><em>prog</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/device.html#Flash.program"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash.program" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the content of the iterable <code class="docutils literal"><span class="pre">prog</span></code> starting with the optional offset <code class="docutils literal"><span class="pre">offset</span></code>
 to the device.</p>
-<p>Invokes <a class="reference internal" href="#write">write</a>.</p>
+<p>Invokes <code class="docutils literal"><span class="pre">program_word</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.core.device.Flash.program_word">
+<code class="descname">program_word</code><span class="sig-paren">(</span><em>offset</em>, <em>word</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/device.html#Flash.program_word"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.device.Flash.program_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Program one word of the Flash device.
+Might raise <a class="reference internal" href="#addresserror">AddressError</a>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -439,6 +449,8 @@ according to the program counter and increases the program counter.</dd>
 <dt><code class="docutils literal"><span class="pre">FLASH_END</span></code></dt>
 <dd>Last word of the <a class="reference internal" href="#flash">Flash</a></dd>
 </dl>
+<p><strong>Cycles</strong></p>
+<p>The number of cycles can be observed by acessing the <code class="docutils literal"><span class="pre">cycles</span></code> variable.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.add_register">
 <code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.add_register" title="Permalink to this definition">¶</a></dt>
@@ -588,7 +600,7 @@ both arguments are Registers.</p>
 
 <dl class="class">
 <dt id="py_register_machine2.core.commands.BaseCommand">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">BaseCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">BaseCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em>, <em>argtypes</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class for Commands.</p>
 <p>Every Command has to be derived from BaseCommand and provide the following functions:</p>
 <ul class="simple">
@@ -596,7 +608,18 @@ both arguments are Registers.</p>
 <li><a class="reference internal" href="#numargs">numargs</a></li>
 <li><a class="reference internal" href="#mnemonic">mnemonic</a></li>
 <li><a class="reference internal" href="#opcode">opcode</a></li>
+<li><a class="reference internal" href="#argtypes">argtypes</a></li>
 </ul>
+<dl class="method">
+<dt id="py_register_machine2.core.commands.BaseCommand.argtypes">
+<code class="descname">argtypes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.argtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.argtypes" title="Permalink to this definition">¶</a></dt>
+<dd><p id="argtypes">Return a list of strings defining the argument types,
+i.e.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;register&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.exec">
 <code class="descname">exec</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.exec" title="Permalink to this definition">¶</a></dt>
@@ -632,7 +655,7 @@ Used by the Assembler and in the <code class="docutils literal"><span class="pre
 
 <dl class="class">
 <dt id="py_register_machine2.core.commands.FunctionCommand">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">FunctionCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#FunctionCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.FunctionCommand" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">FunctionCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>numargs</em>, <em>function</em>, <em>argtypes</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#FunctionCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.FunctionCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p id="functioncommand">Provides a basic handle to create Commands.</p>
 <p>The argument <code class="docutils literal"><span class="pre">function</span></code> is a function with at least three arguments:</p>
 <ol class="arabic simple">
@@ -652,13 +675,13 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
         <span class="n">word</span> <span class="o">=</span> <span class="n">memory_BUS</span><span class="o">.</span><span class="n">read_word</span><span class="p">(</span><span class="n">from_</span><span class="p">)</span>
         <span class="n">register_interface</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
 
-<span class="n">ld_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;ld&quot;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ld_function</span><span class="p">)</span>
+<span class="n">ld_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;ld&quot;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ld_function</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;const&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p><em>Example</em>: <code class="docutils literal"><span class="pre">nop</span></code> Command:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">nop_function</span><span class="p">(</span><span class="n">register_interface</span><span class="p">,</span> <span class="n">memory_BUS</span><span class="p">,</span> <span class="n">device_BUS</span><span class="p">):</span>
         <span class="k">return</span>
-<span class="n">nop_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;nop&quot;</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nop_function</span><span class="p">)</span>
+<span class="n">nop_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;nop&quot;</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nop_function</span><span class="p">,</span> <span class="p">[])</span>
 </pre></div>
 </div>
 </dd></dl>

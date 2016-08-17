@@ -15,6 +15,8 @@ Contents:
    core
    commands
    machines
+   tools
+
    developer_guide
 
 

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
-    <link rel="prev" title="py_register_machine2.core" href="core.html" /> 
+    <link rel="prev" title="Tools" href="tools.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,7 +37,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="core.html" title="py_register_machine2.core"
+          <a href="tools.html" title="Tools"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
       </ul>
@@ -82,6 +82,38 @@ number is choosen, depending on <code class="docutils literal"><span class="pre"
 <p>See also: <a class="reference internal" href="#bytes-to-int">bytes_to_int</a></p>
 </dd></dl>
 
+<dl class="function">
+<dt id="py_register_machine2.engine_tools.conversions.to_int">
+<code class="descclassname">py_register_machine2.engine_tools.conversions.</code><code class="descname">to_int</code><span class="sig-paren">(</span><em>argument</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/engine_tools/conversions.html#to_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.engine_tools.conversions.to_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the <code class="docutils literal"><span class="pre">str</span></code> argument to an integer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_register_machine2.engine_tools.conversions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_int</span><span class="p">(</span><span class="s2">&quot;0x04&quot;</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_int</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39;&quot;</span><span class="p">)</span>
+<span class="go">97</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-py_register_machine2.engine_tools.operations">
+<span id="operations"></span><h3>Operations<a class="headerlink" href="#module-py_register_machine2.engine_tools.operations" title="Permalink to this headline">¶</a></h3>
+<p>Operations used by the engine.</p>
+<dl class="function">
+<dt id="py_register_machine2.engine_tools.operations.bitsetxor">
+<code class="descclassname">py_register_machine2.engine_tools.operations.</code><code class="descname">bitsetxor</code><span class="sig-paren">(</span><em>b1</em>, <em>b2</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/engine_tools/operations.html#bitsetxor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.engine_tools.operations.bitsetxor" title="Permalink to this definition">¶</a></dt>
+<dd><p>If b1 and b2 would be <code class="docutils literal"><span class="pre">int</span></code> s this would be <code class="docutils literal"><span class="pre">b1</span> <span class="pre">^</span> <span class="pre">b2</span></code> :</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">py_register_machine2.engine_tools.operations</span> <span class="kn">import</span> <span class="n">bitsetxor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bitsetxor</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">)</span>
+<span class="go">[0, 0, 1, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">bin</span><span class="p">(</span><span class="mb">0b1111</span> <span class="o">^</span> <span class="mb">0b1101</span><span class="p">)</span>
+<span class="go">&#39;0b10&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 </div>
@@ -97,6 +129,7 @@ number is choosen, depending on <code class="docutils literal"><span class="pre"
 <li><a class="reference internal" href="#">Developer&#8217;s Guide</a><ul>
 <li><a class="reference internal" href="#engine-tools">Engine Tools</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.engine_tools.conversions">Conversions</a></li>
+<li><a class="reference internal" href="#module-py_register_machine2.engine_tools.operations">Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -104,8 +137,8 @@ number is choosen, depending on <code class="docutils literal"><span class="pre"
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="core.html"
-                        title="previous chapter">py_register_machine2.core</a></p>
+  <p class="topless"><a href="tools.html"
+                        title="previous chapter">Tools</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -140,7 +173,7 @@ number is choosen, depending on <code class="docutils literal"><span class="pre"
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="core.html" title="py_register_machine2.core"
+          <a href="tools.html" title="Tools"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
       </ul>

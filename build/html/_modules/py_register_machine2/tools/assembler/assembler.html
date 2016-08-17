@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>py_register_machine2.tools.assembler.assembler &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for py_register_machine2.tools.assembler.assembler</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">**py_register_machine2.tools.assembler.assember**: The Basic Assembler</span>
+
+<span class="sd">Just replaces mnemonics with opcodes and handles references.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">...engine_tools.conversions</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="isreference"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.isreference">[docs]</a><span class="k">def</span> <span class="nf">isreference</span><span class="p">(</span><span class="n">wordlist</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	if the line is a reference (jump mark),</span>
+<span class="sd">	return true</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">wordlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Assembler"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler">[docs]</a><span class="k">class</span> <span class="nc">Assembler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _Assembler:</span>
+
+<span class="sd">	Reads assembly code from ``open_stream`` and converts it to</span>
+<span class="sd">	a ``list`` of integers that can be programmed to the ROM or the Flash.</span>
+
+<span class="sd">	**Stages**:</span>
+
+<span class="sd">	Split Run</span>
+<span class="sd">		Reads the complete file and converts it to a list of tuples:</span>
+<span class="sd">		``[(lineno, &quot;command&quot;, &lt;command&gt;, arguments), ...]``` or</span>
+<span class="sd">		``[(lineno, &quot;data&quot;, &lt;data description&gt;, data), ...]```</span>
+
+<span class="sd">	Argument Run</span>
+<span class="sd">		Checks and converts the arguments. Unconvertable ``str`` objects are</span>
+<span class="sd">		interpreted as addresses.</span>
+
+<span class="sd">	Dereference Run</span>
+<span class="sd">		Handles references.</span>
+<span class="sd">	</span>
+<span class="sd">	Program Run</span>
+<span class="sd">		Generates one iterable of integers</span>
+<span class="sd">	</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">open_stream</span><span class="p">,</span> <span class="n">directives</span> <span class="o">=</span> <span class="p">[]):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">processor</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span> <span class="o">=</span> <span class="n">open_stream</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">directives</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directives</span><span class="p">}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">line_count</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">word_count</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">refs</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># jump marks</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># will stay in flash</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">commands_by_opcode</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">()]</span> <span class="o">=</span> <span class="n">command</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">register</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">registers_by_name</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">register_indices</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">register</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">register_interface</span><span class="o">.</span><span class="n">registers_by_index</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">register_indices</span><span class="p">[</span><span class="n">register</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+
+<div class="viewcode-block" id="Assembler.split_run"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.split_run">[docs]</a>	<span class="k">def</span> <span class="nf">split_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _split_run:</span>
+
+<span class="sd">		Splits the assembly code into</span>
+
+<span class="sd">		* commands</span>
+<span class="sd">		* directives</span>
+<span class="sd">		* jump marks</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">sp_run</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">isspace</span><span class="p">()):</span>
+				<span class="k">continue</span>
+			
+			<span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+			<span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+				<span class="k">continue</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">isreference</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">add_ref</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+				<span class="k">continue</span>
+			<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isdirective</span><span class="p">(</span><span class="n">words</span><span class="p">)):</span>
+				<span class="n">sp_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_directive</span><span class="p">(</span><span class="n">words</span><span class="p">))</span>
+				<span class="k">continue</span>
+			<span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="n">AssembleError</span><span class="p">(</span><span class="s2">&quot;[Line {}]: Unknown Mnemonic &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+			<span class="n">mnemo</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">args</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">word_count</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+			<span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">()):</span>
+				<span class="k">raise</span> <span class="n">AssembleError</span><span class="p">(</span><span class="s2">&quot;[Line {}]: Mnemonic &#39;{}&#39; expects {} arguments, but got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
+							<span class="n">mnemo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+			<span class="n">sp_run</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">],</span> <span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+		<span class="k">return</span> <span class="n">sp_run</span></div>
+
+
+<div class="viewcode-block" id="Assembler.add_ref"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.add_ref">[docs]</a>	<span class="k">def</span> <span class="nf">add_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wordlist</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Adds a reference.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">refname</span> <span class="o">=</span> <span class="n">wordlist</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+		<span class="k">if</span><span class="p">(</span><span class="n">refname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="s2">&quot;[line {}]:{} already defined here (word) {} (line) {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> 
+						<span class="n">refname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">)</span></div>
+
+
+	<span class="k">def</span> <span class="nf">handle_directive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+		<span class="n">refname</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getdirective</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">isstatic</span><span class="p">()):</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">refname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="s2">&quot;[line {}]:{} already defined here (word) {} (line) {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
+							<span class="n">refname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">[</span><span class="n">refname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">refname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="s2">&quot;[line {}]:{} already defined here (word) {} (line) {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
+							<span class="n">refname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">refname</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">word_count</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getdirective</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">words</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+<div class="viewcode-block" id="Assembler.isdirective"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.isdirective">[docs]</a>	<span class="k">def</span> <span class="nf">isdirective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Check if the line ``words`` is a directive.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">directives</span></div>
+<div class="viewcode-block" id="Assembler.getdirective"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.getdirective">[docs]</a>	<span class="k">def</span> <span class="nf">getdirective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the directive with the name ``name``.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">directives</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Assembler.argument_run"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.argument_run">[docs]</a>	<span class="k">def</span> <span class="nf">argument_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sp_r</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _argument_run:</span>
+
+<span class="sd">		Converts Arguments according to ``to_int``</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">arg_run</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sp_r</span><span class="p">:</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;data&quot;</span><span class="p">):</span>
+				<span class="n">arg_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_words</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])))</span>
+				<span class="k">continue</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;command&quot;</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">checkargs</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+				<span class="n">arg_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_args</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])]))</span>
+		<span class="k">return</span> <span class="n">arg_run</span></div>
+				
+
+<div class="viewcode-block" id="Assembler.checkargs"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.checkargs">[docs]</a>	<span class="k">def</span> <span class="nf">checkargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Check if the arguments fit the requerements of the command.</span>
+
+<span class="sd">		Raises ArgumentError_, if an argument does not fit.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">wanted</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">argtypes</span><span class="p">(),</span> <span class="n">args</span><span class="p">):</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;register&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">)):</span>
+				<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Command &#39;{}&#39; wants argument of type register, but {} is not a register&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">))</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;const&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">)):</span>
+				<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Command &#39;{}&#39; wants argument of type const, but {} is a register.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">(),</span> <span class="n">arg</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Assembler.convert_args"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.convert_args">[docs]</a>	<span class="k">def</span> <span class="nf">convert_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Converts ``str -&gt; int`` or ``register -&gt; int``.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">for</span> <span class="n">wanted</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">argtypes</span><span class="p">(),</span> <span class="n">args</span><span class="p">):</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;const&quot;</span><span class="p">):</span>
+				<span class="k">try</span><span class="p">:</span>
+					<span class="k">yield</span> <span class="n">to_int</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+				<span class="k">except</span><span class="p">:</span>
+					<span class="k">yield</span> <span class="n">arg</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;register&quot;</span><span class="p">):</span>
+				<span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_indices</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Assembler.dereference_run"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.dereference_run">[docs]</a>	<span class="k">def</span> <span class="nf">dereference_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_r</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _dereference_run:</span>
+
+<span class="sd">		Converts the commands to opcodes and inserts the (relative or static) references.</span>
+<span class="sd">		</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">wc</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">der_run</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">arg_r</span><span class="p">:</span>
+			<span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+				<span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+					<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
+					<span class="k">continue</span>
+				<span class="k">if</span><span class="p">((</span><span class="ow">not</span> <span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">)</span> <span class="ow">and</span> 
+						<span class="p">(</span><span class="ow">not</span> <span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">)):</span>
+					<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Argument &#39;{}&#39; is neither an int nor a reference.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">argument</span><span class="p">))</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">):</span>
+					<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">[</span><span class="n">argument</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+					<span class="k">continue</span>
+				<span class="n">my_word</span> <span class="o">=</span> <span class="n">wc</span>
+				<span class="n">ref_word</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">argument</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+				<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_word</span> <span class="o">-</span> <span class="n">my_word</span><span class="p">)</span>
+			<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;command&quot;</span><span class="p">):</span>
+				<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">opcode</span><span class="p">()]</span>
+			<span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+			<span class="n">wc</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+			<span class="n">der_run</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">data</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">der_run</span></div>
+			
+
+
+<div class="viewcode-block" id="Assembler.program_run"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.program_run">[docs]</a>	<span class="k">def</span> <span class="nf">program_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">der_r</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _program_run:</span>
+
+<span class="sd">		Generates an iterable that can be programmed onto the register machine.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">program</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">der_r</span><span class="p">:</span>
+			<span class="n">program</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">program</span></div>
+<div class="viewcode-block" id="Assembler.assemble"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.assemble">[docs]</a>	<span class="k">def</span> <span class="nf">assemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _assembler:</span>
+
+<span class="sd">		Chains split_run_, argument_run_, dereference_run_ and program_run_.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">sp_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">split_run</span><span class="p">()</span>
+		<span class="n">ar_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_run</span><span class="p">(</span><span class="n">sp_r</span><span class="p">)</span>
+		<span class="n">de_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dereference_run</span><span class="p">(</span><span class="n">ar_r</span><span class="p">)</span>
+		<span class="n">program</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">program_run</span><span class="p">(</span><span class="n">de_r</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">program</span></div></div>
+
+<div class="viewcode-block" id="ArgumentError"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.ArgumentError">[docs]</a><span class="k">class</span> <span class="nc">ArgumentError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	.. _ArgumentError:</span>
+
+<span class="sd">	Raised if an argument does not fit the requirements.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

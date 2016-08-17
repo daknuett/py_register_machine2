@@ -24,7 +24,7 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
-    <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
+    <link rel="next" title="py_register_machine2.machines" href="machines.html" />
     <link rel="prev" title="py_register_machine2.core" href="core.html" /> 
   </head>
   <body role="document">
@@ -38,7 +38,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="developer_guide.html" title="Developer’s Guide"
+          <a href="machines.html" title="py_register_machine2.machines"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="core.html" title="py_register_machine2.core"
@@ -88,7 +88,7 @@
 </tr>
 <tr class="row-even"><td>st  a b</td>
 <td>0x05</td>
-<td>store from a into register b <a class="footnote-reference" href="#id10" id="id5">[1]</a></td>
+<td>store from register a to address b <a class="footnote-reference" href="#id10" id="id5">[1]</a></td>
 </tr>
 <tr class="row-odd"><td>add a b</td>
 <td>0x06</td>
@@ -128,7 +128,7 @@
 </tr>
 <tr class="row-even"><td>jne a b</td>
 <td>0x10</td>
-<td>if a != 0: pc += b - 3 <a class="footnote-reference" href="#id12" id="id9">[3]</a></td>
+<td>if a != 0: pc += b - 3</td>
 </tr>
 <tr class="row-odd"><td>jeq a b</td>
 <td>0x11</td>
@@ -153,6 +153,10 @@
 <tr class="row-even"><td>ldi a b</td>
 <td>0x16</td>
 <td>Load immediate a into Register b</td>
+</tr>
+<tr class="row-odd"><td>sjmp a</td>
+<td>0x17</td>
+<td>pc = a - 2 <a class="footnote-reference" href="#id12" id="id9">[3]</a></td>
 </tr>
 </tbody>
 </table>
@@ -196,8 +200,8 @@
   <p class="topless"><a href="core.html"
                         title="previous chapter">py_register_machine2.core</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="developer_guide.html"
-                        title="next chapter">Developer&#8217;s Guide</a></p>
+  <p class="topless"><a href="machines.html"
+                        title="next chapter">py_register_machine2.machines</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -232,7 +236,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="developer_guide.html" title="Developer’s Guide"
+          <a href="machines.html" title="py_register_machine2.machines"
              >next</a> |</li>
         <li class="right" >
           <a href="core.html" title="py_register_machine2.core"

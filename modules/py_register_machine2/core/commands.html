@@ -65,12 +65,14 @@
 <span class="sd">	* numargs_</span>
 <span class="sd">	* mnemonic_</span>
 <span class="sd">	* opcode_</span>
+<span class="sd">	* argtypes_</span>
 
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_mnemonic</span> <span class="o">=</span> <span class="n">mnemonic</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_opcode</span> <span class="o">=</span> <span class="n">opcode</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_numargs</span> <span class="o">=</span> <span class="n">numargs</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_argtypes</span> <span class="o">=</span> <span class="n">argtypes</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">register_interface</span> <span class="o">=</span> <span class="bp">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">membus</span> <span class="o">=</span> <span class="bp">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">devbus</span> <span class="o">=</span> <span class="bp">None</span>
@@ -109,7 +111,18 @@
 <span class="sd">		Returns the opcode of the command (``int``).</span>
 <span class="sd">		Used by the Assembler and in the ``decode-command-phase``.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_opcode</span></div></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_opcode</span></div>
+
+<div class="viewcode-block" id="BaseCommand.argtypes"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.commands.BaseCommand.argtypes">[docs]</a>	<span class="k">def</span> <span class="nf">argtypes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		.. _argtypes:</span>
+
+<span class="sd">		Return a list of strings defining the argument types,</span>
+<span class="sd">		i.e.::</span>
+
+<span class="sd">			[&quot;register&quot;, &quot;register&quot;]</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_argtypes</span></div></div>
 
 <div class="viewcode-block" id="ArithmeticCommand"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.commands.ArithmeticCommand">[docs]</a><span class="k">class</span> <span class="nc">ArithmeticCommand</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -126,7 +139,7 @@
 <span class="sd">	</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
-		<span class="n">BaseCommand</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+		<span class="n">BaseCommand</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;register&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">])</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
 
 <div class="viewcode-block" id="ArithmeticCommand.exec"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.commands.ArithmeticCommand.exec">[docs]</a>	<span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operand1</span><span class="p">,</span> <span class="n">operand2</span><span class="p">):</span>
@@ -168,17 +181,17 @@
 <span class="sd">			word = memory_BUS.read_word(from_)</span>
 <span class="sd">			register_interface.write(to, word)</span>
 <span class="sd">		</span>
-<span class="sd">		ld_command = FunctionCommand(&quot;ld&quot;, 34, 2, ld_function)</span>
+<span class="sd">		ld_command = FunctionCommand(&quot;ld&quot;, 34, 2, ld_function, [&quot;const&quot;, &quot;register&quot;])</span>
 <span class="sd">			</span>
 <span class="sd">	*Example*: ``nop`` Command::</span>
 
 <span class="sd">		def nop_function(register_interface, memory_BUS, device_BUS):</span>
 <span class="sd">			return</span>
-<span class="sd">		nop_command = FunctionCommand(&quot;nop&quot;, 36, 0, nop_function)</span>
+<span class="sd">		nop_command = FunctionCommand(&quot;nop&quot;, 36, 0, nop_function, [])</span>
 <span class="sd">			</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
-		<span class="n">BaseCommand</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">):</span>
+		<span class="n">BaseCommand</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
 
 	<span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>

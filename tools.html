@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tools &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
+    <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
+    <link rel="prev" title="py_register_machine2.machines" href="machines.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="machines.html" title="py_register_machine2.machines"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tools">
+<h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-py_register_machine2.tools.assembler.assembler">
+<span id="basic-assembler"></span><h2>Basic Assembler<a class="headerlink" href="#module-py_register_machine2.tools.assembler.assembler" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.tools.assembler.assember</strong>: The Basic Assembler</p>
+<p>Just replaces mnemonics with opcodes and handles references.</p>
+<dl class="exception">
+<dt id="py_register_machine2.tools.assembler.assembler.ArgumentError">
+<em class="property">exception </em><code class="descclassname">py_register_machine2.tools.assembler.assembler.</code><code class="descname">ArgumentError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#ArgumentError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.ArgumentError" title="Permalink to this definition">¶</a></dt>
+<dd><p id="argumenterror">Raised if an argument does not fit the requirements.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler">
+<em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.assembler.</code><code class="descname">Assembler</code><span class="sig-paren">(</span><em>processor</em>, <em>open_stream</em>, <em>directives=[]</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler" title="Permalink to this definition">¶</a></dt>
+<dd><p id="assembler">Reads assembly code from <code class="docutils literal"><span class="pre">open_stream</span></code> and converts it to
+a <code class="docutils literal"><span class="pre">list</span></code> of integers that can be programmed to the ROM or the Flash.</p>
+<p><strong>Stages</strong>:</p>
+<dl class="docutils">
+<dt>Split Run</dt>
+<dd>Reads the complete file and converts it to a list of tuples:
+<code class="docutils literal"><span class="pre">[(lineno,</span> <span class="pre">&quot;command&quot;,</span> <span class="pre">&lt;command&gt;,</span> <span class="pre">arguments),</span> <span class="pre">...]`</span></code> or
+<code class="docutils literal"><span class="pre">[(lineno,</span> <span class="pre">&quot;data&quot;,</span> <span class="pre">&lt;data</span> <span class="pre">description&gt;,</span> <span class="pre">data),</span> <span class="pre">...]`</span></code></dd>
+<dt>Argument Run</dt>
+<dd>Checks and converts the arguments. Unconvertable <code class="docutils literal"><span class="pre">str</span></code> objects are
+interpreted as addresses.</dd>
+<dt>Dereference Run</dt>
+<dd>Handles references.</dd>
+<dt>Program Run</dt>
+<dd>Generates one iterable of integers</dd>
+</dl>
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.add_ref">
+<code class="descname">add_ref</code><span class="sig-paren">(</span><em>wordlist</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.add_ref"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.add_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a reference.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.argument_run">
+<code class="descname">argument_run</code><span class="sig-paren">(</span><em>sp_r</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.argument_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.argument_run" title="Permalink to this definition">¶</a></dt>
+<dd><p id="argument-run">Converts Arguments according to <code class="docutils literal"><span class="pre">to_int</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.assemble">
+<code class="descname">assemble</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.assemble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.assemble" title="Permalink to this definition">¶</a></dt>
+<dd><p id="id1">Chains <a class="reference internal" href="#split-run">split_run</a>, <a class="reference internal" href="#argument-run">argument_run</a>, <a class="reference internal" href="#dereference-run">dereference_run</a> and <a class="reference internal" href="#program-run">program_run</a>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.checkargs">
+<code class="descname">checkargs</code><span class="sig-paren">(</span><em>lineno</em>, <em>command</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.checkargs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.checkargs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the arguments fit the requerements of the command.</p>
+<p>Raises <a class="reference internal" href="#argumenterror">ArgumentError</a>, if an argument does not fit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.convert_args">
+<code class="descname">convert_args</code><span class="sig-paren">(</span><em>command</em>, <em>args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.convert_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.convert_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts <code class="docutils literal"><span class="pre">str</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code> or <code class="docutils literal"><span class="pre">register</span> <span class="pre">-&gt;</span> <span class="pre">int</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.dereference_run">
+<code class="descname">dereference_run</code><span class="sig-paren">(</span><em>arg_r</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.dereference_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.dereference_run" title="Permalink to this definition">¶</a></dt>
+<dd><p id="dereference-run">Converts the commands to opcodes and inserts the (relative or static) references.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.getdirective">
+<code class="descname">getdirective</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.getdirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.getdirective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directive with the name <code class="docutils literal"><span class="pre">name</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.isdirective">
+<code class="descname">isdirective</code><span class="sig-paren">(</span><em>words</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.isdirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.isdirective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the line <code class="docutils literal"><span class="pre">words</span></code> is a directive.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.program_run">
+<code class="descname">program_run</code><span class="sig-paren">(</span><em>der_r</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.program_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.program_run" title="Permalink to this definition">¶</a></dt>
+<dd><p id="program-run">Generates an iterable that can be programmed onto the register machine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.split_run">
+<code class="descname">split_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.split_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.split_run" title="Permalink to this definition">¶</a></dt>
+<dd><p id="split-run">Splits the assembly code into</p>
+<ul class="simple">
+<li>commands</li>
+<li>directives</li>
+<li>jump marks</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="py_register_machine2.tools.assembler.assembler.isreference">
+<code class="descclassname">py_register_machine2.tools.assembler.assembler.</code><code class="descname">isreference</code><span class="sig-paren">(</span><em>wordlist</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#isreference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.isreference" title="Permalink to this definition">¶</a></dt>
+<dd><p>if the line is a reference (jump mark),
+return true</p>
+</dd></dl>
+
+<span class="target" id="module-py_register_machine2.tools.assembler.directives"></span><p>Directives for the assembler.</p>
+<dl class="class">
+<dt id="py_register_machine2.tools.assembler.directives.BaseDirective">
+<em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.directives.</code><code class="descname">BaseDirective</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/directives.html#BaseDirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.directives.BaseDirective" title="Permalink to this definition">¶</a></dt>
+<dd><p>Every Directive has to provide the following Attributes/Methods:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">name</span></code> (like <code class="docutils literal"><span class="pre">.set</span></code>)</li>
+<li><code class="docutils literal"><span class="pre">get_words(line)</span></code>: return the data to store</li>
+<li><code class="docutils literal"><span class="pre">isstatic()</span></code> returns True, if the reference should be static</li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="py_register_machine2.tools.assembler.directives.ConvertingDirective">
+<em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.directives.</code><code class="descname">ConvertingDirective</code><span class="sig-paren">(</span><em>name</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/directives.html#ConvertingDirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.directives.ConvertingDirective" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function <code class="docutils literal"><span class="pre">function</span></code> will have to take the rest of the line (as a list)
+and convert it to an iterable of <code class="docutils literal"><span class="pre">int</span></code> objects</p>
+<p><strong>Example</strong>: The <code class="docutils literal"><span class="pre">.string</span></code> directive:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># usage: .string name string</span>
+<span class="c1"># ie.: .string foo this is a test</span>
+
+<span class="k">def</span> <span class="nf">string_function</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools</a><ul>
+<li><a class="reference internal" href="#module-py_register_machine2.tools.assembler.assembler">Basic Assembler</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="machines.html"
+                        title="previous chapter">py_register_machine2.machines</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="developer_guide.html"
+                        title="next chapter">Developer&#8217;s Guide</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tools.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="developer_guide.html" title="Developer’s Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="machines.html" title="py_register_machine2.machines"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>

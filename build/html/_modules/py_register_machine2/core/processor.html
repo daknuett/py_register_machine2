@@ -63,7 +63,7 @@
 <span class="sd">	Container for the static engine controll bits.</span>
 <span class="sd">	Used by the Processor_ to handle his ECR.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">engine_stop_bit</span> <span class="o">=</span> <span class="mb">0b00001</span></div>
+	<span class="n">engine_stop_bit</span> <span class="o">=</span> <span class="mb">0b00000001</span></div>
 
 
 
@@ -205,6 +205,10 @@
 <span class="sd">	``FLASH_END``</span>
 <span class="sd">		Last word of the Flash_</span>
 
+<span class="sd">	**Cycles**</span>
+<span class="sd">	</span>
+<span class="sd">	The number of cycles can be observed by acessing the ``cycles`` variable.</span>
+
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f_cpu</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
 			<span class="n">interrupts</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">clock_barrier</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -237,6 +241,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">on_cycle_callbacks</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">cycles</span> <span class="o">=</span> <span class="mi">0</span>
 
 	<span class="k">def</span> <span class="nf">_increase_pc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">pc</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -385,9 +390,10 @@
 			<span class="n">cycle_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_cycle</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">cycle_time</span> <span class="o">&lt;</span> <span class="p">(</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_cpu</span><span class="p">)):</span>
 				<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">cycle_time</span>  <span class="o">-</span> <span class="p">(</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">f_cpu</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clock_barrier</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">clock_barrier</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">last_cycle</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">cycles</span> <span class="o">+=</span> <span class="mi">1</span></div>
 <div class="viewcode-block" id="Processor.run"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.processor.Processor.run">[docs]</a>	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Runs do_cycle_, until either a stop bit in the ECR_ is set (see EnigneControlBits_),</span>

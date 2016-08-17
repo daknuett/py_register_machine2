@@ -54,6 +54,8 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">..engine_tools.operations</span> <span class="kn">import</span> <span class="n">bitsetxor</span>
+
 
 <div class="viewcode-block" id="BUS"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS">[docs]</a><span class="k">class</span> <span class="nc">BUS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -85,6 +87,8 @@
 <span class="sd">	BUS.register_device will raise a BUSSetupError.</span>
 
 
+<span class="sd">	The number of read/write actions can be observed by accessing the variables</span>
+<span class="sd">	``reads`` and ``writes``</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
@@ -95,6 +99,10 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">reads</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">writes</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">truncate</span> <span class="o">=</span> <span class="n">Integer</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">)</span>
+
 <div class="viewcode-block" id="BUS.register_device"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.register_device">[docs]</a>	<span class="k">def</span> <span class="nf">register_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_device</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _register_device:</span>
@@ -130,18 +138,22 @@
 <span class="sd">			b.read_word(offset)</span>
 <span class="sd">			# reads third word of d2.</span>
 
+<span class="sd">		Truncates the value according to ``width``.</span>
+
 <span class="sd">		May raise BUSError_, if the offset exceeds the address space.</span>
 
 <span class="sd">		&quot;&quot;&quot;</span>	
 		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">True</span>
 		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="n">BUSError</span><span class="p">(</span><span class="s2">&quot;Offset({}) exceeds address space of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">))</span> 
+		<span class="bp">self</span><span class="o">.</span><span class="n">reads</span> <span class="o">+=</span> <span class="mi">1</span>
 		<span class="k">for</span> <span class="n">addresspace</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">addresspace</span><span class="p">):</span>
 				<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">):</span>
 					<span class="k">print</span><span class="p">(</span><span class="s2">&quot;BUS::read({}) | startaddress({})&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">],</span>
 								<span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">])))</span>
-				<span class="k">return</span> <span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">])</span> </div>
+				<span class="bp">self</span><span class="o">.</span><span class="n">truncate</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span> <span class="n">device</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">]))</span>
+				<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncate</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="BUS.write_word"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.BUS.write_word">[docs]</a>	<span class="k">def</span> <span class="nf">write_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
@@ -154,10 +166,12 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_lock</span> <span class="o">=</span> <span class="bp">True</span>
 		<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">):</span>
 			<span class="k">raise</span> <span class="n">BUSError</span><span class="p">(</span><span class="s2">&quot;Offset({}) exceeds address space of BUS({})&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_max_offset</span><span class="p">))</span> 
+		<span class="bp">self</span><span class="o">.</span><span class="n">writes</span> <span class="o">+=</span> <span class="mi">1</span>
 		
+		<span class="bp">self</span><span class="o">.</span><span class="n">truncate</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">addresspace</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">offset</span> <span class="ow">in</span> <span class="n">addresspace</span><span class="p">):</span>
-				<span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">],</span> <span class="n">word</span><span class="p">)</span> </div>
+				<span class="n">device</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">offset</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">[</span><span class="n">device</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">truncate</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span> </div>
 	<span class="k">def</span> <span class="nf">device_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_addresses</span><span class="p">)</span></div>
 
@@ -175,60 +189,73 @@
 <span class="sd">	Uses a bitset internally.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">64</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">width</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">setvalue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="Integer.setvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.setvalue">[docs]</a>	<span class="k">def</span> <span class="nf">setvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _setvalue:</span>
 
-<span class="sd">		Set the signed value of the Integer, truncate it and handle Overflows.</span>
+<span class="sd">		Set the signed value of the Integer.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="k">if</span><span class="p">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="mi">1</span></div>
 
-		<span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">|=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span></div>
 <div class="viewcode-block" id="Integer.getvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.getvalue">[docs]</a>	<span class="k">def</span> <span class="nf">getvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _getvalue:</span>
 
-<span class="sd">		Get the signed value of the Integer.</span>
+<span class="sd">		Get the signed value of the Integer, truncate it and handle Overflows.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bitset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+		<span class="n">zero</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
 
-		<span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="k">for</span> <span class="n">shift</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-			<span class="n">value</span> <span class="o">+=</span> <span class="n">bit</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
-		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-			<span class="n">value</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+		<span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
+			<span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span>
+		<span class="n">sign</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">if</span><span class="p">((</span><span class="ow">not</span> <span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">):</span>
+			<span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+			<span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+		<span class="k">elif</span><span class="p">(</span><span class="n">bitset</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+			<span class="n">bitset</span> <span class="o">=</span> <span class="n">bitsetxor</span><span class="p">(</span><span class="n">bitset</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
+			<span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+		
+		<span class="n">value</span> <span class="o">=</span> <span class="p">[</span> <span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span> <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+		<span class="n">value</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">sign</span><span class="p">):</span>
+			<span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">value</span>
 		<span class="k">return</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="Integer.setuvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.setuvalue">[docs]</a>	<span class="k">def</span> <span class="nf">setuvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _setuvalue:</span>
 
-<span class="sd">		Set the unsigned value of the Integer, truncate it and handle Overflows.</span>
+<span class="sd">		Set the unsigned value of the Integer.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="mi">0</span></div>
 <div class="viewcode-block" id="Integer.getuvalue"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.Integer.getuvalue">[docs]</a>	<span class="k">def</span> <span class="nf">getuvalue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _getuvalue:</span>
 
-<span class="sd">		Get the ansigned value of the Integer.</span>
+<span class="sd">		Get the unsigned value of the Integer, truncate it and handle Overflows.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">bitset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+		<span class="n">zero</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+		<span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">):</span>
+			<span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="n">shift</span>
+		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">):</span>
+			<span class="n">bitset</span> <span class="o">=</span> <span class="n">bitsetxor</span><span class="p">(</span><span class="n">zero</span><span class="p">,</span> <span class="n">bitset</span><span class="p">)</span>
 
-		<span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
-		<span class="k">for</span> <span class="n">shift</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitset</span><span class="p">):</span>
-			<span class="n">value</span> <span class="o">+=</span> <span class="n">bit</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
+		<span class="n">value</span> <span class="o">=</span> <span class="p">[</span> <span class="n">bitset</span><span class="p">[</span><span class="n">shift</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span> <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div></div>
 
-		<span class="k">return</span> <span class="n">value</span></div></div>
+
 
 
 <div class="viewcode-block" id="WordDevice"><a class="viewcode-back" href="../../../core.html#py_register_machine2.core.parts.WordDevice">[docs]</a><span class="k">class</span> <span class="nc">WordDevice</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
