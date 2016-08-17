@@ -42,7 +42,6 @@ class BUS(object):
 	def __init__(self, width = 64, debug = 0):
 		self.width = width
 		self.max_addr = 2 ** width
-		self.max_val = 2 ** width - 1
 		self.start_addresses = {}
 		self.index = {}
 		self.devices = []
@@ -51,6 +50,8 @@ class BUS(object):
 		self._lock = False
 		self.reads = 0
 		self.writes = 0
+		self.truncate = Integer(width = width)
+
 	def register_device(self, word_device):
 		"""
 		.. _register_device:
@@ -100,7 +101,8 @@ class BUS(object):
 				if(self.debug > 5):
 					print("BUS::read({}) | startaddress({})> {}".format(offset, self.start_addresses[device],
 								device.read(offset - self.start_addresses[device])))
-				return device.read(offset - self.start_addresses[device]) & self.max_val
+				self.truncate.setvalue( device.read(offset - self.start_addresses[device]))
+				return self.truncate.getvalue()
 
 
 	def write_word(self, offset, word):
@@ -115,11 +117,10 @@ class BUS(object):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
 		self.writes += 1
 		
-		word &= self.max_val
-
+		self.truncate.setvalue(word)
 		for addresspace, device in self.index.items():
 			if(offset in addresspace):
-				device.write(offset - self.start_addresses[device], word) 
+				device.write(offset - self.start_addresses[device], self.truncate.getvalue()) 
 	def device_count(self):
 		return len(self.start_addresses)
 
@@ -141,7 +142,9 @@ class Integer(object):
 		self.width = width
 		self.mask = 2 ** width - 1
 		self.setvalue(value)
+		# TODO: remove this
 
+		self._value = value
 
 	def setvalue(self, value):
 		"""
@@ -149,14 +152,17 @@ class Integer(object):
 
 		Set the signed value of the Integer, truncate it and handle Overflows.
 		"""
+		self._value = value
 		if(value < 0):
 			self.bitset[-1] = 1
+			value ^= self.mask
 		else:
 			self.bitset[-1] = 0
 
 		for shift in range(self.width - 1):
 			self.bitset[shift] = (value & (1 << shift)) >> shift
 		self.bitset[-1] |= (value & (1 << self.width)) >> self.width
+
 	def getvalue(self):
 		"""
 		.. _getvalue:
@@ -168,8 +174,11 @@ class Integer(object):
 		for shift, bit in enumerate(self.bitset[:-1]):
 			value += bit << shift
 		if(self.bitset[-1]):
+			value ^= self.mask
 			value *= -1
-		return value
+		#FIXME: revert this
+		return self._value
+		#return value
 
 	def setuvalue(self, value):
 		"""
@@ -191,6 +200,12 @@ class Integer(object):
 			value += bit << shift
 
 		return value
+
+	def getbitset(self):
+		"""
+		Returns the bitset in MSB first order.
+		"""
+		return [i for i in reversed(self.bitset)]
 
 
 class WordDevice(object):
