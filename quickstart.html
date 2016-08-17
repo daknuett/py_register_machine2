@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quickstart &mdash; py_register_machine2 0.0.1a documentation</title>
+    
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1a',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
+    <link rel="next" title="py_register_machine2.core" href="core.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="py_register_machine2.core"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jumping-into-pyregistermachine2">
+<h2>Jumping into PyRegisterMachine2<a class="headerlink" href="#jumping-into-pyregistermachine2" title="Permalink to this headline">¶</a></h2>
+<p>The first thing you might want to do is to assemble some code and run it on the engine.
+To do so you have to set up a <code class="docutils literal"><span class="pre">Processor</span></code> and the <code class="docutils literal"><span class="pre">Assembler</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_macine2.machines.small</span> <span class="kn">import</span> <span class="n">small_register_machine</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.assembler</span> <span class="kn">import</span> <span class="n">Assembler</span>
+<span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span> <span class="o">=</span> <span class="n">small_register_machine</span><span class="p">()</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">setup_done</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">small_register_machine</span></code> returns a configured engine with 50 words ROM, 200 words RAM and 500 words Flash.
+The size of a word is 64 bit.</p>
+<p>Now you need a program, in this case we will use  simple <code class="docutils literal"><span class="pre">Hello,</span> <span class="pre">World</span></code> program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">ldi &#39;H&#39; out0</span>
+<span class="s1">ldi &#39;e&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;o&#39; out0</span>
+<span class="s1">ldi &#39;!&#39; out0</span>
+<span class="s1">ldi 0xa out0</span>
+<span class="s1">ldi 0b1 ECR&#39;&#39;&#39;</span>
+<span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will print <code class="docutils literal"><span class="pre">Hello!\n</span></code> to <code class="docutils literal"><span class="pre">sys.stdout</span></code> and stop the engine. The assembly language is KASM2.</p>
+<p>The assembler will convert the assembly into machine code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The machine code is just a <code class="docutils literal"><span class="pre">list</span></code> of <code class="docutils literal"><span class="pre">int</span></code> objects that can be programmed to the
+ROM or Flash device:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">rom</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And then the Processor will execute the program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">processor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Putting it all together:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_macine2.machines.small</span> <span class="kn">import</span> <span class="n">small_register_machine</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.assembler</span> <span class="kn">import</span> <span class="n">Assembler</span>
+<span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span> <span class="o">=</span> <span class="n">small_register_machine</span><span class="p">()</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">setup_done</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="n">asm</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">ldi &#39;H&#39; out0</span>
+<span class="s1">ldi &#39;e&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;o&#39; out0</span>
+<span class="s1">ldi &#39;!&#39; out0</span>
+<span class="s1">ldi 0xa out0</span>
+<span class="s1">ldi 0b1 ECR&#39;&#39;&#39;</span>
+<span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+<span class="n">rom</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quickstart</a><ul>
+<li><a class="reference internal" href="#jumping-into-pyregistermachine2">Jumping into PyRegisterMachine2</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="next chapter">py_register_machine2.core</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/quickstart.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="py_register_machine2.core"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
