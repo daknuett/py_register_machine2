@@ -206,7 +206,7 @@
 
 <div class="viewcode-block" id="Assembler.checkargs"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.Assembler.checkargs">[docs]</a>	<span class="k">def</span> <span class="nf">checkargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">		Check if the arguments fit the requerements of the command.</span>
+<span class="sd">		Check if the arguments fit the requirements of the command.</span>
 
 <span class="sd">		Raises ArgumentError_, if an argument does not fit.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
@@ -226,7 +226,10 @@
 				<span class="k">try</span><span class="p">:</span>
 					<span class="k">yield</span> <span class="n">to_int</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 				<span class="k">except</span><span class="p">:</span>
-					<span class="k">yield</span> <span class="n">arg</span>
+					<span class="k">if</span><span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">constants</span><span class="p">):</span>
+						<span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">yield</span> <span class="n">arg</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;register&quot;</span><span class="p">):</span>
 				<span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_indices</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span></div>
 

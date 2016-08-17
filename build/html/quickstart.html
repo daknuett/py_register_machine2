@@ -118,6 +118,149 @@ ROM or Flash device:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="a-simple-code-loader">
+<h2>A simple Code Loader<a class="headerlink" href="#a-simple-code-loader" title="Permalink to this headline">¶</a></h2>
+<p>Usually the ROM will be too small to hold the programs you want to execute,
+so those will be stored in the Flash.</p>
+<p>To execute programs stored in the Flash one has to load them into RAM, this is done by the Code Loader(<em>CL</em>) or Boot Code Loader (<em>BCL</em>) stored in the ROM.</p>
+<p>We will use the same setup like above:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_macine2.machines.small</span> <span class="kn">import</span> <span class="n">small_register_machine</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.assembler</span> <span class="kn">import</span> <span class="n">Assembler</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.directives</span> <span class="kn">import</span> <span class="n">ConvertingDirective</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span> <span class="o">=</span> <span class="n">small_register_machine</span><span class="p">()</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">setup_done</span><span class="p">()</span>
+
+<span class="n">asm</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">.set flash_sec_size flash_sec_end</span>
+<span class="s1">ldi &#39;H&#39; out0</span>
+<span class="s1">ldi &#39;e&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;o&#39; out0</span>
+<span class="s1">ldi &#39;!&#39; out0</span>
+<span class="s1">ldi 0xa out0</span>
+<span class="s1">ldi 0b1 ECR</span>
+<span class="s1">flash_sec_end:</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+
+<span class="c1"># This directive will allow you to set one word to a special value</span>
+<span class="c1"># used to get the size of the section</span>
+<span class="n">set_directive</span> <span class="o">=</span> <span class="n">ConvertingDirective</span><span class="p">(</span><span class="s2">&quot;.set&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">directives</span> <span class="o">=</span> <span class="p">[</span><span class="n">set_directive</span><span class="p">])</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The only new part is the size of the program, stored in the first word, now we will store the program in the Flash:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">flash</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So now we need the <em>CL</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">ldi 0 r0</span>
+<span class="s1">in r0 r1</span>
+<span class="s1">ldi RAMEND_LOW r2</span>
+
+<span class="s1">loop:</span>
+<span class="s1">inc r0</span>
+<span class="s1">in r0 r3</span>
+<span class="s1">pst r3 r2</span>
+<span class="s1">inc r2</span>
+<span class="s1">dec r1</span>
+<span class="s1">jne r1 loop</span>
+
+<span class="s1">sjmp RAMEND_LOW</span>
+<span class="s1">&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<p>What does that code snippet?</p>
+<p>At first it reads the size of the code section in the Flash device:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>ldi 0 r0
+in r0 r1
+</pre></div>
+</div>
+<p>and sets up a pointer to the RAM word to write into:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>ldi RAMEND_LOW r2
+</pre></div>
+</div>
+<p>After that it copies the content from the Flash to the RAM using a do-while-loop. Finally it jumps to the first word in RAM:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>sjmp RAMEND_LOW
+</pre></div>
+</div>
+<p>The constant <code class="docutils literal"><span class="pre">RAMEND_LOW</span></code> is a processor constant and points to the first word of the RAM.
+You are able to generate jump marks using <code class="docutils literal"><span class="pre">&lt;name&gt;:</span></code> (i.e. <code class="docutils literal"><span class="pre">loop:</span></code>).</p>
+<p>Now you need to assemble and store the Code Loader:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+<span class="n">rom</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And run it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">processor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Putting it all together</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_macine2.machines.small</span> <span class="kn">import</span> <span class="n">small_register_machine</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.assembler</span> <span class="kn">import</span> <span class="n">Assembler</span>
+<span class="kn">from</span> <span class="nn">py_register_machine2.tools.assembler.directives</span> <span class="kn">import</span> <span class="n">ConvertingDirective</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span> <span class="o">=</span> <span class="n">small_register_machine</span><span class="p">()</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">setup_done</span><span class="p">()</span>
+
+<span class="n">asm</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">.set flash_sec_size flash_sec_end</span>
+<span class="s1">ldi &#39;H&#39; out0</span>
+<span class="s1">ldi &#39;e&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;l&#39; out0</span>
+<span class="s1">ldi &#39;o&#39; out0</span>
+<span class="s1">ldi &#39;!&#39; out0</span>
+<span class="s1">ldi 0xa out0</span>
+<span class="s1">ldi 0b1 ECR</span>
+<span class="s1">flash_sec_end:</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">asm</span><span class="p">)</span>
+
+<span class="c1"># This directive will allow you to set one word to a special value</span>
+<span class="c1"># used to get the size of the section</span>
+<span class="n">set_directive</span> <span class="o">=</span> <span class="n">ConvertingDirective</span><span class="p">(</span><span class="s2">&quot;.set&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">directives</span> <span class="o">=</span> <span class="p">[</span><span class="n">set_directive</span><span class="p">])</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+
+<span class="n">flash</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">ldi 0 r0</span>
+<span class="s1">in r0 r1</span>
+<span class="s1">ldi RAMEND_LOW r2</span>
+
+<span class="s1">loop:</span>
+<span class="s1">inc r0</span>
+<span class="s1">in r0 r3</span>
+<span class="s1">pst r3 r2</span>
+<span class="s1">inc r2</span>
+<span class="s1">dec r1</span>
+<span class="s1">jne r1 loop</span>
+
+<span class="s1">sjmp RAMEND_LOW</span>
+<span class="s1">&#39;&#39;&#39;</span>
+
+<span class="n">stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">)</span>
+<span class="n">code</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+<span class="n">rom</span><span class="o">.</span><span class="n">program</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+<span class="n">processor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -130,6 +273,7 @@ ROM or Flash device:</p>
   <ul>
 <li><a class="reference internal" href="#">Quickstart</a><ul>
 <li><a class="reference internal" href="#jumping-into-pyregistermachine2">Jumping into PyRegisterMachine2</a></li>
+<li><a class="reference internal" href="#a-simple-code-loader">A simple Code Loader</a></li>
 </ul>
 </li>
 </ul>
