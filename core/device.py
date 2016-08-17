@@ -39,9 +39,18 @@ class Flash(parts.WordDevice):
 		Write the content of the iterable ``prog`` starting with the optional offset ``offset``
 		to the device.
 
-		Invokes write_.
+		Invokes ``program_word``.
 		"""
 		for addr, word in enumerate(prog):
-			self.write(offset + addr, word)
+			self.program_word(offset + addr, word)
+	def program_word(self, offset, word):
+		"""
+		Program one word of the Flash device.
+		Might raise AddressError_.
+		"""
+		if(offset >= self.size):
+			raise AddressError("Offset({}) not in address space({})".format(offset, self.size))
+		self.repr_[offset].setvalue(word)
+
 	
 	
