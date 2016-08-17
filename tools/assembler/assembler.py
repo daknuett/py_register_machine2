@@ -62,6 +62,8 @@ class Assembler(object):
 
 	def split_run(self):
 		"""
+		.. _split_run:
+
 		Splits the assembly code into
 
 		* commands
@@ -139,7 +141,7 @@ class Assembler(object):
 		"""
 		.. _argument_run:
 
-		Splits the code into Directives and commands and registers references.
+		Converts Arguments according to ``to_int``
 		"""
 		arg_run = []
 
@@ -155,7 +157,7 @@ class Assembler(object):
 
 	def checkargs(self, lineno, command, args):
 		"""
-		Check if the arguments fit the requerements of the command.
+		Check if the arguments fit the requirements of the command.
 
 		Raises ArgumentError_, if an argument does not fit.
 		"""
@@ -175,7 +177,10 @@ class Assembler(object):
 				try:
 					yield to_int(arg)
 				except:
-					yield arg
+					if(arg in self.processor.constants):
+						yield self.processor.constants[arg]
+					else:
+						yield arg
 			if(wanted == "register"):
 				yield self.register_indices[arg]
 
