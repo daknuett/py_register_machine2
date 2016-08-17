@@ -52,3 +52,24 @@ def bytes_to_int(bytes_, width = None):
 		bytes_ = bytes_ + padding
 	ints = [ (int_ << (shift * 8)) for shift, int_ in enumerate(bytes_[:width])]
 	return sum(ints)
+
+def to_int(argument):
+	"""
+	Converts the ``str`` argument to an integer:
+
+	>>> from py_register_machine2.engine_tools.conversions import *
+	>>> to_int("0x04")
+	4
+	>>> to_int("'a'")
+	97
+
+	"""
+	if(argument.startswith("0b")):
+		return int(argument[2:], 2)
+	elif(argument.startswith("0x")):
+		return int(argument[2:], 16)
+	elif(argument.startswith("0") and argument != "0"):
+		return int(argument[1:], 8)
+	elif(argument[0] == "'" and argument[2] == "'"):
+		return ord(argument[1])
+	return int(argument)

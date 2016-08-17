@@ -1,10 +1,12 @@
-#!/urb/bin/python3
+#!/usr/bin/python3
 
 """
 **py_register_machine2.tools.assembler.assember**: The Basic Assembler
 
 Just replaces mnemonics with opcodes and handles references.
 """
+
+from ...engine_tools.conversions import *
 
 
 def isreference(wordlist):
@@ -171,7 +173,7 @@ class Assembler(object):
 		for wanted, arg in zip(command.argtypes(), args):
 			if(wanted == "const"):
 				try:
-					yield self.to_int(arg)
+					yield to_int(arg)
 				except:
 					yield arg
 			if(wanted == "register"):
@@ -210,16 +212,6 @@ class Assembler(object):
 		return der_run
 			
 
-	def to_int(self, argument):
-		if(argument.startswith("0b")):
-			return int(argument[2:], 2)
-		elif(argument.startswith("0x")):
-			return int(argument[2:], 16)
-		elif(argument.startswith("0") and argument != "0"):
-			return int(argument[1:], 8)
-		elif(argument[0] == "'" and argument[2] == "'"):
-			return ord(argument[1])
-		return int(argument)
 
 	def program_run(self, der_r):
 		"""
