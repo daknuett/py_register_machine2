@@ -19,5 +19,6 @@ Contents:
    tools
 
    developer_guide
+   install
 
 
