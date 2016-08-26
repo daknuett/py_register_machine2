@@ -25,10 +25,10 @@ a ``tuple`` with length ``4``: ``(Processor, ROM, RAM, Flash)``
 
 		r0 = register.Register("r0")
 		r1 = register.Register("r1")
-		r2 = register.register("r2")
+		r2 = register.Register("r2")
 		r3 = register.Register("r3")
 		r4 = register.Register("r4")
-		r5 = register.register("r5")
+		r5 = register.Register("r5")
 
 		for reg in (r0, r1, r2, r3, r4, r5):
 			proc.add_register(reg)
