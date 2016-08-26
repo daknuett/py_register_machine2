@@ -180,9 +180,8 @@ class Processor(object):
 
 		self.commands_by_opcode = {}
 
-		if(f_cpu != None):
-			self.last_cycle = None
-			self.current_cycle = None
+		self.last_cycle = None
+		self.current_cycle = None
 
 		if(interrupts):
 			raise SetupError("Interrupts are not yet implemented")
@@ -213,6 +212,15 @@ class Processor(object):
 	def _set_sp(self, sp):
 		self.sp = sp
 		self.register_interface.write(2, sp)
+		self._refresh_sp()
+	def _set_pc(self, pc):
+		self.pc = pc
+		self.register_interface.write(0, pc)
+		self._refresh_pc()
+	def _set_ecr(self, ecr):
+		self.ecr = ecr
+		self.register_interface.write(1, ecr)
+		self._refresh_ecr()
 	def _execute_on_cycle_callbacks(self):
 		for callback in self.on_cycle_callbacks:
 			callback()
@@ -245,6 +253,16 @@ class Processor(object):
 			flash = self.device_bus.devices[0]
 			self.constants["FLASH_START"] = 0
 			self.constants["FLASH_END"] = flash.size - 1
+	def reset(self):
+		"""
+		Resets the control registers of the Processor_(PC_, ECR_ and SP_)
+		"""
+		rom = self.memory_bus.devices[0]
+		if(self.memory_bus.device_count() > 1):
+			ram = self.memory_bus.devices[1]
+			self._set_sp(rom.size + ram.size - 1)
+		self._set_pc(0)
+		self._set_ecr(0)
 			
 
 	def register_on_cycle_callback(self, callback):
@@ -340,7 +358,7 @@ class Processor(object):
 		if(self.f_cpu != None):
 			cycle_time = self.current_cycle - self.last_cycle
 			if(cycle_time < ( 1 / self.f_cpu)):
-				time.sleep(cycle_time  - ( 1 / self.f_cpu))
+				time.sleep(( 1 / self.f_cpu) - cycle_time )
 			self.last_cycle = time.time()
 		if(self.clock_barrier != None):
 			self.clock_barrier.wait()
