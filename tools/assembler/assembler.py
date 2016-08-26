@@ -163,7 +163,7 @@ class Assembler(object):
 		"""
 		for wanted, arg in zip(command.argtypes(), args):
 			if(wanted == "register" and (not arg in self.register)):
-				raise ArgumentError("[line {}]: Command '{}' wants argument of type register, but {} is not a register".format(lineno, command.name, arg))
+				raise ArgumentError("[line {}]: Command '{}' wants argument of type register, but {} is not a register".format(lineno, command.mnemonic(), arg))
 			if(wanted == "const" and (arg in self.register)):
 				raise ArgumentError("[line {}]: Command '{}' wants argument of type const, but {} is a register.".format(lineno, command.mnemonic(), arg))
 
