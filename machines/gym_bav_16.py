@@ -7,7 +7,7 @@ Differences:
 
 * Register names are ``rX`` instead of ``X`` (i.e. ``r5`` instead of ``5``)
 * The *Program Counters* are unused
-* Comments start with ``;`` instead of ``--``.
+* Comments start with ``;`` instead of ``--``. (see this_)
 
 **Examples**
 
@@ -28,6 +28,14 @@ New style::
 	DLOAD 5
 	SUB r1
 	HALT
+
+.. _this:
+
+*Note*:
+
+You are able to change the commentstart strings using the argument ``commentstarts``::
+
+	asm = Assembler(processor, stream, commentstarts = ["--"])
 """
 from py_register_machine2.core import memory, processor, register, device
 from py_register_machine2.commands.gym_bav_16 import commands
