@@ -42,7 +42,7 @@ class Assembler(object):
 		Generates one iterable of integers
 	
 	"""
-	def __init__(self, processor, open_stream, directives = []):
+	def __init__(self, processor, open_stream, directives = [], commentstarts = [";"]):
 		self.processor = processor
 		self.open_stream = open_stream
 		self.directives = {d.name: d for d in directives}
@@ -50,6 +50,7 @@ class Assembler(object):
 		self.word_count = 0
 		self.refs = {} # jump marks
 		self.static_refs = {} # will stay in flash
+		self.commentstarts = commentstarts
 
 		self.commands = {}
 		for opcode, command in self.processor.commands_by_opcode.items():
@@ -74,9 +75,12 @@ class Assembler(object):
 		sp_run = []
 		for line in self.open_stream.read().split("\n"):
 			self.line_count += 1
+			if(self.iscomment(line)):
+				continue
 			if(line.isspace()):
 				continue
-			
+			line = self.stripcomments(line)
+
 			words = line.split()
 			if(len(words) == 0):
 				continue
@@ -93,8 +97,7 @@ class Assembler(object):
 			args = words[1:]
 			self.word_count += 1 + len(args)
 			if(len(args) != self.commands[mnemo].numargs()):
-				raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count,
-							mnemo, self.commands[mnemo].numargs(), len(args)))
+				raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count, mnemo, self.commands[mnemo].numargs(), len(args)))
 			sp_run.append((self.line_count, "command", self.commands[mnemo], (args)))
 		return sp_run
 
@@ -242,6 +245,19 @@ class Assembler(object):
 		program = self.program_run(de_r)
 		return program
 
+	def iscomment(self, line):
+		for commentstart in self.commentstarts:
+			if(line.startswith(commentstart)):
+				return True
+		return False
+
+	def stripcomments(self, line):
+		for commentstart in self.commentstarts:
+			if(commentstart in line):
+				line = line[:line.index(commentstart)]
+		return line
+
+
 class ArgumentError(Exception):
 	"""
 	.. _ArgumentError:
@@ -250,3 +266,7 @@ class ArgumentError(Exception):
 	"""
 	def __init__(self, *args):
 		Exception.__init__(self, *args)
+class AssembleError(BaseException):
+	def __init__(self, *args):
+		 BaseException.__init__(self, *args)
+
