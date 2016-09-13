@@ -3,14 +3,14 @@ py_register_machine2
 A Register Machine package for Python3
 
 
-You might take a look at the `docs<https://daknuett.github.io/py_register_machine2>` for a lot information about design, usage and the complete code documentation.
+You might take a look at the `docs<https://daknuett.github.io/py_register_machine2>`_ for a lot information about design, usage and the complete code documentation.
 
 
 Installing PyRegisterMachine2
 =============================
 
-`py_register_machine2` is a python3 package, so all you need to do is to place the project folder in your
-`$PYTHONPATH`. You are able to get the pythonpath using `echo $PYTHONPATH` and `python3 -c "import sys; print(sys.path)"`.
+``py_register_machine2`` is a python3 package, so all you need to do is to place the project folder in your
+``$PYTHONPATH``. You are able to get the pythonpath using ``echo $PYTHONPATH`` and ``python3 -c "import sys; print(sys.path)"``.
 
 So you are able to install the package using::
 
@@ -27,14 +27,14 @@ Using PyRegisterMachine2
 Using Prepared Machines
 -----------------------
 
-In ``py_register_machine2.machines`` is a bunch of modules providing a bunch of  _register machine definitions_ 
+In ``py_register_machine2.machines`` is a bunch of modules providing a bunch of  *register machine definitions* 
 those are functions returning a 4-tuple: ``(processor, rom, ram, flash)``, maybe you need to invoke ``processor.setup_done()``.
 
 Creating Your Own Machines
 --------------------------
 
 If the prepared machines do  not match your requirements you might want to create your own machines,
-to do so you should study the `docs<https://daknuett.github.io/py_register_machine2/machines.html`.
+to do so you should study the `docs<https://daknuett.github.io/py_register_machine2/machines.html`_.
 
 Instructionset, Machinecode and Assembly
 ----------------------------------------
