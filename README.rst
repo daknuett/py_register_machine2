@@ -34,7 +34,7 @@ Creating Your Own Machines
 --------------------------
 
 If the prepared machines do  not match your requirements you might want to create your own machines,
-to do so you should study the `docs <https://daknuett.github.io/py_register_machine2/machines.html`_.
+to do so you should study the `docs <https://daknuett.github.io/py_register_machine2/machines.html>`_.
 
 Instructionset, Machinecode and Assembly
 ----------------------------------------
