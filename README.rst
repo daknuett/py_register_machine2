@@ -3,7 +3,7 @@ py_register_machine2
 A Register Machine package for Python3
 
 
-You might take a look at the `docs<https://daknuett.github.io/py_register_machine2>`_ for a lot information about design, usage and the complete code documentation.
+You might take a look at the `docs <https://daknuett.github.io/py_register_machine2>`_ for a lot information about design, usage and the complete code documentation.
 
 
 Installing PyRegisterMachine2
@@ -34,7 +34,7 @@ Creating Your Own Machines
 --------------------------
 
 If the prepared machines do  not match your requirements you might want to create your own machines,
-to do so you should study the `docs<https://daknuett.github.io/py_register_machine2/machines.html`_.
+to do so you should study the `docs <https://daknuett.github.io/py_register_machine2/machines.html`_.
 
 Instructionset, Machinecode and Assembly
 ----------------------------------------
