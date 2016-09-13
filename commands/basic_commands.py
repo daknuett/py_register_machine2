@@ -90,7 +90,7 @@ def ld_function(register_interface, memory_BUS, device_BUS, from_, to):
 ld = FunctionCommand("ld", 0x04, 2, ld_function, ["const", "register"])
 
 def st_function(register_interface, memory_BUS, device_BUS, from_, to):
-	word = memory_BUS.read_word(from_)
+	word = register_interface.read_word(from_)
 	memory_BUS.write_word(to, word)
 
 st = FunctionCommand("st", 0x05, 2, st_function, ["register", "const"])
