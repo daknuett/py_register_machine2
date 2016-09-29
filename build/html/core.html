@@ -25,7 +25,7 @@
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="py_register_machine2 0.0.1a documentation" href="index.html" />
     <link rel="next" title="py_register_machine2.commands" href="commands.html" />
-    <link rel="prev" title="Overview" href="overview.html" /> 
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -41,7 +41,7 @@
           <a href="commands.html" title="py_register_machine2.commands"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="overview.html" title="Overview"
+          <a href="quickstart.html" title="Quickstart"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
       </ul>
@@ -471,6 +471,22 @@ works according to <a class="reference internal" href="#processor-phases">proces
 </dd></dl>
 
 <dl class="method">
+<dt id="py_register_machine2.core.processor.Processor.en_dis_able_interrupts">
+<code class="descname">en_dis_able_interrupts</code><span class="sig-paren">(</span><em>mask</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.en_dis_able_interrupts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.en_dis_able_interrupts" title="Permalink to this definition">¶</a></dt>
+<dd><p>This callback might be used by a Register to enable/disable Interrupts.</p>
+<p><code class="docutils literal"><span class="pre">mask</span></code> is an <code class="docutils literal"><span class="pre">int</span></code>, the Interrupts are bits in this mask, the first registered interrupt
+has the bit <code class="docutils literal"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">0)</span></code>, the n-th Interrupt the bit <code class="docutils literal"><span class="pre">(1</span> <span class="pre">&lt;&lt;</span> <span class="pre">(n</span> <span class="pre">-</span> <span class="pre">1))</span></code>.
+If the bit is cleared (<code class="docutils literal"><span class="pre">0</span></code>) the Interrupt will be disabled.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="py_register_machine2.core.processor.Processor.interrupt">
+<code class="descname">interrupt</code><span class="sig-paren">(</span><em>address</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interrupts the Processor and forces him to jump to <code class="docutils literal"><span class="pre">address</span></code>.
+If <code class="docutils literal"><span class="pre">push_pc</span></code> is enabled this will push the PC to the stack.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.register_command">
 <code class="descname">register_command</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.register_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.register_command" title="Permalink to this definition">¶</a></dt>
 <dd><p id="register-command">Register a Command in the Processor,
@@ -507,6 +523,12 @@ but fatal Errors may stop the engine.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="py_register_machine2.core.processor.Processor.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the control registers of the Processor_(<a class="reference internal" href="#pc">PC</a>, <a class="reference internal" href="#ecr">ECR</a> and <a class="reference internal" href="#sp">SP</a>)</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs <a class="reference internal" href="#do-cycle">do_cycle</a>, until either a stop bit in the <a class="reference internal" href="#ecr">ECR</a> is set (see <a class="reference internal" href="#enignecontrolbits">EnigneControlBits</a>),
@@ -521,6 +543,7 @@ or if an Exception in <a class="reference internal" href="#do-cycle">do_cycle</a
 Sets the <a class="reference internal" href="#internal-constants">internal constants</a> (used by the assembler) and
 sets the Stack Pointer to RAMEND_HIGH, if there is a RAM attached.
 If there is no RAM attached, SP will stay <code class="docutils literal"><span class="pre">0</span></code>.</p>
+<p>If there is a RAM attached <code class="docutils literal"><span class="pre">push_pc</span></code> is set.</p>
 <p>Might raise <a class="reference internal" href="#setuperror">SetupError</a>.</p>
 </dd></dl>
 
@@ -687,6 +710,41 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-py_register_machine2.core.interrupts">
+<span id="interrupts"></span><h2>Interrupts<a class="headerlink" href="#module-py_register_machine2.core.interrupts" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.core.interrupts</strong>: Basic module to provide Interrupts.</p>
+<dl class="class">
+<dt id="py_register_machine2.core.interrupts.Autoreset">
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Autoreset</code><span class="sig-paren">(</span><em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Autoreset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Autoreset" title="Permalink to this definition">¶</a></dt>
+<dd><p id="autoreset">A really rude form of the Watchdog.
+This Interrupt will force the Processor to jump to offset <code class="docutils literal"><span class="pre">0</span></code>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="py_register_machine2.core.interrupts.Counter">
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Counter</code><span class="sig-paren">(</span><em>address</em>, <em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Counter" title="Permalink to this definition">¶</a></dt>
+<dd><p id="counter">A Counter/Timer implementation.</p>
+<p>The <code class="docutils literal"><span class="pre">__init__</span></code> method will inject an <code class="docutils literal"><span class="pre">on_cycle_callback</span></code> into the Processor.
+This callback will increment the internal counter variable by one.
+If the internal counter reaches a predefined value the <code class="docutils literal"><span class="pre">interrupt</span></code> method will be invoked.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="py_register_machine2.core.interrupts.Interrupt">
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Interrupt</code><span class="sig-paren">(</span><em>address</em>, <em>processor</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p id="interrupt">The Base Class for Interrupts. 
+If <code class="docutils literal"><span class="pre">Interrupt.interrupt</span></code> is invoked this will invoke <code class="docutils literal"><span class="pre">Processor.interrupt</span></code> and provide the address of the 
+Interrupt.</p>
+<p>This will allow one to place an ISR (Interrupt Service Routine) at this address.</p>
+<dl class="method">
+<dt id="py_register_machine2.core.interrupts.Interrupt.interrupt">
+<code class="descname">interrupt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Interrupt.interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Interrupt.interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will interrupt the Processor, if the Interrupt is enabled.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -704,13 +762,14 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
 <li><a class="reference internal" href="#id1">Register</a></li>
 <li><a class="reference internal" href="#module-py_register_machine2.core.processor">Processor</a></li>
 <li><a class="reference internal" href="#module-py_register_machine2.core.commands">Commands</a></li>
+<li><a class="reference internal" href="#module-py_register_machine2.core.interrupts">Interrupts</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="overview.html"
-                        title="previous chapter">Overview</a></p>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quickstart</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="commands.html"
                         title="next chapter">py_register_machine2.commands</a></p>
@@ -751,7 +810,7 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
           <a href="commands.html" title="py_register_machine2.commands"
              >next</a> |</li>
         <li class="right" >
-          <a href="overview.html" title="Overview"
+          <a href="quickstart.html" title="Quickstart"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.1a documentation</a> &raquo;</li> 
       </ul>

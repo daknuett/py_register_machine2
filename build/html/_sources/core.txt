@@ -40,3 +40,9 @@ Commands
 
 .. automodule:: py_register_machine2.core.commands
    :members:
+
+Interrupts
+==========
+
+.. automodule:: py_register_machine2.core.interrupts
+   :members:

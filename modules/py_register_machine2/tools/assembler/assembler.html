@@ -91,7 +91,7 @@
 <span class="sd">		Generates one iterable of integers</span>
 <span class="sd">	</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">open_stream</span><span class="p">,</span> <span class="n">directives</span> <span class="o">=</span> <span class="p">[]):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processor</span><span class="p">,</span> <span class="n">open_stream</span><span class="p">,</span> <span class="n">directives</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">commentstarts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;;&quot;</span><span class="p">]):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">processor</span> <span class="o">=</span> <span class="n">processor</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span> <span class="o">=</span> <span class="n">open_stream</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">directives</span> <span class="o">=</span> <span class="p">{</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">directives</span><span class="p">}</span>
@@ -99,6 +99,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">word_count</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">refs</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># jump marks</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># will stay in flash</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">commentstarts</span> <span class="o">=</span> <span class="n">commentstarts</span>
 
 		<span class="bp">self</span><span class="o">.</span><span class="n">commands</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="k">for</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">command</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">processor</span><span class="o">.</span><span class="n">commands_by_opcode</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -123,9 +124,12 @@
 		<span class="n">sp_run</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">open_stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iscomment</span><span class="p">(</span><span class="n">line</span><span class="p">)):</span>
+				<span class="k">continue</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">isspace</span><span class="p">()):</span>
 				<span class="k">continue</span>
-			
+			<span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stripcomments</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
 			<span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 			<span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">words</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
 				<span class="k">continue</span>
@@ -142,8 +146,7 @@
 			<span class="n">args</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">word_count</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 			<span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">()):</span>
-				<span class="k">raise</span> <span class="n">AssembleError</span><span class="p">(</span><span class="s2">&quot;[Line {}]: Mnemonic &#39;{}&#39; expects {} arguments, but got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span>
-							<span class="n">mnemo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+				<span class="k">raise</span> <span class="n">AssembleError</span><span class="p">(</span><span class="s2">&quot;[Line {}]: Mnemonic &#39;{}&#39; expects {} arguments, but got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">mnemo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
 			<span class="n">sp_run</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">],</span> <span class="p">(</span><span class="n">args</span><span class="p">)))</span>
 		<span class="k">return</span> <span class="n">sp_run</span></div>
 
@@ -212,7 +215,7 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">wanted</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">command</span><span class="o">.</span><span class="n">argtypes</span><span class="p">(),</span> <span class="n">args</span><span class="p">):</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;register&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">)):</span>
-				<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Command &#39;{}&#39; wants argument of type register, but {} is not a register&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">))</span>
+				<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Command &#39;{}&#39; wants argument of type register, but {} is not a register&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">(),</span> <span class="n">arg</span><span class="p">))</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">wanted</span> <span class="o">==</span> <span class="s2">&quot;const&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">register</span><span class="p">)):</span>
 				<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Command &#39;{}&#39; wants argument of type const, but {} is a register.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lineno</span><span class="p">,</span> <span class="n">command</span><span class="o">.</span><span class="n">mnemonic</span><span class="p">(),</span> <span class="n">arg</span><span class="p">))</span></div>
 
@@ -289,7 +292,20 @@
 		<span class="n">ar_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_run</span><span class="p">(</span><span class="n">sp_r</span><span class="p">)</span>
 		<span class="n">de_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dereference_run</span><span class="p">(</span><span class="n">ar_r</span><span class="p">)</span>
 		<span class="n">program</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">program_run</span><span class="p">(</span><span class="n">de_r</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">program</span></div></div>
+		<span class="k">return</span> <span class="n">program</span></div>
+
+	<span class="k">def</span> <span class="nf">iscomment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">commentstart</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commentstarts</span><span class="p">:</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">commentstart</span><span class="p">)):</span>
+				<span class="k">return</span> <span class="bp">True</span>
+		<span class="k">return</span> <span class="bp">False</span>
+
+	<span class="k">def</span> <span class="nf">stripcomments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">commentstart</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">commentstarts</span><span class="p">:</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">commentstart</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+				<span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">commentstart</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="n">line</span></div>
+
 
 <div class="viewcode-block" id="ArgumentError"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.ArgumentError">[docs]</a><span class="k">class</span> <span class="nc">ArgumentError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -299,6 +315,10 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
 		<span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+<span class="k">class</span> <span class="nc">AssembleError</span><span class="p">(</span><span class="ne">BaseException</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		 <span class="ne">BaseException</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
 </pre></div>
 
           </div>
