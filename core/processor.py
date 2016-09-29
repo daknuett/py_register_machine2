@@ -166,7 +166,7 @@ class Processor(object):
 		self.memory_bus = memory.BUS(width = width, debug = debug)
 		self.device_bus = device.BUS(width = width, debug = debug)
 		self.register_interface = RegisterInterface(width = width, debug = debug)
-		# program counter
+		# program counter, engine control register, stack pointer
 		self.register_interface.add_register(register.Register("PC", width = width))
 		self.register_interface.add_register(register.Register("ECR", width = width))
 		self.register_interface.add_register(register.Register("SP", width = width))
@@ -175,7 +175,8 @@ class Processor(object):
 
 		if(f_cpu != None and clock != None):
 			raise SetupError("Software Clock (f_cpu) and Thread Clock (clock_barrier) are mutually exclusive")
-		self.interrupts = interrupts
+		self.interrupt_enable = interrupts
+		self.interrupts = []
 		self.debug = debug
 
 		self.commands_by_opcode = {}
@@ -183,8 +184,6 @@ class Processor(object):
 		self.last_cycle = None
 		self.current_cycle = None
 
-		if(interrupts):
-			raise SetupError("Interrupts are not yet implemented")
 
 		self.pc = 0
 		self.ecr = 0
@@ -192,6 +191,30 @@ class Processor(object):
 		self.on_cycle_callbacks = []
 		self.constants = {}
 		self.cycles = 0
+		self.push_pc = False
+
+	def en_dis_able_interrupts(self, mask):
+		"""
+		This callback might be used by a Register to enable/disable Interrupts.
+
+		``mask`` is an ``int``, the Interrupts are bits in this mask, the first registered interrupt
+		has the bit ``(1 << 0)``, the n-th Interrupt the bit ``(1 << (n - 1))``.
+		If the bit is cleared (``0``) the Interrupt will be disabled.
+		"""
+		for shift, interrupt in enumerate(self.interrupts):
+			if(mask & (1 << shift)):
+				interrupt.enable = True
+			else:
+				interrupt.enable = False
+	def interrupt(self, address):
+		"""
+		Interrupts the Processor and forces him to jump to ``address``.
+		If ``push_pc`` is enabled this will push the PC to the stack.
+		"""
+		if(self.push_pc):
+			self.memory_bus.write_word(self.sp, self.pc)
+			self._set_sp(self.sp - 1)
+		self._set_pc(address)
 
 	def _increase_pc(self):
 		self.pc += 1
@@ -235,6 +258,8 @@ class Processor(object):
 		sets the Stack Pointer to RAMEND_HIGH, if there is a RAM attached.
 		If there is no RAM attached, SP will stay ``0``.
 
+		If there is a RAM attached ``push_pc`` is set.
+
 		Might raise SetupError_.
 		"""
 		if(self.memory_bus.device_count() < 1):
@@ -249,6 +274,7 @@ class Processor(object):
 			self.constants["RAMEND_HIGH"] = rom.size + ram.size - 1
 			self.constants["RAMEND_LOW"] = rom.size
 			self._set_sp(rom.size + ram.size - 1)
+			self.push_pc = True
 		if(self.device_bus.device_count() > 0):
 			flash = self.device_bus.devices[0]
 			self.constants["FLASH_START"] = 0
