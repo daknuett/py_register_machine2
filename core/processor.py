@@ -155,6 +155,8 @@ class Processor(object):
 		First word of the Flash_(always ``0``)
 	``FLASH_END``
 		Last word of the Flash_
+	*Interrupt Name*
+		Address of the interrupt (set by invoking ``add_interrupt``)
 
 	**Cycles**
 	
@@ -206,6 +208,13 @@ class Processor(object):
 				interrupt.enable = True
 			else:
 				interrupt.enable = False
+	def add_interrupt(self, interrupt):
+		"""
+		Adds the interrupt to the internal interrupt storage ``self.interrupts`` and
+		registers the interrupt address in the internal constants.
+		"""
+		self.interrupts.append(interrupt)
+		self.constants[interrupt.name] = interrupt.address
 	def interrupt(self, address):
 		"""
 		Interrupts the Processor and forces him to jump to ``address``.

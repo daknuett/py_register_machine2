@@ -17,11 +17,12 @@ class Interrupt(object):
 
 	This will allow one to place an ISR (Interrupt Service Routine) at this address.
 	"""
-	def __init__(self, address, processor):
+	def __init__(self, address, name, processor):
 		self.enable = False
 		self.address = address
 		self.processor = processor
-		self.processor.interrupts.append(self)
+		self.name = name
+		self.processor.add_interrupt(self)
 	def interrupt(self):
 		"""
 		Will interrupt the Processor, if the Interrupt is enabled.
@@ -43,7 +44,7 @@ class Counter(Interrupt):
 
 	"""
 
-	def __init__(self, address, processor, overflow_size):
+	def __init__(self, address, name, processor, overflow_size):
 		Interrupt.__init__(self, address, processor)
 		self.processor.on_cycle_callbacks.append(self.increment_counter)
 		self.counter = 0
@@ -63,7 +64,7 @@ class Autoreset(Interrupt):
 	This Interrupt will force the Processor to jump to offset ``0``.
 	"""
 
-	def __init__(self, processor, overflow_size):
+	def __init__(self, name, processor, overflow_size):
 		Interrupt.__init__(self, 0, processor)
 		self.counter = 0
 		self.overflow = overflow_size
