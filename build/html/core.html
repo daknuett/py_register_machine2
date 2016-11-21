@@ -448,9 +448,18 @@ according to the program counter and increases the program counter.</dd>
 <dd>First word of the Flash_(always <code class="docutils literal"><span class="pre">0</span></code>)</dd>
 <dt><code class="docutils literal"><span class="pre">FLASH_END</span></code></dt>
 <dd>Last word of the <a class="reference internal" href="#flash">Flash</a></dd>
+<dt><em>Interrupt Name</em></dt>
+<dd>Address of the interrupt (set by invoking <code class="docutils literal"><span class="pre">add_interrupt</span></code>)</dd>
 </dl>
 <p><strong>Cycles</strong></p>
 <p>The number of cycles can be observed by acessing the <code class="docutils literal"><span class="pre">cycles</span></code> variable.</p>
+<dl class="method">
+<dt id="py_register_machine2.core.processor.Processor.add_interrupt">
+<code class="descname">add_interrupt</code><span class="sig-paren">(</span><em>interrupt</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.add_interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.add_interrupt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the interrupt to the internal interrupt storage <code class="docutils literal"><span class="pre">self.interrupts</span></code> and
+registers the interrupt address in the internal constants.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="py_register_machine2.core.processor.Processor.add_register">
 <code class="descname">add_register</code><span class="sig-paren">(</span><em>register</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/processor.html#Processor.add_register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.processor.Processor.add_register" title="Permalink to this definition">¶</a></dt>
@@ -715,14 +724,14 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
 <p><strong>py_register_machine2.core.interrupts</strong>: Basic module to provide Interrupts.</p>
 <dl class="class">
 <dt id="py_register_machine2.core.interrupts.Autoreset">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Autoreset</code><span class="sig-paren">(</span><em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Autoreset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Autoreset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Autoreset</code><span class="sig-paren">(</span><em>name</em>, <em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Autoreset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Autoreset" title="Permalink to this definition">¶</a></dt>
 <dd><p id="autoreset">A really rude form of the Watchdog.
 This Interrupt will force the Processor to jump to offset <code class="docutils literal"><span class="pre">0</span></code>.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="py_register_machine2.core.interrupts.Counter">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Counter</code><span class="sig-paren">(</span><em>address</em>, <em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Counter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Counter</code><span class="sig-paren">(</span><em>address</em>, <em>name</em>, <em>processor</em>, <em>overflow_size</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Counter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Counter" title="Permalink to this definition">¶</a></dt>
 <dd><p id="counter">A Counter/Timer implementation.</p>
 <p>The <code class="docutils literal"><span class="pre">__init__</span></code> method will inject an <code class="docutils literal"><span class="pre">on_cycle_callback</span></code> into the Processor.
 This callback will increment the internal counter variable by one.
@@ -731,7 +740,7 @@ If the internal counter reaches a predefined value the <code class="docutils lit
 
 <dl class="class">
 <dt id="py_register_machine2.core.interrupts.Interrupt">
-<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Interrupt</code><span class="sig-paren">(</span><em>address</em>, <em>processor</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Interrupt" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.interrupts.</code><code class="descname">Interrupt</code><span class="sig-paren">(</span><em>address</em>, <em>name</em>, <em>processor</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/interrupts.html#Interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.interrupts.Interrupt" title="Permalink to this definition">¶</a></dt>
 <dd><p id="interrupt">The Base Class for Interrupts. 
 If <code class="docutils literal"><span class="pre">Interrupt.interrupt</span></code> is invoked this will invoke <code class="docutils literal"><span class="pre">Processor.interrupt</span></code> and provide the address of the 
 Interrupt.</p>

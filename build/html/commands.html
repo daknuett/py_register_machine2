@@ -179,6 +179,42 @@
 </tbody>
 </table>
 <p>A list of all commands is <code class="docutils literal"><span class="pre">basic_commands</span></code>.</p>
+<span class="target" id="module-py_register_machine2.commands.stack_based"></span><p><strong>py_register_machine2.commands.stack_based</strong>: A bunch of stack based commands</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="12%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">mnemonic</th>
+<th class="head">opcode</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>push a</td>
+<td>0x18</td>
+<td><a href="#id13"><span class="problematic" id="id14">*</span></a>(SP&#8211;) = a</td>
+</tr>
+<tr class="row-odd"><td>pop a</td>
+<td>0x19</td>
+<td>a = <a href="#id15"><span class="problematic" id="id16">*</span></a>(++SP)</td>
+</tr>
+<tr class="row-even"><td>call a</td>
+<td>0x1a</td>
+<td><a href="#id17"><span class="problematic" id="id18">*</span></a>(SP&#8211;) = PC; PC += a</td>
+</tr>
+<tr class="row-odd"><td>scall a</td>
+<td>0x1b</td>
+<td><a href="#id19"><span class="problematic" id="id20">*</span></a>(SP&#8211;) = PC; PC = a</td>
+</tr>
+<tr class="row-even"><td>ret</td>
+<td>0x1c</td>
+<td>PC = <a href="#id21"><span class="problematic" id="id22">*</span></a>(++SP)</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
