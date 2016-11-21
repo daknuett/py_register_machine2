@@ -59,8 +59,8 @@ def scall_function(register_interface, memory_BUS, device_BUS, addr):
 
 push = FunctionCommand("push", 0x18, 1, push_function, ["register"])
 pop = FunctionCommand("pop", 0x19, 1, pop_function, ["register"])
-call = FunctionCommand("call", 0x1a, 1, call_function, ["register"])
-scall = FunctionCommand("scall", 0x1b, 1, scall_function, ["register"])
+call = FunctionCommand("call", 0x1a, 1, call_function, ["const"])
+scall = FunctionCommand("scall", 0x1b, 1, scall_function, ["const"])
 ret = FunctionCommand("ret", 0x1c, 0, ret_function, [])
 
 stack_based_commands = [push, pop, call, scall, ret]
