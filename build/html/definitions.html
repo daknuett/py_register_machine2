@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyRegisterMachine2 Definitions &mdash; py_register_machine2 0.0.6 documentation</title>
+    
+    <link rel="stylesheet" href="static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.6',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="py_register_machine2 0.0.6 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pyregistermachine2-definitions">
+<h1>PyRegisterMachine2 Definitions<a class="headerlink" href="#pyregistermachine2-definitions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h2>
+<p>If you want to cite PyRegisterMachine2 or a part of its documentation
+you should always use the following format:</p>
+<dl class="docutils">
+<dt>::</dt>
+<dd>PyRegisterMachine2[&lt;implementation&gt;][&lt;branch&gt;][&lt;version&gt;]
+&lt;author(s)&gt;
+&lt;interpreter&gt;</dd>
+</dl>
+<p>Where author should refer at least to the authors that contributed
+50 % of the design of your version (followed by a <code class="docutils literal"><span class="pre">et</span> <span class="pre">al.</span></code> if there are more authors).
+The interpreter is a list of the coders of at 50 % of the code (followed by a <code class="docutils literal"><span class="pre">et</span> <span class="pre">al.</span></code> if there are more interpreter).</p>
+<p>An example for the current implementation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>PyRegisterMachine2[py3-std][master][0.0.5]
+Daniel Knüttel
+Daniel Knüttel
+</pre></div>
+</div>
+</div>
+<div class="section" id="register-machine-definitions">
+<h2>Register Machine Definitions<a class="headerlink" href="#register-machine-definitions" title="Permalink to this headline">¶</a></h2>
+<p>One might define his own machine. This is <em>always</em> done by defining a function
+(or a static method, if the language does not provide functions).
+This function must return a 4-tuple:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are two types of definitions:</p>
+<ul class="simple">
+<li><strong>Final Definitions</strong> must not be changed after instantiation, that includes, that <code class="docutils literal"><span class="pre">Processor.setup_done</span></code> has already been called.</li>
+<li><strong>Extensible Definitions</strong> might be changed after instantiation. <code class="docutils literal"><span class="pre">Processor.setup_done</span></code> must be called after instantiation.</li>
+</ul>
+<div class="section" id="short-name-conventions">
+<h3>Short Name Conventions<a class="headerlink" href="#short-name-conventions" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first"><em>Core Definitions</em></p>
+<blockquote>
+<div><p>are provided in the standard engine. They must not be final.
+A core definition is always in the package <code class="docutils literal"><span class="pre">py_register_machine2.machines</span></code>.
+The name should provide a hint about what the result is, like
+<code class="docutils literal"><span class="pre">simple_machine</span></code> or <code class="docutils literal"><span class="pre">big_machine</span></code>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>Private Definitions</em></p>
+<blockquote>
+<div><p>are provided by a person / institution.
+They have to follow the following name convention:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>prm2-&lt;version&gt;-&lt;name&gt;-&lt;width&gt;-&lt;defversion&gt;
+prm2_&lt;version&gt;_&lt;name&gt;_&lt;width&gt;_&lt;defversion&gt;
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal"><span class="pre">-</span></code> and <code class="docutils literal"><span class="pre">_</span></code> are treated equally and might be converted to each other,
+for example to handle language specific problems.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">version</span></code> should be the used PyRegisterMachine2 version, a <code class="docutils literal"><span class="pre">.</span></code> might be replaced by a <code class="docutils literal"><span class="pre">q</span></code> (<code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">q</span></code> are treated equally).</li>
+<li><code class="docutils literal"><span class="pre">name</span></code> should identify the machine and might give a hint about the resulting engine. All characters in <code class="docutils literal"><span class="pre">name</span></code> must be in <code class="docutils literal"><span class="pre">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">width</span></code> must be smallest width of all parts of the register machine.</li>
+<li><code class="docutils literal"><span class="pre">defversion</span></code> should follow the rules of <code class="docutils literal"><span class="pre">version</span></code> and defines the version of the definition.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="long-name-definitions">
+<h3>Long Name Definitions<a class="headerlink" href="#long-name-definitions" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyRegisterMachine2 Definitions</a><ul>
+<li><a class="reference internal" href="#citation">Citation</a></li>
+<li><a class="reference internal" href="#register-machine-definitions">Register Machine Definitions</a><ul>
+<li><a class="reference internal" href="#short-name-conventions">Short Name Conventions</a></li>
+<li><a class="reference internal" href="#long-name-definitions">Long Name Definitions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/definitions.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">py_register_machine2 0.0.6 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Daniel Knuettel.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.6.
+    </div>
+  </body>
+</html>
