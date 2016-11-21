@@ -44,3 +44,33 @@ class ConvertingDirective(BaseDirective):
 
 	def get_words(self, line):
 		return self.function(line)
+
+class Zeros(BaseDirective):
+	"""
+	Usage: 
+	::
+
+		.zeros n	
+
+	Fills the next n words with zeros.
+	"""
+	def __init__(self, name = ".zeros"):
+		self.name = name
+	def get_words(self, line):
+		return [0] * int(line[0])
+
+class Padding(BaseDirective):
+	"""
+	Usage:
+	::
+
+		.padd n v
+
+	Fills the next n words with v.
+	"""
+	def __init__(self, name = ".padd"):
+		self.name = name
+	def get_words(self, line):
+		number, value = line
+		return [int(value)] * int(number)
+	
