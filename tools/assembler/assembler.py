@@ -7,6 +7,9 @@ Just replaces mnemonics with opcodes and handles references.
 """
 
 from ...engine_tools.conversions import *
+import logging
+
+# logging.basicConfig(level = logging.DEBUG)
 
 
 def isreference(wordlist):
@@ -98,6 +101,7 @@ class Assembler(object):
 			self.word_count += 1 + len(args)
 			if(len(args) != self.commands[mnemo].numargs()):
 				raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count, mnemo, self.commands[mnemo].numargs(), len(args)))
+			logging.debug("split run: " + str((self.line_count, "command", self.commands[mnemo], (args))))
 			sp_run.append((self.line_count, "command", self.commands[mnemo], (args)))
 		return sp_run
 
@@ -117,6 +121,8 @@ class Assembler(object):
 	def handle_directive(self, words):
 		""""""
 		refname = words[1]
+		logging.debug("Handling directive " + str(self.getdirective(words[0])))
+		logging.debug("First argument is " + str(words[1]))
 
 		if(self.getdirective(words[0]).isstatic()):
 			if(refname in self.static_refs):
@@ -149,6 +155,7 @@ class Assembler(object):
 		arg_run = []
 
 		for line in sp_r:
+			logging.debug("argument run: handling: " + str(line))
 			if(line[1] == "data"):
 				arg_run.append( (line[0], line[1], line[2], line[2].get_words(line[3])))
 				continue
@@ -199,18 +206,22 @@ class Assembler(object):
 		for line in arg_r:
 			args = []
 			for argument in line[3]:
+				logging.debug("dereference run: handling argument " + str(argument))
 				if(isinstance(argument, int)):
+					logging.debug("Argument interpreted as integer")
 					args.append(argument)
 					continue
 				if((not argument in self.refs) and 
 						(not argument in self.static_refs)):
 					raise ArgumentError("[line {}]: Argument '{}' is neither an int nor a reference.".format(line[0], argument))
 				if(argument in self.static_refs):
+					logging.debug("Argument interpreted as static reference")
 					args.append(self.static_refs[argument][0])
 					continue
 				my_word = wc
 				ref_word = self.refs[argument][0]
 				args.append(ref_word - my_word)
+				logging.debug("Argument interpreted as reference")
 			data = []
 			if(line[1] == "command"):
 				data = [line[2].opcode()]
