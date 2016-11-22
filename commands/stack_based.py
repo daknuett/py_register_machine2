@@ -17,6 +17,8 @@
 +----------+--------+---------------------------------------------------+
 | ret      | 0x1c   | PC = *(++SP)                                      |
 +----------+--------+---------------------------------------------------+
+
+all stackbased commands are available in the list ``stack_based_commands``.
 """
 
 from ..core.commands import *
@@ -39,6 +41,7 @@ def call_function(register_interface, memory_BUS, device_BUS, addr):
 	memory_BUS.write_word(sp, pc)
 	sp += 1
 	register_interface.write(2, sp)
+	addr -= 2
 	pc += addr
 	register_interface.write(0, pc)
 
@@ -54,6 +57,7 @@ def scall_function(register_interface, memory_BUS, device_BUS, addr):
 	memory_BUS.write_word(sp, pc)
 	sp += 1
 	register_interface.write(2, sp)
+	addr -= 2
 	pc = addr
 	register_interface.write(0, pc)
 
