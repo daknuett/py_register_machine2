@@ -298,6 +298,7 @@ class Processor(object):
 			self._set_sp(rom.size + ram.size - 1)
 		self._set_pc(0)
 		self._set_ecr(0)
+		self.cycles = 0
 			
 
 	def register_on_cycle_callback(self, callback):
