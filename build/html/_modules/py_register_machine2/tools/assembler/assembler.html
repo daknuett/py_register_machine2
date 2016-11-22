@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>py_register_machine2.tools.assembler.assembler &mdash; py_register_machine2 0.0.6 documentation</title>
+    <title>py_register_machine2.tools.assembler.assembler &mdash; py_register_machine2 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '0.0.6',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="py_register_machine2 0.0.6 documentation" href="../../../../index.html" />
+    <link rel="top" title="py_register_machine2 0.1.0 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.0.6 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.1.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -57,6 +57,8 @@
 
 <span class="kn">from</span> <span class="nn">...engine_tools.conversions</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># logging.basicConfig(level = logging.DEBUG)</span>
 
 
 <div class="viewcode-block" id="isreference"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.assembler.isreference">[docs]</a><span class="k">def</span> <span class="nf">isreference</span><span class="p">(</span><span class="n">wordlist</span><span class="p">):</span>
@@ -148,6 +150,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">word_count</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 			<span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">()):</span>
 				<span class="k">raise</span> <span class="n">AssembleError</span><span class="p">(</span><span class="s2">&quot;[Line {}]: Mnemonic &#39;{}&#39; expects {} arguments, but got {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="n">mnemo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">]</span><span class="o">.</span><span class="n">numargs</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;split run: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">],</span> <span class="p">(</span><span class="n">args</span><span class="p">))))</span>
 			<span class="n">sp_run</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">mnemo</span><span class="p">],</span> <span class="p">(</span><span class="n">args</span><span class="p">)))</span>
 		<span class="k">return</span> <span class="n">sp_run</span></div>
 
@@ -167,6 +170,8 @@
 	<span class="k">def</span> <span class="nf">handle_directive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">words</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 		<span class="n">refname</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Handling directive &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getdirective</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+		<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;First argument is &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
 		<span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getdirective</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">isstatic</span><span class="p">()):</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">refname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">):</span>
@@ -199,6 +204,7 @@
 		<span class="n">arg_run</span> <span class="o">=</span> <span class="p">[]</span>
 
 		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sp_r</span><span class="p">:</span>
+			<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;argument run: handling: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;data&quot;</span><span class="p">):</span>
 				<span class="n">arg_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_words</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])))</span>
 				<span class="k">continue</span>
@@ -249,18 +255,22 @@
 		<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">arg_r</span><span class="p">:</span>
 			<span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">argument</span> <span class="ow">in</span> <span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+				<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dereference run: handling argument &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">argument</span><span class="p">))</span>
 				<span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">argument</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+					<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Argument interpreted as integer&quot;</span><span class="p">)</span>
 					<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span>
 					<span class="k">continue</span>
 				<span class="k">if</span><span class="p">((</span><span class="ow">not</span> <span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">)</span> <span class="ow">and</span> 
 						<span class="p">(</span><span class="ow">not</span> <span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">)):</span>
 					<span class="k">raise</span> <span class="n">ArgumentError</span><span class="p">(</span><span class="s2">&quot;[line {}]: Argument &#39;{}&#39; is neither an int nor a reference.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">argument</span><span class="p">))</span>
 				<span class="k">if</span><span class="p">(</span><span class="n">argument</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">):</span>
+					<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Argument interpreted as static reference&quot;</span><span class="p">)</span>
 					<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">static_refs</span><span class="p">[</span><span class="n">argument</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 					<span class="k">continue</span>
 				<span class="n">my_word</span> <span class="o">=</span> <span class="n">wc</span>
 				<span class="n">ref_word</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refs</span><span class="p">[</span><span class="n">argument</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 				<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_word</span> <span class="o">-</span> <span class="n">my_word</span><span class="p">)</span>
+				<span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Argument interpreted as reference&quot;</span><span class="p">)</span>
 			<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;command&quot;</span><span class="p">):</span>
 				<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">opcode</span><span class="p">()]</span>
@@ -353,7 +363,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.0.6 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">py_register_machine2 0.1.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
