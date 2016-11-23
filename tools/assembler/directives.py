@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from py_register_machine2.engine_tools.conversions import to_int
+
 """
 Directives for the assembler.
 """
@@ -55,23 +57,23 @@ class Zeros(BaseDirective):
 	Usage: 
 	::
 
-		.zeros n	
+		.zeros name n	
 
 	Fills the next n words with zeros.
 	"""
 	def __init__(self, name = ".zeros"):
 		self.name = name
 	def get_words(self, line):
-		return [0] * int(line[0])
+		return [0] * to_int(line[0])
 	def get_word_count(self, line):
-		return int(line[0])
+		return to_int(line[0])
 	
 class Padding(BaseDirective):
 	"""
 	Usage:
 	::
 
-		.padd n v
+		.padd name n v
 
 	Fills the next n words with v.
 	"""
@@ -79,7 +81,7 @@ class Padding(BaseDirective):
 		self.name = name
 	def get_words(self, line):
 		number, value = line
-		return [int(value)] * int(number)
+		return [to_int(value)] * to_int(number)
 	def get_word_count(self, line):
-		return int(line[0])
+		return to_int(line[0])
 	
