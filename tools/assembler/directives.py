@@ -10,6 +10,7 @@ class BaseDirective(object):
 
 	* ``name`` (like ``.set``)
 	* ``get_words(line)``: return the data to store
+	* ``get_word_count(line)``: return the number of words to store
 	* ``isstatic()`` returns True, if the reference should be static
 	"""
 
@@ -17,6 +18,8 @@ class BaseDirective(object):
 		self.name = name
 	def get_words(self, line):
 		return [int(line[0])]
+	def get_word_count(self, line):
+		return 1
 	def isstatic(self):
 		return False
 
@@ -44,6 +47,8 @@ class ConvertingDirective(BaseDirective):
 
 	def get_words(self, line):
 		return self.function(line)
+	def get_word_count(self, line):
+		return len(self.function(line))
 
 class Zeros(BaseDirective):
 	"""
@@ -58,7 +63,9 @@ class Zeros(BaseDirective):
 		self.name = name
 	def get_words(self, line):
 		return [0] * int(line[0])
-
+	def get_word_count(self, line):
+		return int(line[0])
+	
 class Padding(BaseDirective):
 	"""
 	Usage:
@@ -73,4 +80,6 @@ class Padding(BaseDirective):
 	def get_words(self, line):
 		number, value = line
 		return [int(value)] * int(number)
+	def get_word_count(self, line):
+		return int(line[0])
 	

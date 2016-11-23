@@ -134,7 +134,10 @@ class Assembler(object):
 				raise ReferenceError("[line {}]:{} already defined here (word) {} (line) {}".format(self.line_count,
 							refname, self.refs[refname][0], self.refs[refname][1]))
 			self.refs[refname] = (self.word_count, self.line_count)
-		return (self.line_count, "data", self.getdirective(words[0]), words[2:])
+		directive = self.getdirective(words[0])
+		self.word_count += directive.get_word_count(words[2:])
+		logging.debug("Directive allocates {} words.".format(directive.get_word_count(words[2:])))
+		return (self.line_count, "data", directive, words[2:])
 	def isdirective(self, words):
 		"""
 		Check if the line ``words`` is a directive.
