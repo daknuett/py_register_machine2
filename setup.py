@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst')) as f:
 
 setup(
 	name = "py_register_machine2",
-	version = "0.1.0",
+	version = "0.1.1",
 	description = "A Register Machine Package",
 	long_description = long_description,
 	url = "https://github.com/daknuett/py_register_machine2",
