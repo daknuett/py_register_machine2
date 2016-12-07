@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>PyRegisterMachine|Web Version</title>
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/static/layout.css">
+		<script type="text/javascript" src="/static/jquery-min.js"></script>
+		<script type="text/javascript" src="/static/loader.js"></script>
+
+</head>
+
+	<body class="">
+
+	<div id = "header" >
+		<h1 id = "head">PyRegisterMachine - the Web Version</h1>
+	</div>
+
+	<div id = "mainbody">
+		<div id = "actions" class = "mainseps">
+			<h2>Actions</h2>
+				<div id = "main_actions">
+					<form action="/cgi-bin/assemble_and_run.py?action=1" method="post" >	
+					<div class = "subseps" style = "align:center;padding:3px;margin:3px;">
+						<select name = "action_select" id = "action_select" 
+							style = "width:187px;">
+							<option value = "asm_and_run"  id = "asm_and_run">Assemble and Run</option>
+							<option value = "asm"  id = "asm">Assemble</option>
+							<option value = "run_flash"  id = "run_flash">Run Flash</option>
+						</select>
+						<input name = "run_action"  id = "run_action" type ="submit" value="Run Action"
+						style = "border:1px solid grey;;"/>
+					</div>
+
+					<div class = "term">
+						<p id = "asm_output" class = "term">{}</p>
+					</div>
+				</div>
+				<div id = "steps" class ="subseps term" style = "align:center;">
+					<table class = "term" >
+						<tr> <th style = "border:1px solid black;">Steps</th> <th style = "border:1px solid black;">Memory Loads</th></tr>
+						<tr id = "register_machine_steps"><td>{}</td><td>{}</td></tr>
+					</table>
+				</div>
+		</div>
+
+		<div id = "text" class = "mainseps">
+			<h2>Assembly</h2>
+			<textarea class = "textarea_input" id = "assembly" name = "assembly" >{}</textarea>
+			<button type="button" onclick="load_rom_code()">Assemble</button>
+		</div>
+
+		<div id = "infos" class = "mainseps">
+			<h2>RegisterMachine Status</h2>
+				<div id = "flash_sep" class = "subseps">
+					<h3>Flash Content</h3>
+					<textarea class = "textarea_output" id = "flash" name = "flash">{}</textarea>
+
+				</div>
+				<div id = "ram_sep" class = "subseps">
+					<h3>Ram Content</h3>
+					<textarea class = "textarea_output" id = "ram" name = "ram">{}</textarea>
+				</div>
+				<div id = "output" class ="subseps term">
+					<p id = "output_header" class = "term">Output</p>
+					<textarea readonly id = "register_machine_output" class = "term">{}</textarea>
+				</div>
+		</div>
+		<div class = "docs mainseps" id = "links">
+			<a href = https://github.com/daknuett/py_register_machine_web>The WebRegisterMachine</a> for online users.
+			</br>
+			<a href = https://github.com/daknuett/py_register_machine>The PyRegisterMachine</a> for offline users.
+
+		</div>
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+
+
+h2
+{
+	position:relative;
+	left:10px;
+}
+
+.mainseps
+{
+	border: 3px solid grey;
+}
+.subseps
+{
+	border: 1px solid grey;
+}
+#actions
+{
+	position:absolute;
+	top:80px;
+	left:10px;
+	height:800px;
+	width:200px;
+}
+#text
+{
+	position:absolute;
+	top:80px;
+	left:220px;
+	height:800px;
+	width:400px;
+}
+#infos
+{
+	position:absolute;
+	top:80px;
+	left:630px;
+	height:800px;
+	width:400px;
+}
+
+.textarea_input
+{
+	position:relative;
+
+}
+#assembly
+{
+	height:697px;
+	width:384px;
+	left:1px;
+	top:20px;
+}
+.textarea_output
+{
+	position:relative;
+
+}
+
+#flash_sep
+{
+	height:590px;
+	position:relative;
+	width:160px;
+	left:10px;
+}
+#ram_sep
+{
+	left:230px;
+	height:590px;
+	position:relative;
+	top:-595px;
+	width:160px;
+}
+
+#ram
+{
+	height: 459px;
+	margin-left: 1px;
+	width: 144px;
+}
+#flash
+{
+	height: 459px;
+	margin-left: 1px;
+	width: 144px;
+}
+
+#output
+{
+	position: relative;
+	top:-590px;
+	height:130px;
+	left:5px;
+	width:380px;
+
+}
+#steps
+{
+	position: relative;
+	margin:3px;
+	padding:3px;
+	width:186px;
+
+}
+.term
+{
+	font-size: 85%;
+	font-family: "Open Sans";
+	margin: 3px;
+	background-color: grey;
+	color: white;
+}
+#output_header
+{
+	color:red;
+	position:relative;
+	top:-5px;
+	left:5px;
+	width:300px;
+}
+
+#asm_and_run
+{
+	position:relative;
+	left:5px;
+}
+#links
+{
+	position:relative;
+	top:850px;
+
+}
+#register_machine_steps
+{
+	text-align:center;
+}
+#register_machine_output
+{
+	background-color:grey;
+	height: 97px;
+	width: 364px;
+	color:white;
+	position: relative;
+	top: -5px;
+	left: -2px;
+}
+
+td 
+{
+	border:1px solid black;
+}
+th
+{
+	border:1px solid black;
+}

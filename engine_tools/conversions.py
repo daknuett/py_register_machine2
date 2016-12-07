@@ -73,3 +73,12 @@ def to_int(argument):
 	elif(argument[0] == "'" and argument[2] == "'"):
 		return ord(argument[1])
 	return int(argument)
+
+
+def chunks(iterable, size = 8):
+	"""
+	from `Stack Overflow <http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks>`_
+	"""
+	for i in range(0, len(iterable), size):
+		yield l[i:i + n]
+		
