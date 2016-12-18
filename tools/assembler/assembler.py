@@ -119,7 +119,9 @@ class Assembler(object):
 
 
 	def handle_directive(self, words):
-		""""""
+		"""
+		handles directives: adds the reference and allocates space for the content	
+		"""
 		refname = words[1]
 		logging.debug("Handling directive " + str(self.getdirective(words[0])))
 		logging.debug("First argument is " + str(words[1]))
@@ -281,6 +283,11 @@ class ArgumentError(Exception):
 	def __init__(self, *args):
 		Exception.__init__(self, *args)
 class AssembleError(BaseException):
+	"""
+	.. _AssembleError:
+
+	Rasied if the assemler terminates without success.
+	"""
 	def __init__(self, *args):
 		 BaseException.__init__(self, *args)
 
