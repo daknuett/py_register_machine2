@@ -2,7 +2,7 @@
 <html>
 <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>PyRegisterMachine|Web Version</title>
+		<title>PRM2|Web Version</title>
 		<link rel="stylesheet" type="text/css" href="/static/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="/static/layout.css">
 		<script type="text/javascript" src="/static/jquery-min.js"></script>
@@ -10,69 +10,67 @@
 
 </head>
 
-	<body class="">
+<body class="">
 
 	<div id = "header" >
-		<h1 id = "head">PyRegisterMachine - the Web Version</h1>
+		<h1 id = "head">PyRegisterMachine2 - the Web Version</h1>
 	</div>
 
 	<div id = "mainbody">
-		<div id = "actions" class = "mainseps">
-			<h2>Actions</h2>
-				<div id = "main_actions">
-					<form action="/cgi-bin/assemble_and_run.py?action=1" method="post" >	
-					<div class = "subseps" style = "align:center;padding:3px;margin:3px;">
-						<select name = "action_select" id = "action_select" 
-							style = "width:187px;">
-							<option value = "asm_and_run"  id = "asm_and_run">Assemble and Run</option>
-							<option value = "asm"  id = "asm">Assemble</option>
-							<option value = "run_flash"  id = "run_flash">Run Flash</option>
-						</select>
-						<input name = "run_action"  id = "run_action" type ="submit" value="Run Action"
-						style = "border:1px solid grey;;"/>
-					</div>
-
-					<div class = "term">
-						<p id = "asm_output" class = "term">{}</p>
-					</div>
-				</div>
-				<div id = "steps" class ="subseps term" style = "align:center;">
-					<table class = "term" >
-						<tr> <th style = "border:1px solid black;">Steps</th> <th style = "border:1px solid black;">Memory Loads</th></tr>
-						<tr id = "register_machine_steps"><td>{}</td><td>{}</td></tr>
-					</table>
-				</div>
+		<div id="assemblysection" class="mainseps" >
+			<div id="romassembly" class="subseps">
+				<textarea id="assemblyr"> ; paste your ROM code here </textarea>
+				<input id="button_asm_rom" class="button" type="button" onclick="load_rom_code();" value="Assemble Rom Code"/>
+			</div>
+			<div id="flashassembly" class="subseps">
+				<textarea id="assemblyf"> ; paste your Flash code here </textarea>
+				<input id="button_asm_flash" class="button" type="button" onclick="load_flash_code();" value="Assemble Flash Code"/>
+			</div>
 		</div>
-
-		<div id = "text" class = "mainseps">
-			<h2>Assembly</h2>
-			<textarea class = "textarea_input" id = "assembly" name = "assembly" >{}</textarea>
-			<button type="button" onclick="load_rom_code()">Assemble</button>
+		<div id="actionsection" class="mainseps">
+			<input id="button_run_cycle" class="button" type="button" onclick="run_cycle();" value="Execute one Cycle"/>
+			<input id="button_run_all" class="button" type="button" onclick="run();" value="Execute Program"/>
+			<input id="button_reset" class="button" type="button" onclick="reset();" value="Reset"/>
+			<input id="button_flush" class="button" type="button" onclick="flush();" value="Flush Devices"/>
 		</div>
-
-		<div id = "infos" class = "mainseps">
-			<h2>RegisterMachine Status</h2>
-				<div id = "flash_sep" class = "subseps">
-					<h3>Flash Content</h3>
-					<textarea class = "textarea_output" id = "flash" name = "flash">{}</textarea>
-
-				</div>
-				<div id = "ram_sep" class = "subseps">
-					<h3>Ram Content</h3>
-					<textarea class = "textarea_output" id = "ram" name = "ram">{}</textarea>
-				</div>
-				<div id = "output" class ="subseps term">
-					<p id = "output_header" class = "term">Output</p>
-					<textarea readonly id = "register_machine_output" class = "term">{}</textarea>
-				</div>
+		<div id="errsect" class="mainseps" style="display:none">
+			<textarea id="errcode"></textarea>
 		</div>
-		<div class = "docs mainseps" id = "links">
-			<a href = https://github.com/daknuett/py_register_machine_web>The WebRegisterMachine</a> for online users.
-			</br>
-			<a href = https://github.com/daknuett/py_register_machine>The PyRegisterMachine</a> for offline users.
-
+		<div id="viewsection" class="mainseps">
+			<div id="memparts">
+				<div id="memory_bus" 
+				style="width:636px; background-color: #e56c09;">
+				Memory BUS</div>
+				<div id="romview" class="subseps">
+					ROM Content
+					<textarea id="romcode">
+					</textarea>
+				</div>
+				<div id="ramview" class="subseps">
+					RAM Content
+					<textarea id="ramcode">
+					</textarea>
+				</div>
+			</div>
+			<div id="devparts" style="margin-top: 4px;">
+				<div id="device_bus" style="width:636px; background-color: #e56c09;">
+				Device BUS</div>
+				<div id="flashview" class="subseps">
+					Flash Content
+					<textarea id="flashcode">
+					</textarea>
+				</div>
+			</div>
 		</div>
-</div>
+		<div id="outputsection" class="mainseps">
+			<div id="textoutput" class="subseps">
+			</div>
+			<div id="registeroutput" class="subseps">
+			</div>
+			<div id="imageoutput" class="subseps">
+			</div>
+		</div>
+	</div>
 
 
 </body>

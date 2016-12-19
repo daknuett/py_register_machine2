@@ -71,6 +71,7 @@ class RMServer(object):
 		self.processor = Processor(width = get_cfg("width"))
 		self.rom = ROM(get_cfg("rom_size"), get_cfg("rom_width"))
 		self.processor.register_memory_device(self.rom)
+		self.registers = []
 
 		if(get_cfg("ram_enable")):
 			self.ram = RAM(get_cfg("ram_size"), get_cfg("ram_width"))
@@ -86,9 +87,15 @@ class RMServer(object):
 
 		for register in get_cfg("registers"):
 			self.processor.add_register(register)
+			self.registers.append(register)
 		for command in get_cfg("commands"):
 			self.processor.register_command(command)
 		self.processor.setup_done()
+
+	def get_register_contents(self):
+		for r in self.registers:
+			yield r.name, r.read()
+
 	def assemble_rom_code(self, asm):
 		"""
 			assemble the given code and program the ROM
@@ -109,7 +116,7 @@ class RMServer(object):
 		worker = assembler.Assembler(self.processor, stream)
 		try:
 			result = worker.assemble()
-		except Exception as e:
+		except BaseException as e:
 			return e, None
 		self.flash.program(result)
 		return None, result
@@ -119,6 +126,15 @@ class RMServer(object):
 		"""
 		try:
 			self.processor.run()
+		except BaseException as e:
+			return e
+		return None
+	def run_cycle(self):
+		"""
+			run one cycle. Returns an exception on failure.
+		"""
+		try:
+			self.processor.do_cycle()
 		except BaseException as e:
 			return e
 		return None
@@ -132,9 +148,9 @@ class RMServer(object):
 		"""
 			overwrite the complete memory with zeros	
 		"""
-		self.rom.program([0 for i in range(self.rom.length)])
-		self.flash.program([0 for i in range(self.flash.length)])
-		for i in range(self.ram.length):
+		self.rom.program([0 for i in range(self.rom.size)])
+		self.flash.program([0 for i in range(self.flash.size)])
+		for i in range(self.ram.size):
 			self.ram.write(i, 0)
 	def _format_mem(self, mem, format_ = "nl"):
 		res = ""
@@ -147,19 +163,19 @@ class RMServer(object):
 		"""
 			return a string representations of the rom
 		"""
-		rom = [self.rom.read(i) for i in self.rom.length]
+		rom = [self.rom.read(i) for i in range(self.rom.size)]
 		return self._format_mem(rom, format_)
 	def get_ram(self, format_ = "nl"):
 		"""
 			return a string representations of the ram
 		"""
-		ram = [self.ram.read(i) for i in self.ram.length]
+		ram = [self.ram.read(i) for i in range(self.ram.size)]
 		return self._format_mem(ram, format_)
 	def get_flash(self, format_ = "nl"):
 		"""
 			return a string representations of the flash
 		"""
-		flash = [self.flash.read(i) for i in self.flash.length]
+		flash = [self.flash.read(i) for i in range(self.flash.size)]
 		return self._format_mem(flash, format_)
 	
 		
