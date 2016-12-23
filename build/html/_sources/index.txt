@@ -6,6 +6,9 @@
 Welcome to py_register_machine2's documentation!
 ================================================
 
+Browse the code or contribute on `github.com <https://github.com/daknuett/py_register_machine2>`_.
+
+
 Contents:
 
 .. toctree::
