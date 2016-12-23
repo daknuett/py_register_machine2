@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>py_register_machine2.commands &mdash; py_register_machine2 0.1.1 documentation</title>
+    <title>py_register_machine2.commands &mdash; py_register_machine2 0.1.2 documentation</title>
     
     <link rel="stylesheet" href="static/basic.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.1',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="py_register_machine2 0.1.1 documentation" href="index.html" />
+    <link rel="top" title="py_register_machine2 0.1.2 documentation" href="index.html" />
     <link rel="next" title="py_register_machine2.machines" href="machines.html" />
     <link rel="prev" title="py_register_machine2.core" href="core.html" />
 <meta charset='utf-8'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           py_register_machine2</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -91,6 +91,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">py_register_machine2.commands</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.commands.basic_commands">Basic Commands</a></li>
+<li><a class="reference internal" href="#module-py_register_machine2.commands.gym_bav_16">Commands for Curriculae</a></li>
 </ul>
 </li>
 </ul>
@@ -304,6 +305,89 @@
 </tbody>
 </table>
 <p>all stackbased commands are available in the list <code class="docutils literal"><span class="pre">stack_based_commands</span></code>.</p>
+</div>
+<div class="section" id="module-py_register_machine2.commands.gym_bav_16">
+<span id="commands-for-curriculae"></span><h2>Commands for Curriculae<a class="headerlink" href="#module-py_register_machine2.commands.gym_bav_16" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.commands.gym_bav_16</strong>: Instruction set compatible to the register machine used in the bavarian gymnasium.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="12%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">mnemonic</th>
+<th class="head">opcode</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>DLOAD c</td>
+<td>0x01</td>
+<td>A = c  (c is a number)</td>
+</tr>
+<tr class="row-odd"><td>LOAD r</td>
+<td>0x02</td>
+<td>A = r (r is a register)</td>
+</tr>
+<tr class="row-even"><td>STORE r</td>
+<td>0x03</td>
+<td>r = A</td>
+</tr>
+<tr class="row-odd"><td>ADD r</td>
+<td>0x04</td>
+<td>A = A + r (r is a register)</td>
+</tr>
+<tr class="row-even"><td>SUB r</td>
+<td>0x05</td>
+<td>A = A - r</td>
+</tr>
+<tr class="row-odd"><td>MULT r</td>
+<td>0x06</td>
+<td>A = A * r</td>
+</tr>
+<tr class="row-even"><td>DIV r</td>
+<td>0x07</td>
+<td>A = A / r</td>
+</tr>
+<tr class="row-odd"><td>JUMP c</td>
+<td>0x08</td>
+<td>PC = c (c is a constant)</td>
+</tr>
+<tr class="row-even"><td>HALT</td>
+<td>0x09</td>
+<td>ECR = 1 (halts the engine)</td>
+</tr>
+<tr class="row-odd"><td>JNE c</td>
+<td>0x0a</td>
+<td>if(A != 0): PC = c</td>
+</tr>
+<tr class="row-even"><td>JEQ c</td>
+<td>0x0b</td>
+<td>if(A == 0): PC = c</td>
+</tr>
+<tr class="row-odd"><td>JLT c</td>
+<td>0x0c</td>
+<td>if(A &lt; 0): PC = c</td>
+</tr>
+<tr class="row-even"><td>JLE c</td>
+<td>0x0d</td>
+<td>if(A &lt;= 0): PC = c</td>
+</tr>
+<tr class="row-odd"><td>JGT c</td>
+<td>0x0f</td>
+<td>if(A &gt; 0): PC = c</td>
+</tr>
+<tr class="row-even"><td>JGE c</td>
+<td>0x10</td>
+<td>if(A &gt;= 0): PC = c</td>
+</tr>
+</tbody>
+</table>
+<p>all commands are available in the list <code class="docutils literal"><span class="pre">commands</span></code></p>
+<p><em>Note</em>:</p>
+<p>Actually all commands use 2 words. So actually all branch functions set
+the PC to <code class="docutils literal"><span class="pre">c</span> <span class="pre">*</span> <span class="pre">2</span></code>.</p>
 </div>
 </div>
 

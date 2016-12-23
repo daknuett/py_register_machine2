@@ -8,3 +8,9 @@ Small Machines
 
 .. automodule:: py_register_machine2.machines.small
    :members:
+
+Machines for Curriculae
+=======================
+
+.. automodule:: py_register_machine2.machines.gym_bav_16
+   :members:

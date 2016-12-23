@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>py_register_machine2.machines &mdash; py_register_machine2 0.1.1 documentation</title>
+    <title>py_register_machine2.machines &mdash; py_register_machine2 0.1.2 documentation</title>
     
     <link rel="stylesheet" href="static/basic.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.1',
+        VERSION:     '0.1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="py_register_machine2 0.1.1 documentation" href="index.html" />
+    <link rel="top" title="py_register_machine2 0.1.2 documentation" href="index.html" />
     <link rel="next" title="Tools" href="tools.html" />
     <link rel="prev" title="py_register_machine2.commands" href="commands.html" />
 <meta charset='utf-8'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           py_register_machine2</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -91,6 +91,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">py_register_machine2.machines</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.machines.small">Small Machines</a></li>
+<li><a class="reference internal" href="#module-py_register_machine2.machines.gym_bav_16">Machines for Curriculae</a></li>
 </ul>
 </li>
 </ul>
@@ -188,6 +189,50 @@ a <code class="docutils literal"><span class="pre">tuple</span></code> with leng
 <p>returns : <code class="docutils literal"><span class="pre">(Processor,</span> <span class="pre">ROM,</span> <span class="pre">RAM,</span> <span class="pre">Flash)</span></code></p>
 </dd></dl>
 
+</div>
+<div class="section" id="module-py_register_machine2.machines.gym_bav_16">
+<span id="machines-for-curriculae"></span><h2>Machines for Curriculae<a class="headerlink" href="#module-py_register_machine2.machines.gym_bav_16" title="Permalink to this headline">¶</a></h2>
+<p><strong>py_register_machine2.machines.gym_bav_16</strong></p>
+<p>A register machine compatible to the schedule of the bavarian gymnasium.</p>
+<p>Differences:</p>
+<ul class="simple">
+<li>Register names are <code class="docutils literal"><span class="pre">rX</span></code> instead of <code class="docutils literal"><span class="pre">X</span></code> (i.e. <code class="docutils literal"><span class="pre">r5</span></code> instead of <code class="docutils literal"><span class="pre">5</span></code>)</li>
+<li>The <em>Program Counters</em> are unused</li>
+<li>Comments start with <code class="docutils literal"><span class="pre">;</span></code> instead of <code class="docutils literal"><span class="pre">--</span></code>. (see <a class="reference internal" href="#this">this</a>)</li>
+</ul>
+<p><strong>Examples</strong></p>
+<p>Old style:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>0: DLOAD 1 -- load stuff
+1: STORE 1 -- store stuff
+2: DLOAD 5
+3: SUB 1
+4: HALT
+</pre></div>
+</div>
+<p>New style:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>DLOAD 1 ; load stuff
+; comments can take a complete line
+; store stuff
+STORE r1
+DLOAD 5
+SUB r1
+HALT
+</pre></div>
+</div>
+<p id="this"><em>Note</em>:</p>
+<p>You are able to change the commentstart strings using the argument <code class="docutils literal"><span class="pre">commentstarts</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">asm</span> <span class="o">=</span> <span class="n">Assembler</span><span class="p">(</span><span class="n">processor</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">commentstarts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;--&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Generate a register machine using</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py_register_machine2.machines.gym_bav_16</span> <span class="kn">import</span> <span class="n">machine</span>
+<span class="n">processor</span><span class="p">,</span> <span class="n">rom</span><span class="p">,</span> <span class="n">ram</span><span class="p">,</span> <span class="n">flash</span> <span class="o">=</span> <span class="n">machine</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><em>Note</em>:</p>
+<p>This machine does not provide a RAM or Flash device by default.
+You can change the number of registers and the size of the ROM by 
+passing the attributes to the function <code class="docutils literal"><span class="pre">machine(romsize</span> <span class="pre">=</span> <span class="pre">200,</span> <span class="pre">numregister</span> <span class="pre">=</span> <span class="pre">15)</span></code></p>
 </div>
 </div>
 
