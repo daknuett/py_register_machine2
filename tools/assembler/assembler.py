@@ -98,9 +98,17 @@ class Assembler(object):
 
 			mnemo = words[0]
 			args = words[1:]
-			self.word_count += 1 + len(args)
 			if(len(args) != self.commands[mnemo].numargs()):
-				raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count, mnemo, self.commands[mnemo].numargs(), len(args)))
+				# check for default arguments
+				args_ = list(args)
+				for argtype in self.commands[mnemo].argtypes()[len(args):]:
+					if(not argtype.can_default):
+						raise AssembleError("[Line {}]: Mnemonic '{}' expects {} arguments, but got {}".format(self.line_count, mnemo, self.commands[mnemo].numargs(), len(args)))
+					else:
+						args_.append(argtype.default)
+				args = args_
+			self.word_count += 1 + len(args)
+						
 			logging.debug("split run: " + str((self.line_count, "command", self.commands[mnemo], (args))))
 			sp_run.append((self.line_count, "command", self.commands[mnemo], (args)))
 		return sp_run
@@ -177,6 +185,7 @@ class Assembler(object):
 		Raises ArgumentError_, if an argument does not fit.
 		"""
 		for wanted, arg in zip(command.argtypes(), args):
+			wanted = wanted.type_
 			if(wanted == "register" and (not arg in self.register)):
 				raise ArgumentError("[line {}]: Command '{}' wants argument of type register, but {} is not a register".format(lineno, command.mnemonic(), arg))
 			if(wanted == "const" and (arg in self.register)):
@@ -188,6 +197,7 @@ class Assembler(object):
 		"""
 
 		for wanted, arg in zip(command.argtypes(), args):
+			wanted = wanted.type_
 			if(wanted == "const"):
 				try:
 					yield to_int(arg)
