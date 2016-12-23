@@ -83,7 +83,7 @@ class ArgumentType(object):
 	``"register"`` and ``"const"`` but it might be helpful to 
 	use default values. Those are stored in the ArgumentType, too.
 
-	This module provides the functions ``registerargument():`` and
+	This module provides the functions ``registerargument()`` and
 	``constargument()`` those will return an ``ArgumentType(type_ = "register", can_default = False, default = 0)``
 	and an ``ArgumentType(type_ = "const", can_default = False, default = 0)``
 	"""
