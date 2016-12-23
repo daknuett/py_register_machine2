@@ -17,6 +17,7 @@ Contents:
    commands
    machines
    tools
+   apps
 
    developer_guide
    install

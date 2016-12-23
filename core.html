@@ -73,6 +73,7 @@
 <li class="toctree-l1"><a class="reference internal" href="commands.html">py_register_machine2.commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="machines.html">py_register_machine2.machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apps.html">Apps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer_guide.html">Developer&#8217;s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing PyRegisterMachine2</a></li>
 </ul>
@@ -702,6 +703,17 @@ is wrong an AttributeError will be raised.</p>
 <div class="section" id="module-py_register_machine2.core.commands">
 <span id="commands"></span><h2>Commands<a class="headerlink" href="#module-py_register_machine2.core.commands" title="Permalink to this headline">¶</a></h2>
 <p><strong>py_register_machine2.core.commands</strong>: Abstract Commands</p>
+<dl class="class">
+<dt id="py_register_machine2.core.commands.ArgumentType">
+<em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">ArgumentType</code><span class="sig-paren">(</span><em>type_='register'</em>, <em>can_default=False</em>, <em>default=0</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#ArgumentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArgumentType" title="Permalink to this definition">¶</a></dt>
+<dd><p id="argumenttype">Represents argument types. Actually there are only the types
+<code class="docutils literal"><span class="pre">&quot;register&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;const&quot;</span></code> but it might be helpful to 
+use default values. Those are stored in the ArgumentType, too.</p>
+<p>This module provides the functions <code class="docutils literal"><span class="pre">registerargument()</span></code> and
+<code class="docutils literal"><span class="pre">constargument()</span></code> those will return an <code class="docutils literal"><span class="pre">ArgumentType(type_</span> <span class="pre">=</span> <span class="pre">&quot;register&quot;,</span> <span class="pre">can_default</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">default</span> <span class="pre">=</span> <span class="pre">0)</span></code>
+and an <code class="docutils literal"><span class="pre">ArgumentType(type_</span> <span class="pre">=</span> <span class="pre">&quot;const&quot;,</span> <span class="pre">can_default</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">default</span> <span class="pre">=</span> <span class="pre">0)</span></code></p>
+</dd></dl>
+
 <dl class="class">
 <dt id="py_register_machine2.core.commands.ArithmeticCommand">
 <em class="property">class </em><code class="descclassname">py_register_machine2.core.commands.</code><code class="descname">ArithmeticCommand</code><span class="sig-paren">(</span><em>mnemonic</em>, <em>opcode</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#ArithmeticCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.ArithmeticCommand" title="Permalink to this definition">¶</a></dt>

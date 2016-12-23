@@ -90,6 +90,7 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Tools</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.tools.assembler.assembler">Basic Assembler</a></li>
+<li><a class="reference internal" href="#module-py_register_machine2.tools.assembler.directives">Assembly Directives</a></li>
 </ul>
 </li>
 </ul>
@@ -149,6 +150,12 @@
 <dt id="py_register_machine2.tools.assembler.assembler.ArgumentError">
 <em class="property">exception </em><code class="descclassname">py_register_machine2.tools.assembler.assembler.</code><code class="descname">ArgumentError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#ArgumentError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.ArgumentError" title="Permalink to this definition">¶</a></dt>
 <dd><p id="argumenterror">Raised if an argument does not fit the requirements.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="py_register_machine2.tools.assembler.assembler.AssembleError">
+<em class="property">exception </em><code class="descclassname">py_register_machine2.tools.assembler.assembler.</code><code class="descname">AssembleError</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#AssembleError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.AssembleError" title="Permalink to this definition">¶</a></dt>
+<dd><p id="assembleerror">Rasied if the assemler terminates without success.</p>
 </dd></dl>
 
 <dl class="class">
@@ -214,6 +221,12 @@ interpreted as addresses.</dd>
 </dd></dl>
 
 <dl class="method">
+<dt id="py_register_machine2.tools.assembler.assembler.Assembler.handle_directive">
+<code class="descname">handle_directive</code><span class="sig-paren">(</span><em>words</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.handle_directive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.handle_directive" title="Permalink to this definition">¶</a></dt>
+<dd><p>handles directives: adds the reference and allocates space for the content</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="py_register_machine2.tools.assembler.assembler.Assembler.isdirective">
 <code class="descname">isdirective</code><span class="sig-paren">(</span><em>words</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/assembler.html#Assembler.isdirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.assembler.Assembler.isdirective" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the line <code class="docutils literal"><span class="pre">words</span></code> is a directive.</p>
@@ -245,7 +258,9 @@ interpreted as addresses.</dd>
 return true</p>
 </dd></dl>
 
-<span class="target" id="module-py_register_machine2.tools.assembler.directives"></span><p>Directives for the assembler.</p>
+</div>
+<div class="section" id="module-py_register_machine2.tools.assembler.directives">
+<span id="assembly-directives"></span><h2>Assembly Directives<a class="headerlink" href="#module-py_register_machine2.tools.assembler.directives" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="py_register_machine2.tools.assembler.directives.BaseDirective">
 <em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.directives.</code><code class="descname">BaseDirective</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/directives.html#BaseDirective"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.directives.BaseDirective" title="Permalink to this definition">¶</a></dt>
@@ -253,6 +268,7 @@ return true</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">name</span></code> (like <code class="docutils literal"><span class="pre">.set</span></code>)</li>
 <li><code class="docutils literal"><span class="pre">get_words(line)</span></code>: return the data to store</li>
+<li><code class="docutils literal"><span class="pre">get_word_count(line)</span></code>: return the number of words to store</li>
 <li><code class="docutils literal"><span class="pre">isstatic()</span></code> returns True, if the reference should be static</li>
 </ul>
 </dd></dl>
@@ -280,7 +296,7 @@ and convert it to an iterable of <code class="docutils literal"><span class="pre
 <dt id="py_register_machine2.tools.assembler.directives.Padding">
 <em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.directives.</code><code class="descname">Padding</code><span class="sig-paren">(</span><em>name='.padd'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/directives.html#Padding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.directives.Padding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Usage:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>.padd n v
+<div class="highlight-python"><div class="highlight"><pre><span></span>.padd name n v
 </pre></div>
 </div>
 <p>Fills the next n words with v.</p>
@@ -290,7 +306,7 @@ and convert it to an iterable of <code class="docutils literal"><span class="pre
 <dt id="py_register_machine2.tools.assembler.directives.Zeros">
 <em class="property">class </em><code class="descclassname">py_register_machine2.tools.assembler.directives.</code><code class="descname">Zeros</code><span class="sig-paren">(</span><em>name='.zeros'</em><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/tools/assembler/directives.html#Zeros"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.tools.assembler.directives.Zeros" title="Permalink to this definition">¶</a></dt>
 <dd><p>Usage:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>.zeros n        
+<div class="highlight-python"><div class="highlight"><pre><span></span>.zeros name n   
 </pre></div>
 </div>
 <p>Fills the next n words with zeros.</p>

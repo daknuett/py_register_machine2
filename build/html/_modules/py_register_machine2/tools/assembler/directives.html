@@ -72,6 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../commands.html">py_register_machine2.commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../machines.html">py_register_machine2.machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../apps.html">Apps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../developer_guide.html">Developer&#8217;s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../install.html">Installing PyRegisterMachine2</a></li>
 </ul>
@@ -123,7 +124,12 @@
   <h1>Source code for py_register_machine2.tools.assembler.directives</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/python3</span>
 
+<span class="kn">from</span> <span class="nn">py_register_machine2.engine_tools.conversions</span> <span class="kn">import</span> <span class="n">to_int</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">**py_register_machine2.tools.assembler.directives**: Directives (Pseudoops) for the assembler</span>
+
 <span class="sd">Directives for the assembler.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -133,6 +139,7 @@
 
 <span class="sd">	* ``name`` (like ``.set``)</span>
 <span class="sd">	* ``get_words(line)``: return the data to store</span>
+<span class="sd">	* ``get_word_count(line)``: return the number of words to store</span>
 <span class="sd">	* ``isstatic()`` returns True, if the reference should be static</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
@@ -140,6 +147,8 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 	<span class="k">def</span> <span class="nf">get_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
 		<span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+	<span class="k">def</span> <span class="nf">get_word_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">return</span> <span class="mi">1</span>
 	<span class="k">def</span> <span class="nf">isstatic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="bp">False</span></div>
 
@@ -166,28 +175,32 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
 
 	<span class="k">def</span> <span class="nf">get_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_word_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">line</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Zeros"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.directives.Zeros">[docs]</a><span class="k">class</span> <span class="nc">Zeros</span><span class="p">(</span><span class="n">BaseDirective</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Usage: </span>
 <span class="sd">	::</span>
 
-<span class="sd">		.zeros n	</span>
+<span class="sd">		.zeros name n	</span>
 
 <span class="sd">	Fills the next n words with zeros.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;.zeros&quot;</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 	<span class="k">def</span> <span class="nf">get_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
-		<span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
-
+		<span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">to_int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+	<span class="k">def</span> <span class="nf">get_word_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">to_int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+	
 <div class="viewcode-block" id="Padding"><a class="viewcode-back" href="../../../../tools.html#py_register_machine2.tools.assembler.directives.Padding">[docs]</a><span class="k">class</span> <span class="nc">Padding</span><span class="p">(</span><span class="n">BaseDirective</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Usage:</span>
 <span class="sd">	::</span>
 
-<span class="sd">		.padd n v</span>
+<span class="sd">		.padd name n v</span>
 
 <span class="sd">	Fills the next n words with v.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
@@ -195,7 +208,9 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 	<span class="k">def</span> <span class="nf">get_words</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
 		<span class="n">number</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span>
-		<span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span></div>
+		<span class="k">return</span> <span class="p">[</span><span class="n">to_int</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span> <span class="o">*</span> <span class="n">to_int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">get_word_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">to_int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
 	
 </pre></div>
 

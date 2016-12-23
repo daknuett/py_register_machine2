@@ -72,6 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../commands.html">py_register_machine2.commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../machines.html">py_register_machine2.machines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../apps.html">Apps</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developer_guide.html">Developer&#8217;s Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install.html">Installing PyRegisterMachine2</a></li>
 </ul>
@@ -196,6 +197,15 @@
 	<span class="k">elif</span><span class="p">(</span><span class="n">argument</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span> <span class="ow">and</span> <span class="n">argument</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">):</span>
 		<span class="k">return</span> <span class="nb">ord</span><span class="p">(</span><span class="n">argument</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 	<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">argument</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="chunks"><a class="viewcode-back" href="../../../developer_guide.html#py_register_machine2.engine_tools.conversions.chunks">[docs]</a><span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	from `Stack Overflow &lt;http://stackoverflow.com/questions/312443/how-do-you-split-a-list-into-evenly-sized-chunks&gt;`_</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterable</span><span class="p">),</span> <span class="n">size</span><span class="p">):</span>
+		<span class="k">yield</span> <span class="n">l</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span></div>
+		
 </pre></div>
 
     </div>

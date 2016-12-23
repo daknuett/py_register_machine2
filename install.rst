@@ -1,6 +1,9 @@
 Installing PyRegisterMachine2
 *****************************
 
+From Source
+===========
+
 PyRegisterMachine2 is a simple python3-package, so the only thing one has to do is to place the folder in the ``$PYTHONPATH``. One can get the ``$PYTHONPATH`` in the following ways::
 
 	echo $PYTHONPATH
@@ -20,4 +23,11 @@ Usually the local path is ``/home/<username>/.local/lib/python3.5/site-packages`
 	git clone https://github.com/daknuett/py_register_machine2
 
 
+Using PyPi
+==========
 
+Use ::
+
+	python3 -m pip install py_register_machine2
+
+To install py_register_machine2 using PyPi.

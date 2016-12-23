@@ -16,7 +16,7 @@
 import sys
 import os
 
-sys.path.append("../../py_register_machine2/")
+sys.path = ["../../py_register_machine2/"] + sys.path
  
 import sphinx_bootstrap_theme
 
