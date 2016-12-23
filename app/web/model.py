@@ -1,7 +1,13 @@
 #!/usr/bin/python3
 
 """
-PyRegisterMachine2 Webapplication Datamodel
+**py_register_machine2.app.web.front**: PRM2 Webapplication Datamodel
+
+Every session generates a new RMServer object.
+The RMServer contains the complete register machine.
+
+It is possible to generate custom register machines by providing the 
+RMServer by a dict with specifications.
 """
 
 from ...core.register import *

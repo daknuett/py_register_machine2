@@ -1,5 +1,21 @@
 #!/usr/bin/python3
 
+"""
+**py_register_machine2.app.web.front**: Webapplication controller
+
+Run 
+::
+
+	python3 -m py_register_machine2.app.web.front
+
+to start the server.
+
+This module uses py_register_machine2.app.web.model, cherrypy
+and a bunch of HTML/CSS/JS to provide a webinterface.
+
+All actions are performed by AJAX.
+"""
+
 import cherrypy, os
 from .model import RMServer
 
