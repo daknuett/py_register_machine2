@@ -3,6 +3,9 @@
 from py_register_machine2.engine_tools.conversions import to_int
 
 """
+
+**py_register_machine2.tools.assembler.directives**: Directives (Pseudoops) for the assembler
+
 Directives for the assembler.
 """
 

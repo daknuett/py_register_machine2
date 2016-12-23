@@ -72,7 +72,7 @@ def pld_function(register_interface, memory_BUS, device_BUS, addr_from, to):
 	word = memory_BUS.read_word(from_)
 	register_interface.write(to, word)
 
-pld = FunctionCommand("pld", 0x02, 2, pld_function, ["register", "register"])
+pld = FunctionCommand("pld", 0x02, 2, pld_function, [registerargument(), registerargument()])
 
 def pst_function(register_interface, memory_BUS, device_BUS, from_, addr_to):
 	to = register_interface.read(addr_to)
@@ -80,20 +80,20 @@ def pst_function(register_interface, memory_BUS, device_BUS, from_, addr_to):
 	word = register_interface.read(from_)
 	memory_BUS.write_word(to, word)
 
-pst = FunctionCommand("pst", 0x03, 2, pst_function, ["register", "register"])
+pst = FunctionCommand("pst", 0x03, 2, pst_function, [registerargument(), registerargument()])
 
 
 def ld_function(register_interface, memory_BUS, device_BUS, from_, to):
 	word = memory_BUS.read_word(from_)
 	register_interface.write(to, word)
 
-ld = FunctionCommand("ld", 0x04, 2, ld_function, ["const", "register"])
+ld = FunctionCommand("ld", 0x04, 2, ld_function, [constargument(), registerargument()])
 
 def st_function(register_interface, memory_BUS, device_BUS, from_, to):
 	word = register_interface.read(from_)
 	memory_BUS.write_word(to, word)
 
-st = FunctionCommand("st", 0x05, 2, st_function, ["register", "const"])
+st = FunctionCommand("st", 0x05, 2, st_function, [registerargument(), constargument()])
 
 
 add_function = lambda a,b: a + b
@@ -111,12 +111,12 @@ def jmp_function(register_interface, memory_BUS, device_BUS, to):
 	pc -= 2
 	pc += to
 	register_interface.write(0, pc)
-jmp = FunctionCommand("jmp", 0x0a, 1, jmp_function, ["const"])
+jmp = FunctionCommand("jmp", 0x0a, 1, jmp_function, [constargument()])
 
 def sjmp_function(register_interface, memory_BUS, device_BUS, to):
 	pc = to
 	register_interface.write(0, pc)
-sjmp = FunctionCommand("sjmp", 0x17, 1, sjmp_function, ["const"])
+sjmp = FunctionCommand("sjmp", 0x17, 1, sjmp_function, [constargument()])
 
 def inc_function(register_interface, memory_BUS, device_BUS, register):
 	word = register_interface.read(register)
@@ -127,8 +127,8 @@ def dec_function(register_interface, memory_BUS, device_BUS, register):
 	word -= 1
 	register_interface.write(register, word)
 
-inc = FunctionCommand("inc", 0x0d, 1, inc_function, ["register"])
-dec = FunctionCommand("dec", 0x0f, 1, dec_function, ["register"])
+inc = FunctionCommand("inc", 0x0d, 1, inc_function, [registerargument()])
+dec = FunctionCommand("dec", 0x0f, 1, dec_function, [registerargument()])
 
 
 def branch_function(register_interface, memory_BUS, device_BUS, op1, op2, function):
@@ -146,12 +146,12 @@ jlt_function = lambda register_interface, memory_BUS, device_BUS, op1, op2: bran
 jge_function = lambda register_interface, memory_BUS, device_BUS, op1, op2: branch_function(register_interface, memory_BUS, device_BUS, op1, op2, lambda x: x >= 0)
 jgt_function = lambda register_interface, memory_BUS, device_BUS, op1, op2: branch_function(register_interface, memory_BUS, device_BUS, op1, op2, lambda x: x > 0)
 
-jne = FunctionCommand("jne", 0x10, 2, jne_function, ["register", "const"])
-jeq = FunctionCommand("jeq", 0x11, 2, jeq_function, ["register", "const"])
-jle = FunctionCommand("jle", 0x12, 2, jle_function, ["register", "const"])
-jlt = FunctionCommand("jlt", 0x13, 2, jlt_function, ["register", "const"])
-jge = FunctionCommand("jge", 0x14, 2, jge_function, ["register", "const"])
-jgt = FunctionCommand("jgt", 0x15, 2, jgt_function, ["register", "const"])
+jne = FunctionCommand("jne", 0x10, 2, jne_function, [registerargument(), constargument()])
+jeq = FunctionCommand("jeq", 0x11, 2, jeq_function, [registerargument(), constargument()])
+jle = FunctionCommand("jle", 0x12, 2, jle_function, [registerargument(), constargument()])
+jlt = FunctionCommand("jlt", 0x13, 2, jlt_function, [registerargument(), constargument()])
+jge = FunctionCommand("jge", 0x14, 2, jge_function, [registerargument(), constargument()])
+jgt = FunctionCommand("jgt", 0x15, 2, jgt_function, [registerargument(), constargument()])
 
 
 
@@ -162,7 +162,7 @@ def in_function(register_interface, memory_BUS, device_BUS, addr_from, to):
 	register_interface.write(to, word)
 
 
-in_ = FunctionCommand("in", 0x0b, 2, in_function, ["register", "register"])
+in_ = FunctionCommand("in", 0x0b, 2, in_function, [registerargument(), registerargument()])
 
 def out_function(register_interface, memory_BUS, device_BUS, from_, addr_to):
 	to = register_interface.read(addr_to)
@@ -170,10 +170,10 @@ def out_function(register_interface, memory_BUS, device_BUS, from_, addr_to):
 	word = memory_BUS.read_word(from_)
 	device_BUS.write_word(to, word)
 
-out = FunctionCommand("out", 0x0c, 2, out_function, ["register", "register"])
+out = FunctionCommand("out", 0x0c, 2, out_function, [registerargument(), registerargument()])
 
 def ldi_function(register_interface, memory_BUS, device_BUS, const, to):
 	register_interface.write(to, const)
-ldi = FunctionCommand("ldi", 0x16, 2, ldi_function,  ["const", "register"])
+ldi = FunctionCommand("ldi", 0x16, 2, ldi_function,  [constargument(), registerargument()])
 
 basic_commands = [mov, pld, pst, st, ld, add, sub, mul, div, jmp, in_, out, jne, jeq, jle, jlt, jge, jgt, inc, dec, ldi, sjmp]

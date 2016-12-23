@@ -75,6 +75,30 @@ class BaseCommand(object):
 		"""
 		return self._argtypes
 
+class ArgumentType(object):
+	"""
+	.. _ArgumentType:
+
+	Represents argument types. Actually there are only the types
+	``"register"`` and ``"const"`` but it might be helpful to 
+	use default values. Those are stored in the ArgumentType, too.
+
+	This module provides the functions ``registerargument():`` and
+	``constargument()`` those will return an ``ArgumentType(type_ = "register", can_default = False, default = 0)``
+	and an ``ArgumentType(type_ = "const", can_default = False, default = 0)``
+	"""
+	def __init__(self, type_ = "register", can_default = False, default = 0):
+		self.type_ = type_
+		self.can_default = can_default
+		self.default = default
+	def __repr__(self):
+		return "ArgumentType(type_ = {}, can_default = {}, default = {})".format(repr(self.type_),
+				self.can_default, repr(self.default))
+def registerargument():
+	return ArgumentType(type_ = "register", can_default = False, default = 0)
+def constargument():
+	return ArgumentType(type_ = "const", can_default = False, default = 0)
+
 class ArithmeticCommand(BaseCommand):
 	"""
 	.. _ArithmeticCommand:
@@ -90,7 +114,7 @@ class ArithmeticCommand(BaseCommand):
 	
 	"""
 	def __init__(self, mnemonic, opcode, function):
-		BaseCommand.__init__(self, mnemonic, opcode, 2, ["register", "register"])
+		BaseCommand.__init__(self, mnemonic, opcode, 2, [registerargument(), registerargument()])
 		self.function = function
 
 	def exec(self, operand1, operand2):
