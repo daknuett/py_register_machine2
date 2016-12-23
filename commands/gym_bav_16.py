@@ -37,6 +37,13 @@
 +----------+--------+---------------------------------------------------+
 | JGE c    | 0x10   | if(A >= 0): PC = c                     	        |
 +----------+--------+---------------------------------------------------+
+
+all commands are available in the list ``commands``
+
+*Note*:
+
+Actually all commands use 2 words. So actually all branch functions set
+the PC to ``c * 2``.
 """
 
 from ..core.commands import * 

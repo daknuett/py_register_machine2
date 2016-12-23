@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 """
+**py_register_machine2.machines.gym_bav_16** 
+
 A register machine compatible to the schedule of the bavarian gymnasium.
 
 Differences:
@@ -36,6 +38,19 @@ New style::
 You are able to change the commentstart strings using the argument ``commentstarts``::
 
 	asm = Assembler(processor, stream, commentstarts = ["--"])
+
+
+Generate a register machine using
+::
+
+	from py_register_machine2.machines.gym_bav_16 import machine
+	processor, rom, ram, flash = machine()
+
+*Note*:
+
+This machine does not provide a RAM or Flash device by default.
+You can change the number of registers and the size of the ROM by 
+passing the attributes to the function ``machine(romsize = 200, numregister = 15)``
 """
 from py_register_machine2.core import memory, processor, register, device
 from py_register_machine2.commands.gym_bav_16 import commands
