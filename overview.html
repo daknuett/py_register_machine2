@@ -92,6 +92,7 @@
 <li><a class="reference internal" href="#">Overview</a><ul>
 <li><a class="reference internal" href="#block-diagram-of-the-architecture">Block Diagram of the Architecture</a></li>
 <li><a class="reference internal" href="#class-diagram-of-the-memory-layout">Class Diagram of the Memory Layout</a></li>
+<li><a class="reference internal" href="#model-overview">Model Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -151,6 +152,22 @@
 <h2>Class Diagram of the Memory Layout<a class="headerlink" href="#class-diagram-of-the-memory-layout" title="Permalink to this headline">¶</a></h2>
 <img alt="images/Classes.png" src="images/Classes.png" />
 <p>(UML Diagram)</p>
+</div>
+<div class="section" id="model-overview">
+<h2>Model Overview<a class="headerlink" href="#model-overview" title="Permalink to this headline">¶</a></h2>
+<p>The model uses the following parts:</p>
+<ul class="simple">
+<li>Core: Everything the basic RM needs to work( Memory, Processor, Interrupts, abstract Commands)
+most probably you are not going to use this part.</li>
+<li>Commands: Here are a bunch of basic Commands. You should definitly check the doc for these modules.</li>
+<li>Machines: A bunch of ready to use RMs.</li>
+<li>engine_tools: A bunch of utils used by the Core module. If you do not want to modify the core
+you are not going to use this package.</li>
+<li>Tools: A set of tools to provide basic funtionality, like an Assembler.</li>
+<li>App: A collection of applications to provide a more comfortable interface to the RMs.</li>
+</ul>
+<p>Usual users should take a look at the Commands, Machines, Tools and Apps.
+If you want to dive deep into PRM2 you should check out the core.processor documentation.</p>
 </div>
 </div>
 
