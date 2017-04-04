@@ -369,7 +369,7 @@ class Processor(object):
 
 		If ``clock_barrier`` is set, ``do_cycle`` will perform the ``clock_barrier.wait()``.
 
-		Might raise SIGSEGV_, if there is an invalid opcode.
+		Might raise SIGILL_, if there is an invalid opcode.
 		"""
 		if(self.f_cpu != None):
 			if(self.last_cycle == None):
@@ -377,7 +377,7 @@ class Processor(object):
 
 		opcode = self._fetch_at_pc()
 		if(not opcode in self.commands_by_opcode):
-			raise SIGSEGV("Invalid opcode ({}) at {}".format(opcode, self.pc - 1))
+			raise SIGILL("Invalid opcode ({}) at {}".format(opcode, self.pc - 1))
 		command = self.commands_by_opcode[opcode]
 		numargs = command.numargs()
 		args = [self._fetch_at_pc() for i in range(numargs)]
@@ -421,11 +421,11 @@ class SetupError(Exception):
 		Exception.__init__(self, *args)
 
 
-class SIGSEGV(Exception):
+class SIGILL(Exception):
 	"""
-	.. _SIGSEGV:
+	.. _SIGILL:
 	
-	Raised if an invalid memory command or opcode occurs.
+	Raised if an invalid opcode occurs.
 	"""
 	def __init__(self, *args):
 		Exception.__init__(self, *args)
