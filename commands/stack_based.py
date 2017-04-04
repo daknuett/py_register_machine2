@@ -68,3 +68,6 @@ scall = FunctionCommand("scall", 0x1b, 1, scall_function, [constargument()])
 ret = FunctionCommand("ret", 0x1c, 0, ret_function, [])
 
 stack_based_commands = [push, pop, call, scall, ret]
+
+def get_commands():
+	return stack_based_commands

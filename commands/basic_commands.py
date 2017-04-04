@@ -177,3 +177,5 @@ def ldi_function(register_interface, memory_BUS, device_BUS, const, to):
 ldi = FunctionCommand("ldi", 0x16, 2, ldi_function,  [constargument(), registerargument()])
 
 basic_commands = [mov, pld, pst, st, ld, add, sub, mul, div, jmp, in_, out, jne, jeq, jle, jlt, jge, jgt, inc, dec, ldi, sjmp]
+def get_commands():
+	return basic_commands

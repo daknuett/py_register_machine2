@@ -112,3 +112,6 @@ JGE = FunctionCommand("JGE", 0x10, 1,
 		branch_function( register_interface, memory_BUS, device_BUS, c, lambda x: x >= 0),  [constargument()])
 
 commands = [DLOAD, LOAD, STORE, ADD, SUB, MULT, DIV, JUMP, HALT, JNE, JEQ, JLT, JLE, JGT, JGE]
+
+def get_commands():
+	return commands

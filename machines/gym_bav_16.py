@@ -69,3 +69,4 @@ def machine(romsize = 200, numregister = 15):
 	proc.setup_done()
 	return (proc, rom, None, None)
 
+get_machine = machine
