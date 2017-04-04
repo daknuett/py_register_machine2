@@ -37,8 +37,13 @@ setup(
 	keywords = "simulation virtualization processor registermachine",
 	packages = find_packages(),
 	install_requires = [
-		"cherrypy >= 3.0"	# this is only required for
+		"cherrypy >= 3.0",	# this is only required for
 					# py_register_machine2.app.web
+					# comment this requirement if you do not need it. 
+
+
+		"docopt >= 0.6.1"	# this is only required for
+					# py_register_machine2.app.cli
 					# comment this requirement if you do not need it. 
 	]
 
