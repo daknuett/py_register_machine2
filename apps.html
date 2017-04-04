@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Apps &mdash; py_register_machine2 0.1.2 documentation</title>
+    <title>Apps &mdash; py_register_machine2 0.1.3 documentation</title>
     
     <link rel="stylesheet" href="static/basic.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.2',
+        VERSION:     '0.1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <script type="text/javascript" src="static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="py_register_machine2 0.1.2 documentation" href="index.html" />
+    <link rel="top" title="py_register_machine2 0.1.3 documentation" href="index.html" />
     <link rel="next" title="Developer’s Guide" href="developer_guide.html" />
     <link rel="prev" title="Tools" href="tools.html" />
 <meta charset='utf-8'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           py_register_machine2</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.2</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.1.3</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -92,6 +92,13 @@
 <li><a class="reference internal" href="#">Apps</a><ul>
 <li><a class="reference internal" href="#webapp">Webapp</a><ul>
 <li><a class="reference internal" href="#module-py_register_machine2.app.web.front">Documentation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#command-line-interface">Command Line Interface</a><ul>
+<li><a class="reference internal" href="#using-the-cli">Using the CLI</a></li>
+<li><a class="reference internal" href="#about-prm2bin">About prm2bin</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#id1">Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -169,6 +176,152 @@ and a bunch of HTML/CSS/JS to provide a webinterface.</p>
 The RMServer contains the complete register machine.</p>
 <p>It is possible to generate custom register machines by providing the 
 RMServer by a dict with specifications.</p>
+</div>
+</div>
+<div class="section" id="command-line-interface">
+<h2>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h2>
+<p>The command line interface is the preferred way to use PRM2
+as a program.</p>
+<p>Because PRM2 is way more generic the interface cannot follow
+usual interface standards, like the GCC does. It is however
+possible to use the CLI with make.</p>
+<div class="section" id="using-the-cli">
+<h3>Using the CLI<a class="headerlink" href="#using-the-cli" title="Permalink to this headline">¶</a></h3>
+<p>The CLI uses three commands:</p>
+<dl class="docutils">
+<dt>assemble</dt>
+<dd>Takes exactly one <code class="docutils literal"><span class="pre">kasm2</span></code> file suitable for the
+machine definition and compiles it to <a class="reference internal" href="#prm2bin">prm2bin</a>
+code.</dd>
+<dt>link</dt>
+<dd>Takes one or more <a class="reference internal" href="#prm2bin">prm2bin</a> files and concatenates
+them to one. This is actually an equivalent to <code class="docutils literal"><span class="pre">cat</span>
+<span class="pre">&lt;linkfiles&gt;</span> <span class="pre">&gt;</span> <span class="pre">&lt;outfile&gt;</span></code>, but further versions
+might provide more functions.</dd>
+<dt>execute</dt>
+<dd>Executes one <a class="reference internal" href="#prm2bin">prm2bin</a> file.</dd>
+</dl>
+</div>
+<div class="section" id="about-prm2bin">
+<span id="prm2bin"></span><h3>About prm2bin<a class="headerlink" href="#about-prm2bin" title="Permalink to this headline">¶</a></h3>
+<p>prm2bin is a human readable format to store binary data. One
+prm2bin file is divided into several sections (usually 2)
+that will used to program the corresponding devices. The
+sections are ended by a newline character (<code class="docutils literal"><span class="pre">\n</span></code>). The file
+looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>&lt;sectionname&gt;:&lt;content&gt;
+&lt;sectionname&gt;:&lt;content&gt;
+</pre></div>
+</div>
+<p>For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>ROM:[22, 72, 3, 22, 101, 3, 22, 108, 3, 22, 108, 3, 22, 111, 3, 22, 33, 3, 22, 10, 3, 22, 1, 1]
+FLASH:[22, 1, 1]
+</pre></div>
+</div>
+<p>The content is a list with the values of the words. It is
+possible to modify these files using a common text editor.</p>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>This is a small example about how to use the CLI with GNU
+make.</p>
+<p>Makefile:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>asm = python3 -m py_register_machine2.app.cli assemble
+link = python3 -m py_register_machine2.app.cli link
+execute = python3 -m py_register_machine2.app.cli execute
+
+asmflag = --directives=&quot;[directives.ConvertingDirective(&#39;.set&#39;, lambda x: x)]&quot; -o
+
+exec: main.prm2bin
+        $(execute) main.prm2bin
+
+execv: main.prm2bin
+        $(execute) main.prm2bin -v
+
+rom.prm2bin:rom.kasm2
+        $(asm) rom.kasm2 --section=ROM $(asmflag) rom.prm2bin
+
+flash.prm2bin:flash.kasm2
+        $(asm) flash.kasm2 --section=FLASH $(asmflag) flash.prm2bin
+
+main.prm2bin:rom.prm2bin flash.prm2bin
+        $(link) main.prm2bin rom.prm2bin flash.prm2bin
+
+
+clean:
+        -rm *.prm2bin
+</pre></div>
+</div>
+<p>rom.kasm2:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>ldi 0 r0
+in r0 r1
+ldi RAMEND_LOW r2
+
+loop:
+inc r0
+in r0 r3
+pst r3 r2
+inc r2
+dec r1
+jne r1 loop
+
+sjmp RAMEND_LOW
+</pre></div>
+</div>
+<p>flash.kasm2:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>.set flash_sec_size flash_sec_end
+ldi &#39;H&#39; out0
+ldi &#39;e&#39; out0
+ldi &#39;l&#39; out0
+ldi &#39;l&#39; out0
+ldi &#39;o&#39; out0
+ldi &#39;!&#39; out0
+ldi 0xa out0
+ldi 0b1 ECR
+flash_sec_end:
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Documentation<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-py_register_machine2.app.cli"></span><p>A command line interface for py_register_machine2.</p>
+<p>Used to compile and execute assembly code.</p>
+<p><strong>Note</strong>: The binary object code is divided into sections.
+There are the following two sections:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">ROM</span></code> will be programmed into the ROM</li>
+<li><code class="docutils literal"><span class="pre">FLASH</span></code> will be programmed into the Flash</li>
+</ul>
+<p>The sections are splitted by a newline character in the binary
+file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>&lt;sectionname&gt;:&lt;code&gt;
+</pre></div>
+</div>
+<p>Eg:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>ROM:[22, 0, 4, 22, 1, 1]
+FLASH:[22, 0, 4, 22, 1, 1]
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>Usage:
+        cli assemble (&lt;infile&gt; | --string &lt;string&gt;) [options]
+        cli execute (&lt;infile&gt; | --string &lt;string&gt;) [options]
+        cli link &lt;outfile&gt; &lt;linkfiles&gt; ...
+
+Options:
+        -c &lt;commandmodule&gt; --commands=&lt;commandmodule&gt;    use the given commands [default: py_register_machine2.commands.basic_commands]
+        -m &lt;machinemodule&gt; --machine=&lt;machinemodule&gt;     use the given register machine [default: py_register_machine2.machines.small]
+        -r --register-commands                           actually register the commands specified by -c
+        -s &lt;steps&gt; --steps=&lt;steps&gt;                       run &lt;steps&gt; processor cycles, if &lt;steps&gt; is negative the processor will just execute all steps [default: -1]
+        --commentstart=&lt;commentstart&gt;                    use commentstart to start comments [default: [&#39;;&#39;]]
+        --string=&lt;string&gt;                                use the given string instead of an input file
+        -o &lt;outfile&gt; --output=&lt;outfile&gt;                  write output to the given file (if unspecified write to sys.stdout)
+        -S &lt;section&gt; --section=&lt;section&gt;                 the assembly code is for the given section [default: ROM]
+        -v --verbose                                     add more output
+        -d &lt;debug&gt; --debug=&lt;debug&gt;                       set debugging verbosity [default: 0]
+        --directive-import &lt;directivemodule&gt;             import this module for directives [default: py_register_machine2.tools.assembler.directives]
+        -D &lt;directives&gt; --directives=&lt;directives&gt;        use these directives [default: []] NOTE: all directives must be named ``directives.&lt;Directive&gt;``.
+</pre></div>
+</div>
 </div>
 </div>
 </div>
