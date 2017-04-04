@@ -35,7 +35,12 @@ setup(
 		'Programming Language :: Python :: 3.4',
 		'Programming Language :: Python :: 3.5'],
 	keywords = "simulation virtualization processor registermachine",
-	packages = find_packages()
+	packages = find_packages(),
+	install_requires = [
+		"cherrypy >= 3.0"	# this is only required for
+					# py_register_machine2.app.web
+					# comment this requirement if you do not need it. 
+	]
 
 
      )
