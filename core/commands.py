@@ -18,6 +18,8 @@ class BaseCommand(object):
 	* opcode_
 	* argtypes_
 
+	argtypes_ must be a list of ``ArgumentType`` objects.
+
 	"""
 	def __init__(self, mnemonic, opcode, numargs, argtypes):
 		self._mnemonic = mnemonic
@@ -68,10 +70,10 @@ class BaseCommand(object):
 		"""
 		.. _argtypes:
 
-		Return a list of strings defining the argument types,
+		Return a list of ArgumentType objects defining the argument types,
 		i.e.::
 
-			["register", "register"]
+			[ArgumentType(type_ = "register", can_default = False, default = 0), ArgumentType(type_ = "register", can_default = False, default = 0)]
 		"""
 		return self._argtypes
 
@@ -156,7 +158,7 @@ class FunctionCommand(BaseCommand):
 			word = memory_BUS.read_word(from_)
 			register_interface.write(to, word)
 		
-		ld_command = FunctionCommand("ld", 34, 2, ld_function, ["const", "register"])
+		ld_command = FunctionCommand("ld", 34, 2, ld_function, [constargument(), registerargument()])
 			
 	*Example*: ``nop`` Command::
 
