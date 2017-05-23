@@ -747,12 +747,13 @@ both arguments are Registers.</p>
 <li><a class="reference internal" href="#opcode">opcode</a></li>
 <li><a class="reference internal" href="#argtypes">argtypes</a></li>
 </ul>
+<p><a class="reference internal" href="#argtypes">argtypes</a> must be a list of <code class="docutils literal"><span class="pre">ArgumentType</span></code> objects.</p>
 <dl class="method">
 <dt id="py_register_machine2.core.commands.BaseCommand.argtypes">
 <code class="descname">argtypes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/py_register_machine2/core/commands.html#BaseCommand.argtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#py_register_machine2.core.commands.BaseCommand.argtypes" title="Permalink to this definition">¶</a></dt>
-<dd><p id="argtypes">Return a list of strings defining the argument types,
+<dd><p id="argtypes">Return a list of ArgumentType objects defining the argument types,
 i.e.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;register&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">ArgumentType</span><span class="p">(</span><span class="n">type_</span> <span class="o">=</span> <span class="s2">&quot;register&quot;</span><span class="p">,</span> <span class="n">can_default</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">),</span> <span class="n">ArgumentType</span><span class="p">(</span><span class="n">type_</span> <span class="o">=</span> <span class="s2">&quot;register&quot;</span><span class="p">,</span> <span class="n">can_default</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -812,7 +813,7 @@ in <code class="docutils literal"><span class="pre">numargs</span></code></p>
         <span class="n">word</span> <span class="o">=</span> <span class="n">memory_BUS</span><span class="o">.</span><span class="n">read_word</span><span class="p">(</span><span class="n">from_</span><span class="p">)</span>
         <span class="n">register_interface</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
 
-<span class="n">ld_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;ld&quot;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ld_function</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;const&quot;</span><span class="p">,</span> <span class="s2">&quot;register&quot;</span><span class="p">])</span>
+<span class="n">ld_command</span> <span class="o">=</span> <span class="n">FunctionCommand</span><span class="p">(</span><span class="s2">&quot;ld&quot;</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ld_function</span><span class="p">,</span> <span class="p">[</span><span class="n">constargument</span><span class="p">(),</span> <span class="n">registerargument</span><span class="p">()])</span>
 </pre></div>
 </div>
 <p><em>Example</em>: <code class="docutils literal"><span class="pre">nop</span></code> Command:</p>

@@ -142,6 +142,8 @@
 <span class="sd">	* opcode_</span>
 <span class="sd">	* argtypes_</span>
 
+<span class="sd">	argtypes_ must be a list of ``ArgumentType`` objects.</span>
+
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mnemonic</span><span class="p">,</span> <span class="n">opcode</span><span class="p">,</span> <span class="n">numargs</span><span class="p">,</span> <span class="n">argtypes</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">_mnemonic</span> <span class="o">=</span> <span class="n">mnemonic</span>
@@ -192,10 +194,10 @@
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		.. _argtypes:</span>
 
-<span class="sd">		Return a list of strings defining the argument types,</span>
+<span class="sd">		Return a list of ArgumentType objects defining the argument types,</span>
 <span class="sd">		i.e.::</span>
 
-<span class="sd">			[&quot;register&quot;, &quot;register&quot;]</span>
+<span class="sd">			[ArgumentType(type_ = &quot;register&quot;, can_default = False, default = 0), ArgumentType(type_ = &quot;register&quot;, can_default = False, default = 0)]</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_argtypes</span></div></div>
 
@@ -280,7 +282,7 @@
 <span class="sd">			word = memory_BUS.read_word(from_)</span>
 <span class="sd">			register_interface.write(to, word)</span>
 <span class="sd">		</span>
-<span class="sd">		ld_command = FunctionCommand(&quot;ld&quot;, 34, 2, ld_function, [&quot;const&quot;, &quot;register&quot;])</span>
+<span class="sd">		ld_command = FunctionCommand(&quot;ld&quot;, 34, 2, ld_function, [constargument(), registerargument()])</span>
 <span class="sd">			</span>
 <span class="sd">	*Example*: ``nop`` Command::</span>
 
