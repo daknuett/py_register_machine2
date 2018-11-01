@@ -17,11 +17,28 @@
 +----------+--------+---------------------------------------------------+
 | ret      | 0x1c   | PC = *(++SP)                                      |
 +----------+--------+---------------------------------------------------+
+| resw a   | 0x1d   | SP -= a                                           |
++----------+--------+---------------------------------------------------+
+| frew a   | 0x1f   | SP += a                                           |
++----------+--------+---------------------------------------------------+
 
 all stackbased commands are available in the list ``stack_based_commands``.
 """
 
 from ..core.commands import *
+
+def resw_function(register_interface, memory_BUS, device_BUS, words):
+	sp = register_interface.read(2)
+	sp -= abs(words)
+	register_interface.write(2, sp)
+
+def frew_function(register_interface, memory_BUS, device_BUS, words):
+	sp = register_interface.read(2)
+	sp += abs(words)
+	register_interface.write(2, sp)
+
+
+	
 
 def push_function(register_interface, memory_BUS, device_BUS, register):
 	sp = register_interface.read(2)
@@ -39,7 +56,7 @@ def call_function(register_interface, memory_BUS, device_BUS, addr):
 	pc = register_interface.read(0)
 	sp = register_interface.read(2)
 	memory_BUS.write_word(sp, pc)
-	sp += 1
+	sp -= 1
 	register_interface.write(2, sp)
 	addr -= 2
 	pc += addr
@@ -55,7 +72,7 @@ def scall_function(register_interface, memory_BUS, device_BUS, addr):
 	pc = register_interface.read(0)
 	sp = register_interface.read(2)
 	memory_BUS.write_word(sp, pc)
-	sp += 1
+	sp -= 1
 	register_interface.write(2, sp)
 	addr -= 2
 	pc = addr
@@ -66,8 +83,10 @@ pop = FunctionCommand("pop", 0x19, 1, pop_function, [registerargument()])
 call = FunctionCommand("call", 0x1a, 1, call_function, [constargument()])
 scall = FunctionCommand("scall", 0x1b, 1, scall_function, [constargument()])
 ret = FunctionCommand("ret", 0x1c, 0, ret_function, [])
+resw = FunctionCommand("resw", 0x1d, 1, resw_function, [constargument()])
+frew = FunctionCommand("frew", 0x1e, 1, frew_function, [constargument()])
 
-stack_based_commands = [push, pop, call, scall, ret]
+stack_based_commands = [push, pop, call, scall, ret, resw, frew]
 
 def get_commands():
 	return stack_based_commands
