@@ -95,7 +95,7 @@ class BUS(object):
 
 		"""	
 		self._lock = True
-		if(offset >= self.current_max_offset):
+		if(offset > self.current_max_offset):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
 		self.reads += 1
 		for addresspace, device in self.index.items():
@@ -115,7 +115,7 @@ class BUS(object):
 		see read_word_.
 		"""
 		self._lock = True
-		if(offset >= self.current_max_offset):
+		if(offset > self.current_max_offset):
 			raise BUSError("Offset({}) exceeds address space of BUS({})".format(offset, self.current_max_offset)) 
 		self.writes += 1
 		
