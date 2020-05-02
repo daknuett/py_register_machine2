@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst')) as f:
 
 setup(
 	name = "py_register_machine2",
-	version = "0.1.3",
+	version = "0.1.4",
 	description = "A Register Machine Package",
 	long_description = long_description,
 	url = "https://github.com/daknuett/py_register_machine2",
@@ -39,12 +39,12 @@ setup(
 	install_requires = [
 		"cherrypy >= 3.0",	# this is only required for
 					# py_register_machine2.app.web
-					# comment this requirement if you do not need it. 
+					# comment this requirement if you do not need it.
 
 
 		"docopt >= 0.6.1"	# this is only required for
 					# py_register_machine2.app.cli
-					# comment this requirement if you do not need it. 
+					# comment this requirement if you do not need it.
 	]
 
 
