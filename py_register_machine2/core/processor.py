@@ -142,10 +142,10 @@ class Processor(object):
 	**Internal Constants**
 
 	Constants used by the Assembler, should be set using setup_done_
-	
+
 	``ROMEND_LOW``
 		First word of the ROM_ (always ``0``)
-	``ROMEND_HIGH`` 
+	``ROMEND_HIGH``
 		Last word of the ROM_
 	``RAMEND_LOW``
 		First word of the RAM_, (``ROMEND_HIGH + rom.size``)
@@ -159,7 +159,7 @@ class Processor(object):
 		Address of the interrupt (set by invoking ``add_interrupt``)
 
 	**Cycles**
-	
+
 	The number of cycles can be observed by acessing the ``cycles`` variable.
 
 	"""
@@ -237,6 +237,8 @@ class Processor(object):
 			print("ECR: {}".format(bin(self.ecr)))
 	def _refresh_sp(self):
 		self.sp = self.register_interface.read(2)
+		if(self.debug > 5):
+			print("SP: {}".format(bin(self.sp)))
 	def _fetch_at_pc(self):
 		opcode = self.memory_bus.read_word(self.pc)
 		self._increase_pc()
@@ -259,7 +261,7 @@ class Processor(object):
 	def setup_done(self):
 		"""
 		.. _setup_done:
-	
+
 		Finish the setup of the Processor.
 
 		This should be the last call before the Processor is used.
@@ -299,7 +301,7 @@ class Processor(object):
 		self._set_pc(0)
 		self._set_ecr(0)
 		self.cycles = 0
-			
+
 
 	def register_on_cycle_callback(self, callback):
 		"""
@@ -409,12 +411,12 @@ class Processor(object):
 			if(self.ecr & EnigneControlBits.engine_stop_bit):
 				break
 
-		
+
 
 class SetupError(Exception):
 	"""
 	.. _SetupError:
-	
+
 	Raised if the setup is invalid.
 	"""
 	def __init__(self, *args):
@@ -424,7 +426,7 @@ class SetupError(Exception):
 class SIGILL(Exception):
 	"""
 	.. _SIGILL:
-	
+
 	Raised if an invalid opcode occurs.
 	"""
 	def __init__(self, *args):
